@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Test.Framework\CanonicalBuilderTest.cs" Link="CanonicalBuilderTest.cs" />
+    <Compile Include="..\Test.Framework\CreateStringToSignTest.cs" Link="CreateStringToSignTest.cs" />
+    <Compile Include="..\Test.Framework\SignatureHelperTest.cs" Link="SignatureHelperTest.cs" />
+    <Compile Include="..\Test.Framework\UtilTest.cs" Link="UtilTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Test.Framework\TestData.js" Link="TestData.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AmazonPayV2">
+      <HintPath>..\AmazonPayV2\bin\Debug\netcoreapp2.0\AmazonPayV2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
