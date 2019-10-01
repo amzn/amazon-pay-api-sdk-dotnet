@@ -29,9 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="AmazonPayV2">
-      <HintPath>..\AmazonPayV2\bin\Debug\netcoreapp2.0\AmazonPayV2.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\AmazonPayV2\AmazonPayV2.csproj" />
   </ItemGroup>
 
 </Project>
