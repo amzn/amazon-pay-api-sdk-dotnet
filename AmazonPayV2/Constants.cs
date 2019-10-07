@@ -5,7 +5,7 @@ namespace AmazonPayV2
 {
     public class Constants
     {
-        public static readonly string SDKClientVersion = "4.2.1";
+        public static readonly string SDKClientVersion = "4.2.1.1";
         public static readonly string GithubSDKName = "amazon-pay-sdk-v2-dotnet";
         public static readonly string AmazonSignatureAlgorithm = "AMZN-PAY-RSASSA-PSS";
         public static readonly string AmazonPayAPIVersionInStore = "v1";

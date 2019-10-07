@@ -1,15 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net35</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
-    <OutputPath>..\lib\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35|AnyCPU'">
-    <OutputPath>..\lib</OutputPath>
+    <Version>4.2.1.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>AmazonPay</Authors>
+    <Company>Amazon</Company>
+    <PackageProjectUrl>https://github.com/amzn/amazon-pay-sdk-v2-dotnet</PackageProjectUrl>
+    <PackageIconUrl>https://images-na.ssl-images-amazon.com/images/G/01/Iris3_US/en_US/inca/images/60x38-white-x1.png</PackageIconUrl>
+    <Description>AmazonPay service. This API section enables you to programmatically retrieve shipping and payment information provided by the buyer from their Amazon account. It allows you to authorize, capture, and refund payments, enabling a variety of payments scenarios.</Description>
+    <Copyright>Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.</Copyright>
+    <PackageTags>AmazonPay</PackageTags>
+    <PackageReleaseNotes>v4.2.1.1</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
