@@ -22,8 +22,8 @@ MWS access keys, MWS secret keys, and MWS authorization tokens from previous MWS
 You will need to generate your own public/private key pair to make API calls with this SDK.  This can be done using openssl commands:
 
 ```
-openssl genrsa -out private.txt 2048
-openssl rsa -in private.txt -pubout > public.txt
+openssl genrsa -out private.pem 2048
+openssl rsa -in private.txt -pubout > public.pub
 ```
 
 The first command above generates a private key and the second line uses the private key to generate a public key.
@@ -202,7 +202,7 @@ namespace getCheckoutSessionId
         protected void Page_Load(object sender, EventArgs e)
         {
             JObject testRequest = JObject.Parse(@"{ 
-                ""webCheckoutDetails"": { 
+                ""webCheckoutDetail"": { 
                     ""checkoutReviewReturnUrl"" : ""https://example.com/updateCheckoutSession.aspx""
                 },
                 ""storeId"" : ""store_id""
@@ -259,11 +259,11 @@ private static readonly PayConfiguration config = new PayConfiguration
     PrivateKey = "private_key_text"
 }
 string jsonRequestString = @"{
-    ""webCheckoutDetails"":
+    ""webCheckoutDetail"":
     {
-        ""checkoutResultReturnUrl"":""https://10.1.118.125/resultReturn.aspx""
+        ""checkoutResultReturnUrl"":""https://localhost/resultReturn.aspx""
     },
-    ""paymentDetails"":
+    ""paymentDetail"":
     {
         ""paymentIntent"": ""Confirm"",
         ""canHandlePendingAuthorization"": false,
