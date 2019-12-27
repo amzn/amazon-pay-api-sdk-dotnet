@@ -19,11 +19,20 @@ If you are developing an integration using the original [Amazon Pay API Referenc
 
 MWS access keys, MWS secret keys, and MWS authorization tokens from previous MWS or Amazon Pay V1 integrations cannot be used with this SDK.
 
-You will need to generate your own public/private key pair to make API calls with this SDK.  This can be done using openssl commands:
+You will need to generate your own public/private key pair to make API calls with this SDK.
+
+In Windows 10 this can be done with ssh-keygen commands:
+
+```
+ssh-keygen -t rsa -b 2048 -f private.pem
+ssh-keygen -f private.pem -e -m PKCS8 > public.pub
+```
+
+In Linux or macOS this can be done using openssl commands:
 
 ```
 openssl genrsa -out private.pem 2048
-openssl rsa -in private.txt -pubout > public.pub
+openssl rsa -in private.pem -pubout > public.pub
 ```
 
 The first command above generates a private key and the second line uses the private key to generate a public key.
