@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Amazon.Pay.API.SDK.Tests\ApiUrlBuilderTests.cs" Link="ApiUrlBuilderTests.cs" />
+    <Compile Include="..\Amazon.Pay.API.SDK.Tests\CanonicalBuilderTest.cs" Link="CanonicalBuilderTest.cs" />
+    <Compile Include="..\Amazon.Pay.API.SDK.Tests\CreateStringToSignTest.cs" Link="CreateStringToSignTest.cs" />
+    <Compile Include="..\Amazon.Pay.API.SDK.Tests\SignatureHelperTest.cs" Link="SignatureHelperTest.cs" />
+    <Compile Include="..\Amazon.Pay.API.SDK.Tests\UtilTest.cs" Link="UtilTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Pay.API.SDK\Amazon.Pay.API.SDK.csproj" />
+  </ItemGroup>
+
+</Project>
