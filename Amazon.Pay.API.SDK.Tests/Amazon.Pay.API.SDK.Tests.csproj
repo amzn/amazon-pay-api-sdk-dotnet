@@ -13,6 +13,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.14.0" />
+    <PackageReference Include="jnm2.ReferenceAssemblies.net35" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

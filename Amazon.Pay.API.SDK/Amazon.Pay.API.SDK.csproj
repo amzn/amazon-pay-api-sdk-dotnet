@@ -4,16 +4,18 @@
     <TargetFrameworks>netcoreapp2.0;net35</TargetFrameworks>
     <Version>1.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>AmazonPay</Authors>
+    <Authors>Amazon Pay</Authors>
     <Company>Amazon</Company>
     <PackageProjectUrl>https://github.com/amzn/amazon-pay-api-sdk-dotnet</PackageProjectUrl>
-    <PackageIconUrl>https://images-na.ssl-images-amazon.com/images/G/01/Iris3_US/en_US/inca/images/60x38-white-x1.png</PackageIconUrl>
-    <Description>AmazonPay service. This API section enables you to programmatically retrieve shipping and payment information provided by the buyer from their Amazon account. It allows you to authorize, capture, and refund payments, enabling a variety of payments scenarios.</Description>
+    <Description>The Amazon Pay API SDK for .NET allows you integrating Amazon Pay into your .NET-based website or application.</Description>
     <Copyright>Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.</Copyright>
-    <PackageTags>AmazonPay, Amazon Pay, Amazon Payments, Pay With Amazon</PackageTags>
+    <PackageTags>AmazonPay, Amazon Pay, Amazon Payments, Pay With Amazon, Amazon, Payment, Payments</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <OutputType>Library</OutputType>
     <RootNamespace>Amazon.Pay.API</RootNamespace>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/amzn/amazon-pay-api-sdk-dotnet</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
@@ -22,7 +24,13 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
+    <PackageReference Include="jnm2.ReferenceAssemblies.net35" Version="1.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <None Include="logo.png" Pack="true" PackagePath="\"/>
+    <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

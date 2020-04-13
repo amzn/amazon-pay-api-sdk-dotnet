@@ -20,7 +20,12 @@ This SDK is available on NuGet under the name 'amazon-pay-api-sdk-dotnet'.
 
 Installation via Package Manager:
 ```
-PM> Install-Package amazon-pay-api-sdk-dotnet -Version 1.0.0.0
+PM> Install-Package amazon-pay-api-sdk-dotnet -Version 1.0.0
+```
+
+Installation via .NET CLI:
+```
+> dotnet add package amazon-pay-api-sdk-dotnet --version 1.0.0
 ```
 
 ## Public and Private Keys
