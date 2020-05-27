@@ -95,7 +95,7 @@ namespace Amazon.Pay.API.Tests
             payConfig.Region = Region.UnitedStates;
             payConfig.Environment = Environment.Sandbox;
             apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/in-store/v1/merchantScan/");
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/in-store/merchantScan/");
 
             // act
             Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
@@ -111,7 +111,7 @@ namespace Amazon.Pay.API.Tests
             payConfig.Region = Region.UnitedStates;
             payConfig.Environment = Environment.Sandbox;
             apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v1/deliveryTrackers/");
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/deliveryTrackers/");
 
             // act
             Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
@@ -127,7 +127,7 @@ namespace Amazon.Pay.API.Tests
             payConfig.Region = Region.UnitedStates;
             payConfig.Environment = Environment.Sandbox;
             apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v1/authorizationTokens/");
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/authorizationTokens/");
 
             // act
             Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.TokenExchange);

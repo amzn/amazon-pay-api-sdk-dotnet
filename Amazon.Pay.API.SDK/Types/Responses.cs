@@ -28,7 +28,7 @@ namespace Amazon.Pay.API.Types
         {
             get
             {
-                if ( Status == 200 || Status == 201 ) return true;
+                if ( Status >= 200 && Status <= 299 ) return true;
                 else return false;
             }
         }

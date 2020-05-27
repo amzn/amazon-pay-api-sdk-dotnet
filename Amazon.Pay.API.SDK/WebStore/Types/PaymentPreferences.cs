@@ -9,11 +9,5 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "paymentDescriptor")]
         public string PaymentDescriptor { get; internal set; }
-
-        /// <summary>
-        /// Billing address for buyer-selected payment instrument. Billing address is only available in EU or for PayOnly product type.
-        /// </summary>
-        [JsonProperty(PropertyName = "billingAddress")]
-        public Address BillingAddress { get; internal set; }
     }
 }

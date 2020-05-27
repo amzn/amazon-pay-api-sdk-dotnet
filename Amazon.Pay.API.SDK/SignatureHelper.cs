@@ -1,5 +1,4 @@
 ﻿using Amazon.Pay.API.Types;
-using Amazon.Pay.API;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
@@ -124,25 +123,50 @@ namespace Amazon.Pay.API
             return stringToSignBuilder.ToString();
         }
 
+
         /// <summary>
         /// Generates a signature for the string passed in
         /// </summary>
         /// <param name="stringToSign"></param>
-        /// <param name="privateKeyString"></param>
         /// <returns>signature string</returns>
-        public string GenerateSignature(string stringToSign, string privateKeyString)
+        public string GenerateSignature(string stringToSign)
         {
             SecureRandom random = new SecureRandom();
 
             byte[] bytesToSign = Encoding.UTF8.GetBytes(stringToSign);
 
-            PemReader pemReader = new PemReader(new StringReader(privateKeyString));
-            AsymmetricCipherKeyPair keyPair = (AsymmetricCipherKeyPair)pemReader.ReadObject();
+            // read the private key
+            PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey));
+            object pemObject = pemReader.ReadObject();
 
+            if (pemReader == null)
+            {
+                throw new ArgumentException("Unsupported private key format");
+            }
+
+            ICipherParameters parameters;
+            if (pemObject is AsymmetricKeyParameter)
+            {
+                // PKCS #8 format ("BEGIN PRIVATE KEY")
+                parameters = (AsymmetricKeyParameter)pemObject;
+            }
+            else if (pemObject is AsymmetricCipherKeyPair)
+            {
+                // RSA key format ("BEGIN RSA PRIVATE KEY")
+                var pair = pemObject as AsymmetricCipherKeyPair;
+                parameters = pair.Private;
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported private key format");
+            }
+
+            // initiate the signing object
             PssSigner pssSigner = new PssSigner(new RsaEngine(), new Sha256Digest(), SaltLength, TrailerField);
-            pssSigner.Init(true, new ParametersWithRandom((RsaKeyParameters)keyPair.Private, random));
+            pssSigner.Init(true, new ParametersWithRandom(parameters, random));
             pssSigner.BlockUpdate(bytesToSign, 0, bytesToSign.Length);
 
+            // sign it
             byte[] signature = pssSigner.GenerateSignature();
 
             return Convert.ToBase64String(signature);

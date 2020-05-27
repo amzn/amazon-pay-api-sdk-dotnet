@@ -44,6 +44,7 @@ namespace Amazon.Pay.API
             set
             {
                 FileInfo fileInfo;
+
                 try
                 {
                     fileInfo = new FileInfo(value);
@@ -70,7 +71,7 @@ namespace Amazon.Pay.API
                     }
                     else
                     {
-                        throw new ArgumentException("Provided string does not contain a private key in the expected format");
+                        throw new FileNotFoundException("Provided private key file cannot be found", privateKey);
                     }
                 }
             }

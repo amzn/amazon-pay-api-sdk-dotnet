@@ -26,7 +26,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// <summary>
         /// URLs associated to the Checkout Session used for completing checkout
         /// </summary>
-        [JsonProperty(PropertyName = "webCheckoutDetail")]
+        [JsonProperty(PropertyName = "webCheckoutDetails")]
         public WebCheckoutDetails WebCheckoutDetails { get; internal set; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// <summary>
         /// Payment details specified by the merchant, such as the amount and method for charging the buyer
         /// </summary>
-        [JsonProperty(PropertyName = "paymentDetail")]
+        [JsonProperty(PropertyName = "paymentDetails")]
         public PaymentDetails PaymentDetails { get; internal set; }
 
         /// <summary>

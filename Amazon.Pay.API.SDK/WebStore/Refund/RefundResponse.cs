@@ -40,7 +40,7 @@ namespace Amazon.Pay.API.WebStore.Refund
         /// <summary>
         /// State of the refund object.
         /// </summary>
-        [JsonProperty(PropertyName = "statusDetail")]
+        [JsonProperty(PropertyName = "statusDetails")]
         public StatusDetails StatusDetails { get; internal set; }
 
         /// <summary>

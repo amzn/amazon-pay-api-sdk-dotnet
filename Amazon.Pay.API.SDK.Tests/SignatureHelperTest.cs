@@ -1,9 +1,11 @@
 ﻿using Amazon.Pay.API.InStore.MerchantScan;
 using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.CheckoutSession;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Environment = Amazon.Pay.API.Types.Environment;
 
 namespace Amazon.Pay.API.Tests
 {
@@ -40,10 +42,10 @@ namespace Amazon.Pay.API.Tests
             Uri uri = new Uri("https://pay-api.amazon.eu/sandbox/in-store/v1/merchantScan");
 
             var scanRequest = new MerchantScanRequest("UKhrmatMeKdlfY6b", "0b8fb271-2ae2-49a5-4901237", Currency.EUR, "DE", "FR");
-            
+
             var preSignedHeaders = CreateHeaders(uri);
             string canonicalHeaderString = "accept:application/json" + "\n" + "content-type:application/json"
-                                            + "\n" + "x-amz-pay-date:20181013T004102Z" + "\n" + 
+                                            + "\n" + "x-amz-pay-date:20181013T004102Z" + "\n" +
                                             "x-amz-pay-host:pay-api.amazon.eu" + "x -amz-pay-region:eu";
 
             var canonicalBuilder = new Mock<CanonicalBuilder>();
@@ -64,6 +66,17 @@ namespace Amazon.Pay.API.Tests
             string actualCanonicalRequest = signatureHelper.CreateCanonicalRequest(apiRequest, preSignedHeaders);
 
             Assert.AreEqual(expectedCanonicalRequest, actualCanonicalRequest);
+        }
+
+        [Test]
+        public void ButtonPayloadAsJsonResultsInExpectedSignatureString()
+        {
+            var signatureHelper = new SignatureHelper(config, new CanonicalBuilder());
+            var payload = "{\"storeId\":\"amzn1.application-oa2-client.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://localhost/test/CheckoutReview.php\",\"checkoutResultReturnUrl\":\"https://localhost/test/CheckoutResult.php\"}}";
+
+            var stringToSign = signatureHelper.CreateStringToSign(payload);
+
+            Assert.AreEqual("AMZN-PAY-RSASSA-PSS\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSign);
         }
 
         private Dictionary<string, List<string>> CreateHeaders(Uri uri)

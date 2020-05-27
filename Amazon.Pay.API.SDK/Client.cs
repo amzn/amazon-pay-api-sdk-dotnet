@@ -71,7 +71,7 @@ namespace Amazon.Pay.API
 
             string canonicalRequest = signatureHelper.CreateCanonicalRequest(request, preSignedHeaders);
             string stringToSign = signatureHelper.CreateStringToSign(canonicalRequest);
-            string signature = signatureHelper.GenerateSignature(stringToSign, payConfiguration.PrivateKey);
+            string signature = signatureHelper.GenerateSignature(stringToSign);
 
             Dictionary<string, string> postSignedHeadersMap = new Dictionary<string, string>();
 

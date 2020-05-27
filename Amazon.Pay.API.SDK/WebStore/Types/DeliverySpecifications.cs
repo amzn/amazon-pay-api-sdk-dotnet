@@ -16,13 +16,13 @@ namespace Amazon.Pay.API.WebStore.Types
         internal void OnSerializing(StreamingContext content)
         {
             // skip 'specialRestrictions' if there weren't any provided
-            if (SpecialRestrictions.Count == 0)
+            if (SpecialRestrictions != null && SpecialRestrictions.Count == 0)
             {
                 SpecialRestrictions = null;
             }
 
             // skip 'addressRestrictions' if there weren't any provided
-            if (AddressRestrictions.Restrictions.Count == 0)
+            if (AddressRestrictions != null && AddressRestrictions.Restrictions != null && AddressRestrictions.Restrictions.Count == 0)
             {
                 AddressRestrictions = null;
             }

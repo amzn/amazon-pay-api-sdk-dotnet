@@ -15,13 +15,13 @@ namespace Amazon.Pay.API
         {
             string url = GetApiEndPointBaseUrl().ToString(); // example: https://pay-api.amazon.eu/sandbox/
 
-            if (!string.IsNullOrEmpty(service))
-            {
-                url += $"{service}/"; // example: https://pay-api.amazon.eu/sandbox/in-store/
-            }
-
             // add the version hard-coded via the Constant as SDK version and API versions must match to ensure all objects are in sync
             url += $"v{Constants.ApiVersion}/"; // example: https://pay-api.amazon.eu/sandbox/v1/
+
+            if (!string.IsNullOrEmpty(service))
+            {
+                url += $"{service}/"; // example: https://pay-api.amazon.eu/sandbox/v2/in-store/
+            }
 
             if (!string.IsNullOrEmpty(resource))
             {

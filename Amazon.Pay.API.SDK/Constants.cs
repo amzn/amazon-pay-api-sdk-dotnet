@@ -4,9 +4,9 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "1.0.0.0";
+        public const string SdkVersion = "2.0.0.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
-        public const int    ApiVersion = 1;
+        public const int    ApiVersion = 2;
 
         public const string AmazonSignatureAlgorithm = "AMZN-PAY-RSASSA-PSS";
 
@@ -59,6 +59,7 @@ namespace Amazon.Pay.API
             internal const string Capture = "capture";
             internal const string Delete = "delete";
             internal const string Cancel = "cancel";
+            internal const string Complete = "complete";
         }
     }
 }

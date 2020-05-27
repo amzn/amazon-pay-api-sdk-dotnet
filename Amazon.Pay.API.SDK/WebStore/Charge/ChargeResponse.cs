@@ -77,7 +77,7 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// <summary>
         /// State of the Charge object.
         /// </summary>
-        [JsonProperty(PropertyName = "statusDetail")]
+        [JsonProperty(PropertyName = "statusDetails")]
         public StatusDetails StatusDetails { get; internal set; }
 
         /// <summary>

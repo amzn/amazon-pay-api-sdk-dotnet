@@ -3,6 +3,7 @@ using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Refund;
+using System;
 using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore
@@ -50,6 +51,19 @@ namespace Amazon.Pay.API.WebStore
         {
             var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.CheckoutSessions, checkoutSessionId);
             var apiRequest = new ApiRequest(apiPath, HttpMethod.PATCH, body, headers);
+
+            var result = CallAPI<CheckoutSessionResponse>(apiRequest);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Completes a Checkout Session.
+        /// </summary>
+        public CheckoutSessionResponse CompleteCheckoutSession(string checkoutSessionId, CompleteCheckoutSessionRequest completeRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.CheckoutSessions, checkoutSessionId, Constants.Methods.Complete);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, completeRequest, headers);
 
             var result = CallAPI<CheckoutSessionResponse>(apiRequest);
 
@@ -198,5 +212,30 @@ namespace Amazon.Pay.API.WebStore
             return result;
         }
 
+        /// <summary>
+        /// Generates the signature string for the Amazon Pay front-end button.
+        /// </summary>
+        /// <param name="jsonString">The payload for generating a CheckoutSession as JSON string.</param>
+        /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
+        public string GenerateButtonSignature(string jsonString)
+        {
+            var signatureHelper = new SignatureHelper(payConfiguration, new CanonicalBuilder());
+            var stringToSign = signatureHelper.CreateStringToSign(jsonString);
+            var signature = signatureHelper.GenerateSignature(stringToSign);
+
+            return signature;
+        }
+
+        /// <summary>
+        /// Generates the signature string for the Amazon Pay front-end button.
+        /// </summary>
+        /// <param name="request">The payload for generating a CheckoutSession as CreateCheckoutSessionRequest object.</param>
+        /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
+        public string GenerateButtonSignature(CreateCheckoutSessionRequest request)
+        {
+            var signature = GenerateButtonSignature(request.ToJson());
+
+            return signature;
+        }
     }
 }

@@ -15,10 +15,10 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         public string ChargePermissionId { get; internal set; }
 
         /// <summary>
-        /// Total amount that can be charged using this ChargePermission.
+        /// Limits that apply to this ChargePermission.
         /// </summary>
-        [JsonProperty(PropertyName = "chargeAmountLimit")]
-        public Price ChargeAmountLimit { get; internal set; }
+        [JsonProperty(PropertyName = "limits")]
+        public Limits Limits { get; internal set; }
 
         /// <summary>
         /// The environment of the Amazon Pay API (live or sandbox).
@@ -37,6 +37,12 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// </summary>
         [JsonProperty(PropertyName = "shippingAddress")]
         public Address ShippingAddress { get; internal set; }
+
+        /// <summary>
+        /// Billing address for buyer-selected payment instrument. Billing address is only available in EU or for PayOnly product type.
+        /// </summary>
+        [JsonProperty(PropertyName = "billingAddress")]
+        public Address BillingAddress { get; internal set; }
 
         /// <summary>
         /// List of payment instruments selected by the buyer.
@@ -72,7 +78,7 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// <summary>
         /// State of the Charge Permission object.
         /// </summary>
-        [JsonProperty(PropertyName = "statusDetail")]
+        [JsonProperty(PropertyName = "statusDetails")]
         public ChargePermissionStatusDetails StatusDetails { get; internal set; }
 
         /// <summary>

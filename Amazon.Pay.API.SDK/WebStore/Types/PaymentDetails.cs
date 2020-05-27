@@ -15,7 +15,7 @@ namespace Amazon.Pay.API.WebStore.Types
         internal void OnSerializing(StreamingContext content)
         {
             // skip 'chargeAmount' if there wasn't provided anything
-            if (ChargeAmount.Amount == 0 && ChargeAmount.CurrencyCode == null)
+            if (ChargeAmount != null && ChargeAmount.Amount == 0 && ChargeAmount.CurrencyCode == null)
             {
                 ChargeAmount = null;
             }
