@@ -32,12 +32,12 @@ This SDK is currently available via GitHub only (NuGet release coming soon). Ple
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.0.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.1.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.0.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.1.0 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -228,6 +228,112 @@ public class Sample
         }
 
         return result;
+    }
+}
+```
+
+### Get ChargePermission
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.ChargePermission;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+
+public class Sample
+{
+    //  ...
+
+    public void GetChargePermission()
+    {
+        // prepare the request
+        var chargePermissionId = "P01-0000000-0000000";
+
+        // send the request
+        ChargePermissionResponse result = client.GetChargePermission(chargePermissionId);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        State chargePermissionState = result.StatusDetails.State;
+        DateTime chargePermissionExpiryDate = result.ExpirationTimestamp;
+        Address buyerAddress = result.BillingAddress;
+
+        // ...
+    }
+}
+```
+
+### Update ChargePermission
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.ChargePermission;
+
+public class Sample
+{
+    //  ...
+
+    public void UpdateChargePermission()
+    {
+        // prepare the request
+        var chargePermissionId = "P01-0000000-0000000";
+        var request = new UpdateChargePermissionRequest();
+        request.MerchantMetadata.MerchantReferenceId = "32-41-323141-32";
+        request.MerchantMetadata.MerchantStoreName = "AmazonTestStoreFront";
+        request.MerchantMetadata.NoteToBuyer = "Some Note to buyer";
+        request.MerchantMetadata.CustomInformation = "";
+
+        // send the request
+        ChargePermissionResponse result = client.UpdateChargePermission(chargePermissionId, request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        State chargePermissionState = result.StatusDetails.State;
+
+        // ...
+    }
+}
+```
+
+### Close ChargePermission
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.ChargePermission;
+
+public class Sample
+{
+    //  ...
+
+    public void CloseChargePermission()
+    {
+        // prepare the request
+        var chargePermissionId = "P01-0000000-0000000";
+        var request = new CloseChargePermissionRequest("No more charges required");
+
+        // send the request
+        ChargePermissionResponse result = client.CloseChargePermission(chargePermissionId, request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        State chargePermissionState = result.StatusDetails.State;
+
+        // ...
     }
 }
 ```
