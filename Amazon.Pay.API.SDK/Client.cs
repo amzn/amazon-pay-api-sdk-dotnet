@@ -1,4 +1,5 @@
-﻿using Amazon.Pay.API.DeliveryTracker;
+﻿using Amazon.Pay.API.AuthorizationToken;
+using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.Exceptions;
 using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
@@ -58,7 +59,7 @@ namespace Amazon.Pay.API
         {
             Dictionary<string, List<string>> preSignedHeaders = signatureHelper.CreateDefaultHeaders(request.Path);
 
-            if (request.Headers.Count>0)
+            if (request.Headers.Count > 0)
             {
                 foreach (KeyValuePair<string, string> header in request.Headers)
                 {
@@ -92,14 +93,14 @@ namespace Amazon.Pay.API
         /// <summary>
         /// Sends the API requests and processes the result by filling the AmazonPayResponse object.
         /// </summary>
-        protected T ProcessRequest<T>(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders) 
+        protected T ProcessRequest<T>(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
             where T : AmazonPayResponse, new()
         {
             var responseObject = new T();
 
             long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             try
-            { 
+            {
                 int retries = 0;
 
                 while (retries <= payConfiguration.MaxRetries)
@@ -164,7 +165,24 @@ namespace Amazon.Pay.API
         /// </summary>
         protected HttpWebResponse SendRequest(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
         {
-            HttpWebRequest request = WebRequest.Create(apiRequest.Path) as HttpWebRequest;
+
+            string path = apiRequest.Path.ToString();
+
+            // add the query parameters to the URL, if there are any
+            if (apiRequest.QueryParameters != null && apiRequest.QueryParameters.Count > 0)
+            {
+                var canonicalBuilder = new CanonicalBuilder();
+                path += "?" + canonicalBuilder.GetCanonicalizedQueryString(apiRequest.QueryParameters);
+            }
+
+            // ensure the right minimum TLS version is being used
+            if (Util.IsObsoleteSecurityProtocol(ServicePointManager.SecurityProtocol))
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            }
+
+            // create the web request
+            HttpWebRequest request = WebRequest.Create(path) as HttpWebRequest;
 
             foreach (KeyValuePair<string, string> header in postSignedHeaders)
             {
@@ -242,6 +260,26 @@ namespace Amazon.Pay.API
             var apiRequest = new ApiRequest(apiUrl, HttpMethod.POST, deliveryTrackersRequest, headers);
 
             var result = CallAPI<DeliveryTrackerResponse>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Retrieves a delegated authorization token used in order to make API calls on behalf of a merchant.
+        /// </summary>
+        /// <param name="mwsAuthToken">The MWS Auth Token that the solution provider currently uses to make V1 API calls on behalf of the merchant.</param>
+        /// <param name="merchantId">The Amazon Pay merchant ID.</param>
+        /// <returns>HS256 encoded JWT Token that will be used to make V2 API calls on behalf of the merchant.</returns>
+        public AuthorizationTokenResponse GetAuthorizationToken(string mwsAuthToken, string merchantId, Dictionary<string, string> headers = null)
+        {
+            var apiUrl = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.TokenExchange, mwsAuthToken);
+            var apiRequest = new ApiRequest(apiUrl, HttpMethod.GET);
+            apiRequest.Headers = headers;
+
+            apiRequest.QueryParameters.Add("merchantId", new List<string>() { merchantId });
+
+            var result = CallAPI<AuthorizationTokenResponse>(apiRequest);
 
             return result;
         }

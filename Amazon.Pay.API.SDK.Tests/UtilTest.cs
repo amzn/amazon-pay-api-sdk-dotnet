@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Net;
 
 namespace Amazon.Pay.API.Tests
 {
@@ -45,6 +46,76 @@ namespace Amazon.Pay.API.Tests
         {
             string expectedUrl = Util.UrlEncode("/\u1234", true);
             Assert.AreEqual(expectedUrl, "/%E1%88%B4");
+        }
+
+        [Test]
+        public void Ssl3OnlyIsObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Ssl3;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void TlsOnlyIsObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Tls;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Tls11OnlyIsNotObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Tls11;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Tls12OnlyIsNotObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Tls12;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Ssl3AndTls1AreObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Ssl3AndTls1AndTls11AreNotObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Tls1AndTls11AndTls12AreNotObsoleteSecurityProtocol()
+        {
+            var protocolType = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            var result = Util.IsObsoleteSecurityProtocol(protocolType);
+
+            Assert.IsFalse(result);
         }
     }   
 }

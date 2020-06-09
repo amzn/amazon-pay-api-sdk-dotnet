@@ -28,7 +28,18 @@ Please note that BouncyCastle 1.8.6 has known to cause issues with the signature
 
 ## SDK Installation
 
-This SDK is currently available via GitHub only (NuGet release coming soon). Please download the latest version [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/tag/2.0.0). It is recommended to download the binary version (DLL) of the SDK, so that it can be added as an assembly reference to the project.
+This SDK is currently available via GitHub only (NuGet release coming soon). Please download the latest version [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.0.0/Amazon.Pay.API.SDK.2.0.0.nupkg).  After download, use one of the following commands for installing the package to your project (replace value for -Source parameter if you have downloaded the package to some other place).
+
+Visual Studio Package Manager Console
+```
+Install-Package Amazon.Pay.API.SDK -Version 2.0.0 -Source %USERPROFILE%\Downloads
+```
+
+.NET Core CLI
+```
+dotnet add package Amazon.Pay.API.SDK -v 2.0.0 -s %USERPROFILE%\Downloads\
+```
+
 
 ## API Credentials (Public and Private Keys)
 
@@ -221,3 +232,73 @@ public class Sample
 }
 ```
 
+## Other available methods
+
+### Get authorization token for delegated API calls
+
+Call this method to retrieve a delegated authorization token used in order to make API calls on behalf of a merchant. This method is available in all client classes; the example below shows usage in the WebStoreClient.
+
+**Important:** This method is available only in "Live" mode.
+
+```csharp
+using Amazon.Pay.API.AuthorizationToken;
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore;
+using System.Collections.Generic;
+
+public class Sample
+{
+    private ApiConfiguration config;
+
+    public void PerformDelegatedApiCall()
+    {
+        // set up config
+        config = new ApiConfiguration
+        (
+            region: Region.Europe,
+            environment: Environment.Live, // IMPORTANT: only available in "Live" mode
+            publicKeyId: "MY_PUBLIC_KEY_ID",
+            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
+        );
+
+        // init API client
+        var client = new WebStoreClient(config);
+
+
+        // prepare the request for the auth token retrieval
+        string mwsAuthToken = "amzn.mws.00000000-0000-0000-0000-000000000000"; // the MWS Auth Token
+        string merchantId = "MERCHANT_ID"; // the merchant ID of the account that the API call is done on behalf of
+
+        // send the request
+        AuthorizationTokenResponse result = client.GetAuthorizationToken(mwsAuthToken, merchantId);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // do something, e.g. throw an error
+        }
+
+        // now do some API call on behalf of the merchant, for example a CheckoutSession creation
+
+        var request = new CreateCheckoutSessionRequest
+        (
+            checkoutReviewReturnUrl: "https://example.com/review.html",
+            storeId: "amzn1.application-oa2-client.000000000000000000000000000000000"
+        );
+
+        // IMPORTANT: the auth token must be added as an additional header for authorizing the API call
+        var headers = new Dictionary<string, string>();
+        headers.Add(Constants.Headers.AuthToken, result.AuthorizationToken);
+
+        CheckoutSessionResponse anotherResult = client.CreateCheckoutSession(request);
+
+        // check if API call was successful
+        if (!anotherResult.Success)
+        {
+            // do something, e.g. throw an error
+        }
+
+    }
+}
+```

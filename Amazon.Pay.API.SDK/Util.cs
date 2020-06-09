@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -77,6 +78,31 @@ namespace Amazon.Pay.API
                 .Append("(").Append(osVersion).Append(")");
 
             return userAgentBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Checks if the passed set of SecurityProtocolType is using only outdated protocols.
+        /// </summary>
+        /// <param name="securityProtocolTypes">A set of security protocol types</param>
+        /// <returns>True if using outdated security protocol type versions, false otherwise.</returns>
+        /// <remarks>
+        /// This method will effectively ensure that as a minimum TLS version 1.1 is being used for API calls.
+        /// Please note that the provdided parameter doesn't contain a single protocol type only, but may 
+        /// contain a set, e.g. "SSL3.0 | TLS1.0".
+        /// </remarks>
+        public static bool IsObsoleteSecurityProtocol(SecurityProtocolType securityProtocolTypes)
+        {
+            // check if there is an outdated protocol being used
+            if (securityProtocolTypes.HasFlag(SecurityProtocolType.Ssl3) || securityProtocolTypes.HasFlag(SecurityProtocolType.Tls))
+            {
+                // if also not using at least the minimum version (TLS 1.1), then this is an outdated set of protocols
+                if (securityProtocolTypes.HasFlag(SecurityProtocolType.Tls11) == false)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

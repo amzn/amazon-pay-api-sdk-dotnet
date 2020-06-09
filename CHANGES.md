@@ -1,3 +1,8 @@
+### Version 2.1.0 - June 8, 2020
+
+* Added GetAuthorizationToken method (available for all clients)
+* Set TLS version for API requests to version 1.2 to avoid issues on .NET versions where TLS 1.2 is not yet the default
+
 ### Version 2.0.0 - May 25, 2020
 
 Adapted SDK to support Amazon Pay API version 2
