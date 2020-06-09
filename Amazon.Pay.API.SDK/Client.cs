@@ -175,11 +175,15 @@ namespace Amazon.Pay.API
                 path += "?" + canonicalBuilder.GetCanonicalizedQueryString(apiRequest.QueryParameters);
             }
 
+            // TODO: move setting of SecurityProtocol into constructor
+
             // ensure the right minimum TLS version is being used
             if (Util.IsObsoleteSecurityProtocol(ServicePointManager.SecurityProtocol))
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             }
+
+            // TODO: consider switching to HttpClient class for web requests
 
             // create the web request
             HttpWebRequest request = WebRequest.Create(path) as HttpWebRequest;

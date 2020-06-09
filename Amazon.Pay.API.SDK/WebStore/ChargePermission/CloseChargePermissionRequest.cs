@@ -5,6 +5,8 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
 {
     public class CloseChargePermissionRequest : ApiRequestBody
     {
+        // TODO: add constructor to enforce provision of ClosureReason
+
         /// <summary>
         /// Merchant-provided reason for closing Charge Permission.
         /// </summary>
