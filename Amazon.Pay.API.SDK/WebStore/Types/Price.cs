@@ -1,4 +1,5 @@
-﻿using Amazon.Pay.API.Types;
+﻿using Amazon.Pay.API.Converters;
+using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
 
 namespace Amazon.Pay.API.WebStore.Types
@@ -20,6 +21,7 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Transaction amount.
         /// </summary>
         [JsonProperty(PropertyName = "amount")]
+        [JsonConverter(typeof(DecimalJsonConverter))]
         public decimal Amount { get; set; }
 
         /// <summary>
