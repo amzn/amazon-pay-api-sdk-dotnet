@@ -28,6 +28,6 @@ namespace Amazon.Pay.API.WebStore.Refund
         /// Description shown on the buyer payment instrument statement.
         /// </summary>
         [JsonProperty(PropertyName = "softDescriptor")]
-        public string SoftDescriptor { get; internal set; }
+        public string SoftDescriptor { get; set; }
     }
 }

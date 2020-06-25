@@ -31,7 +31,7 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Boolean that indicates whether merchant can handle pending response.
         /// </summary>
         [JsonProperty(PropertyName = "canHandlePendingAuthorization")]
-        public bool CanHandlePendingAuthorization { get; set; }
+        public bool? CanHandlePendingAuthorization { get; set; }
 
         /// <summary>
         /// Transaction amount

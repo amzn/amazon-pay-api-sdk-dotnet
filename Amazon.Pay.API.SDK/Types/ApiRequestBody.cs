@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Amazon.Pay.API.Types
 {
@@ -21,6 +22,15 @@ namespace Amazon.Pay.API.Types
             };
 
             var jsonString = JsonConvert.SerializeObject(this, serializerSettings);
+
+            // remove empty objects from the JSON string
+            var regex = new Regex(",?\"[a-z]([a-z]|[A-Z])+\":{}");
+            jsonString = regex.Replace(jsonString, string.Empty);
+
+            // remove potential clutter
+            var regex2 = new Regex("{,\"");
+            jsonString = regex2.Replace(jsonString, "{\"");
+
             return jsonString;
         }
     }

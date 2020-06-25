@@ -47,13 +47,13 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// Boolean that indicates whether or not Charge should be captured immediately after a successful authorization.
         /// </summary>
         [JsonProperty(PropertyName = "captureNow")]
-        public bool CaptureNow { get; internal set; }
+        public bool? CaptureNow { get; internal set; }
 
         /// <summary>
         /// Boolean that indicates whether merchant can handle pending response.
         /// </summary>
         [JsonProperty(PropertyName = "canHandlePendingAuthorization")]
-        public bool CanHandlePendingAuthorization { get; internal set; }
+        public bool? CanHandlePendingAuthorization { get; internal set; }
 
         /// <summary>
         /// Payment service provider (PSP)-provided order details.
