@@ -16,13 +16,13 @@ namespace Amazon.Pay.API.WebStore.Types
         internal void OnSerializing(StreamingContext content)
         {
             // skip 'statesOrRegions' if there weren't any provided
-            if (StatesOrRegions.Count == 0)
+            if (StatesOrRegions != null && StatesOrRegions.Count == 0)
             {
                 StatesOrRegions = null;
             }
 
             // skip 'zipCodes' if there weren't any provided
-            if (ZipCodes.Count == 0)
+            if (ZipCodes != null && ZipCodes.Count == 0)
             {
                 ZipCodes = null;
             }

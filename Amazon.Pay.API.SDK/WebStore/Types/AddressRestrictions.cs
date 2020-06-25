@@ -1,8 +1,14 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore.Types
 {
+    // TODO: replace property Type with a boolean property "IsAllowed"
+
+    /// <summary>
+    /// Country-based address restrictions.
+    /// </summary>
     public class AddressRestrictions
     {
         public AddressRestrictions()
@@ -21,5 +27,12 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "restrictions")]
         public Dictionary<string, Restriction> Restrictions { get; internal set; }
+
+        public InnerCountryAddressRestriction AddCountryRestriction(string countryCode)
+        {
+            Restrictions.Add(countryCode, new Restriction());
+
+            return new InnerCountryAddressRestriction(countryCode, this);
+        }
     }
 }

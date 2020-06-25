@@ -29,13 +29,13 @@ namespace Amazon.Pay.API.WebStore.Types
         }
 
         /// <summary>
-        /// Rule-based restrictions.
+        /// Special restrictions, for example to prohibit buyers from selecting PO boxes.
         /// </summary>
         [JsonProperty(PropertyName = "specialRestrictions")]
         public List<SpecialRestriction> SpecialRestrictions { get; internal set; }
 
         /// <summary>
-        /// Country-based restrictions.
+        /// Country-based address restrictions.
         /// </summary>
         [JsonProperty(PropertyName = "addressRestrictions")]
         public AddressRestrictions AddressRestrictions { get; internal set; }
