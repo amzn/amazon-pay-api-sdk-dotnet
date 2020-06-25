@@ -40,6 +40,7 @@ namespace Amazon.Pay.API
                 public const string ChargePermissions = "chargePermissions";
                 public const string Charges = "charges";
                 public const string Refunds = "refunds";
+                public const string Buyer = "buyers";
             }
 
             public class InStore

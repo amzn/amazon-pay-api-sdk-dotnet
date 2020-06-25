@@ -13,7 +13,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             WebCheckoutDetails = new WebCheckoutDetails();
             PaymentDetails = new PaymentDetails();
             MerchantMetadata = new MerchantMetadata();
-            Buyer = new Buyer();
+            Buyer = new Types.Buyer();
             ProviderMetadata = new ProviderMetadata();
             ShippingAddress = new Address();
             BillingAddress = new Address();
@@ -61,7 +61,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// Details about the buyer, such as their unique identifer, name, and email.
         /// </summary>
         [JsonProperty(PropertyName = "buyer")]
-        public Buyer Buyer { get; internal set; }
+        public Types.Buyer Buyer { get; internal set; }
 
         /// <summary>
         /// State of the Checkout Session object.

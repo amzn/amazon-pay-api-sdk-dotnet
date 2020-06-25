@@ -30,7 +30,7 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// Details about the buyer, such as their unique identifer, name, and email.
         /// </summary>
         [JsonProperty(PropertyName = "buyer")]
-        public Buyer Buyer { get; internal set; }
+        public Types.Buyer Buyer { get; internal set; }
 
         /// <summary>
         /// Shipping address selected by the buyer.

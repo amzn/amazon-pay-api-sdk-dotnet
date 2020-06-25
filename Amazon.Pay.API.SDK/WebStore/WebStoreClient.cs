@@ -1,4 +1,5 @@
 ﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
@@ -213,6 +214,29 @@ namespace Amazon.Pay.API.WebStore
         }
 
         /// <summary>
+        /// Get buyer details.
+        /// </summary>
+        /// <param name="buyerToken">Token used to retrieve buyer details. This value is appended as a query parameter to signInReturnUrl.</param>
+        /// <param name="headers"></param>
+        /// <returns>Object with buyer details.</returns>
+        /// <remarks>
+        /// Get Buyer will only return buyerId by default. You must explicitly request access to additional buyer details using the button signInScopes parameter.
+        /// Amazon Pay will only provide the token required to retrieve buyer details after the buyer signs in. It will be appended to the signInReturnUrl as a query parameter and expires after 24 hours.
+        /// </remarks>
+        public BuyerResponse GetBuyer(string buyerToken, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Buyer, buyerToken);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                Headers = headers
+            };
+
+            var result = CallAPI<BuyerResponse>(apiRequest);
+
+            return result;
+        }
+
+        /// <summary>
         /// Generates the signature string for the Amazon Pay front-end button.
         /// </summary>
         /// <param name="jsonString">The payload for generating a CheckoutSession as JSON string.</param>
@@ -227,11 +251,23 @@ namespace Amazon.Pay.API.WebStore
         }
 
         /// <summary>
-        /// Generates the signature string for the Amazon Pay front-end button.
+        /// Generates the signature string for the Amazon Pay Checkout button.
         /// </summary>
         /// <param name="request">The payload for generating a CheckoutSession as CreateCheckoutSessionRequest object.</param>
         /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
         public string GenerateButtonSignature(CreateCheckoutSessionRequest request)
+        {
+            var signature = GenerateButtonSignature(request.ToJson());
+
+            return signature;
+        }
+
+        /// <summary>
+        /// Generates the signature string for the Amazon Pay Login button.
+        /// </summary>
+        /// <param name="request">The payload for generating a SignIn Request.</param>
+        /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
+        public string GenerateButtonSignature(SignInRequest request)
         {
             var signature = GenerateButtonSignature(request.ToJson());
 
