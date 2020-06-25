@@ -118,6 +118,13 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         public DateTime CreationTimestamp { get; internal set; }
 
         /// <summary>
+        /// UTC date and time when the Charge will expire in ISO 8601 format.
+        /// </summary>
+        /// <remarks>The Charge Permission will expire 180 days after it's confirmed</remarks>
+        [JsonProperty(PropertyName = "expirationTimestamp")]
+        public DateTime? ExpirationTimestamp { get; internal set; }
+
+        /// <summary>
         /// Charge permission identifier returned after Checkout Session is complete.
         /// </summary>
         [JsonProperty(PropertyName = "chargePermissionId")]
