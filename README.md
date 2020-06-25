@@ -32,12 +32,12 @@ This SDK is currently available via GitHub only (NuGet release coming soon). Ple
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.1.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.2.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.1.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.2.0 -s %USERPROFILE%\Downloads\
 ```
 
 
