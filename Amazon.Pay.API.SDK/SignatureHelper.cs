@@ -47,7 +47,7 @@ namespace Amazon.Pay.API
             string body = string.Empty;
             if (apiRequest.Body != null)
             {
-                body = apiRequest.BodyAsJsonString;
+                body = apiRequest.Body.ToJson();
             }
 
             canonicalRequestBuilder.Append(apiRequest.HttpMethod.ToString())
@@ -88,7 +88,7 @@ namespace Amazon.Pay.API
 
             List<string> regionHeaderValue = new List<string>
              {
-                 payConfiguration.Region.ToShortform()
+                 payConfiguration.Region.ToShortform()  // TODO: replace by method parameter to get rid of config dependency
              };
             headers.Add(Constants.Headers.Region, regionHeaderValue);
 
@@ -123,7 +123,6 @@ namespace Amazon.Pay.API
             return stringToSignBuilder.ToString();
         }
 
-
         /// <summary>
         /// Generates a signature for the string passed in
         /// </summary>
@@ -136,7 +135,7 @@ namespace Amazon.Pay.API
             byte[] bytesToSign = Encoding.UTF8.GetBytes(stringToSign);
 
             // read the private key
-            PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey));
+            PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey)); // TODO: replace by method parameter to get rid of config dependency
             object pemObject = pemReader.ReadObject();
 
             if (pemReader == null)

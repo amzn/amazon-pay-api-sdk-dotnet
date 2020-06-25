@@ -142,7 +142,7 @@ namespace Amazon.Pay.API
                             responseObject.RawResponse = response;
                             responseObject.Url = apiRequest.Path;
                             responseObject.Method = apiRequest.HttpMethod;
-                            responseObject.RawRequest = apiRequest.BodyAsJsonString;
+                            responseObject.RawRequest = apiRequest.Body?.ToJson();
                             responseObject.Retries = retries;
 
                             break;
@@ -218,7 +218,7 @@ namespace Amazon.Pay.API
             {
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    streamWriter.Write(apiRequest.BodyAsJsonString);
+                    streamWriter.Write(apiRequest.Body.ToJson());
                     streamWriter.Flush();
                 }
             }

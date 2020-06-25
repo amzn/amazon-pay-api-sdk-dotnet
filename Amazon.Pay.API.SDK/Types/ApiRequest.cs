@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Amazon.Pay.API.Types
 {
+    // TODO: add unit tests
     public class ApiRequest
     {
         private ApiRequestBody body;
@@ -41,6 +42,7 @@ namespace Amazon.Pay.API.Types
             }
         }
 
+        [Obsolete("Use Body?.ToJson() instead")]
         public string BodyAsJsonString { get; private set; }
     }
 }
