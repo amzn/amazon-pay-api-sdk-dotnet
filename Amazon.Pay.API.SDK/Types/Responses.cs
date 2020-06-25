@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Amazon.Pay.API.Types
 {
+    // TODO: rename file to AmazonPayResponse
+    // TODO: introduce strong-typed fields for 'reasonCode' and 'message' (response of erroneous API calls)
+
     /// <summary>
     /// Response object for API calls 
     /// </summary>
