@@ -1,3 +1,10 @@
+### Version 2.2.0 - June 25, 2020
+
+* Added support for "Sign-In only" feature (types and mehthods)
+* Added missing property ExpirationTimestamp on CheckoutSessionResponse class
+* Simplified usage of DeliverySpecifications / AddressRestriction feature
+* Fixed issue with decimal conversion when using Japanese Yen
+
 ### Version 2.1.0 - June 9, 2020
 
 * Added GetAuthorizationToken method (available for all clients)
