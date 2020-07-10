@@ -1,17 +1,40 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Types;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
+
 
 namespace Amazon.Pay.API.WebStore.CheckoutSession
 {
     public class UpdateCheckoutSessionRequest : ApiRequestBody
     {
+
         public UpdateCheckoutSessionRequest()
         {
             WebCheckoutDetails = new WebCheckoutDetails();
             PaymentDetails = new PaymentDetails();
             MerchantMetadata = new MerchantMetadata();
             ProviderMetadata = new ProviderMetadata();
+            RecurringMetadata = new RecurringMetadata();
+        }
+
+        [OnSerializing]
+        internal void OnSerializing(StreamingContext content)
+        {
+            // skip 'RecurringMetadata' if there wasn't provided anything
+            if (RecurringMetadata != null && RecurringMetadata.Frequency == null && RecurringMetadata.Amount == null)
+            {
+                RecurringMetadata = null;
+            }
+        }
+
+        [OnSerialized]
+        internal void OnSerialized(StreamingContext content)
+        {
+            if (RecurringMetadata == null)
+            {
+                RecurringMetadata = new RecurringMetadata();
+            }
         }
 
         /// <summary>
@@ -49,5 +72,18 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "providerMetadata")]
         public ProviderMetadata ProviderMetadata { get; internal set; }
+
+        /// <summary>
+        /// Configure OneTime or Recurring payment chargePermissionType
+        /// </summary>
+        [JsonProperty(PropertyName = "chargePermissionType")]
+        public ChargePermissionType? ChargePermissionType { get; set; }
+
+        /// <summary>
+        /// Metadata about how the recurring Charge Permission will be used. Amazon Pay only uses this information to calculate the Charge Permission expiration date and in buyer communication,
+        /// </summary>
+        [JsonProperty(PropertyName = "recurringMetadata")]
+        public RecurringMetadata RecurringMetadata { get; internal set; }
+
     }
 }

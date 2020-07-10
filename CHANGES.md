@@ -1,3 +1,9 @@
+### Version 2.3.0 - July 2020
+* Add suppport for Recurring and Multi-ship API features
+* Remove duplicate code in SDK's CreateCheckoutSessionRequest and UpdateCheckoutSessionRequest objects
+* Remove duplicate Tests.DotNetCore unit tests and folded into existing unit tests
+* Fix bug causing some objects to become corrupted after .ToJson() call
+
 ### Version 2.2.0 - June 25, 2020
 
 * Added support for "Sign-In only" feature (types and mehthods)

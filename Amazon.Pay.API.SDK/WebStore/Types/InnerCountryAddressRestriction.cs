@@ -1,4 +1,4 @@
-﻿namespace Amazon.Pay.API.WebStore.Types
+namespace Amazon.Pay.API.WebStore.Types
 {
     /// <summary>
     /// An address restriction inside a specific country such as a state, region or postal code.

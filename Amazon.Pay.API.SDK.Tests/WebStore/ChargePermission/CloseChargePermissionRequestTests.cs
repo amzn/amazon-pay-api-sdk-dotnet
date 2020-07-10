@@ -26,8 +26,10 @@ namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"closureReason\":\"foo\"}", json);
         }
 
@@ -40,8 +42,10 @@ namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"closureReason\":\"foo\",\"cancelPendingCharges\":true}", json);
         }
 

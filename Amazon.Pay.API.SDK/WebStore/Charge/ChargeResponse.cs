@@ -97,5 +97,11 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// </summary>
         [JsonProperty(PropertyName = "releaseEnvironment")]
         public string ReleaseEnvironment { get; internal set; }
+
+        /// <summary>
+        /// Merchant-provided order info.
+        /// </summary>
+        [JsonProperty(PropertyName = "merchantMetadata")]
+        public MerchantMetadata MerchantMetadata { get; internal set; }
     }
 }

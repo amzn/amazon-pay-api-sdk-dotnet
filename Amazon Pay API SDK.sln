@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Pay.API.SDK", "Amazon.Pay.API.SDK\Amazon.Pay.API.SDK.csproj", "{EF359F91-50C0-4351-8657-0FCD38982F54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Pay.API.SDK.Tests.DotNetCore", "Amazon.Pay.API.SDK.Tests.DotNetCore\Amazon.Pay.API.SDK.Tests.DotNetCore.csproj", "{CF7642F3-BADB-499F-86F7-A07450F94D7A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Pay.API.SDK.Tests", "Amazon.Pay.API.SDK.Tests\Amazon.Pay.API.SDK.Tests.csproj", "{905570BC-BF33-4FF0-8195-8E551FDDE48D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{63DC1479-E1E9-4FA3-9FBB-832C2046DCB9}"

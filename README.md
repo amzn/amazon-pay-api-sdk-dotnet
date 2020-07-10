@@ -28,16 +28,16 @@ Please note that BouncyCastle 1.8.6 has known to cause issues with the signature
 
 ## SDK Installation
 
-This SDK is currently available via GitHub only (NuGet release coming soon). Please download the latest version [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.0.0/Amazon.Pay.API.SDK.2.0.0.nupkg).  After download, use one of the following commands for installing the package to your project (replace value for -Source parameter if you have downloaded the package to some other place).
+This SDK is currently available via GitHub only (NuGet release coming soon). Please download the latest version [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.3.0/Amazon.Pay.API.SDK.2.3.0.nupkg).  After download, use one of the following commands for installing the package to your project (replace value for -Source parameter if you have downloaded the package to some other place).
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.2.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.3.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.2.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.3.0 -s %USERPROFILE%\Downloads\
 ```
 
 

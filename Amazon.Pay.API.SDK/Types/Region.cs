@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Attributes;
+using Amazon.Pay.API.Attributes;
 
 namespace Amazon.Pay.API.Types
 {

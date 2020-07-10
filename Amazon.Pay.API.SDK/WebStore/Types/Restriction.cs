@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -25,6 +25,20 @@ namespace Amazon.Pay.API.WebStore.Types
             if (ZipCodes != null && ZipCodes.Count == 0)
             {
                 ZipCodes = null;
+            }
+        }
+
+        [OnSerialized]
+        internal void OnSerialized(StreamingContext content)
+        {
+            if (StatesOrRegions == null)
+            {
+                StatesOrRegions = new List<string>();
+            }
+
+            if (ZipCodes == null)
+            {
+                ZipCodes = new List<string>();
             }
         }
 

@@ -33,8 +33,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
                 signInReturnUrl: "https://example.com/review.html",
                 storeId: "amzn1.application-oa2-client.000000000000000000000000000000000",
                 signInScopes: SignInScope.Name
-            ); 
-            
+            );
 
             // assert
             Assert.IsNotNull(request);
@@ -51,8 +50,10 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"name\",\"email\"]}", json);
         }
     }

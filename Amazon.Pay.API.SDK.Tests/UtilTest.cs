@@ -51,7 +51,9 @@ namespace Amazon.Pay.API.Tests
         [Test]
         public void Ssl3OnlyIsObsoleteSecurityProtocol()
         {
+            #pragma warning disable CS0618
             var protocolType = SecurityProtocolType.Ssl3;
+            #pragma warning restore CS0618
 
             var result = Util.IsObsoleteSecurityProtocol(protocolType);
 
@@ -91,7 +93,9 @@ namespace Amazon.Pay.API.Tests
         [Test]
         public void Ssl3AndTls1AreObsoleteSecurityProtocol()
         {
+            #pragma warning disable CS0618
             var protocolType = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
+            #pragma warning restore CS0618
 
             var result = Util.IsObsoleteSecurityProtocol(protocolType);
 
@@ -101,7 +105,9 @@ namespace Amazon.Pay.API.Tests
         [Test]
         public void Ssl3AndTls1AndTls11AreNotObsoleteSecurityProtocol()
         {
+            #pragma warning disable CS0618
             var protocolType = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11;
+            #pragma warning restore CS0618
 
             var result = Util.IsObsoleteSecurityProtocol(protocolType);
 

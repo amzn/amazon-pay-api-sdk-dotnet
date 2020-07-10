@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Types;
 using Newtonsoft.Json;
 using System;
@@ -86,5 +86,17 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// </summary>
         [JsonProperty(PropertyName = "presentmentCurrency")]
         public Currency? PresentmentCurrency { get; internal set; }
+
+        /// <summary>
+        /// The type of Charge Permission requested.
+        /// </summary>
+        [JsonProperty(PropertyName = "chargePermissionType")]
+        public ChargePermissionType? ChargePermissionType { get; internal set; }
+
+        /// <summary>
+        /// Metadata about how the recurring Charge Permission will be used.
+        /// </summary>
+        [JsonProperty(PropertyName = "recurringMetadata")]
+        public RecurringMetadata RecurringMetadata { get; internal set; }
     }
 }

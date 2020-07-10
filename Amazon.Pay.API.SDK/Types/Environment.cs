@@ -1,4 +1,3 @@
-﻿
 namespace Amazon.Pay.API.Types
 {
     /// <summary>

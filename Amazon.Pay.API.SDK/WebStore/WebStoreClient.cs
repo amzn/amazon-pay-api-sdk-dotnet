@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
@@ -13,7 +13,6 @@ namespace Amazon.Pay.API.WebStore
     {
         public WebStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {
-            
         }
 
         /// <summary>

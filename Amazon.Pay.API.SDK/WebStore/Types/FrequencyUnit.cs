@@ -4,13 +4,15 @@ using Newtonsoft.Json.Converters;
 namespace Amazon.Pay.API.WebStore.Types
 {
     /// <summary>
-    /// Payment flow for charging the buyer.
+    /// Frequency Unit for Recurring Charge Permissions
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum PaymentIntent
+    public enum FrequencyUnit
     {
-        Confirm,
-        Authorize,
-        AuthorizeWithCapture
+        Year,
+        Month,
+        Week,
+        Day,
+        Variable
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Amazon.Pay.API.Types
@@ -21,7 +21,7 @@ namespace Amazon.Pay.API.Types
         /// British Pound
         /// </summary>
         GBP,
-        
+
         /// <summary>
         /// Danish Krone
         /// </summary>

@@ -28,8 +28,10 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"captureAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"}}", json);
         }
 
@@ -42,8 +44,10 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"captureAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"softDescriptor\":\"foo\"}", json);
         }
 

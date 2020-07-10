@@ -25,9 +25,17 @@ namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{}", json);
+
+            // verify object hasn't been corrupted
+            request.MerchantMetadata.CustomInformation = "bar";
+            request.MerchantMetadata.MerchantReferenceId = "345";
+            request.MerchantMetadata.MerchantStoreName = "anotherShop";
+            request.MerchantMetadata.NoteToBuyer = "mee";
         }
 
         [Test]
@@ -42,8 +50,10 @@ namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"merchantMetadata\":{\"merchantReferenceId\":\"345\",\"merchantStoreName\":\"anotherShop\",\"noteToBuyer\":\"mee\",\"customInformation\":\"bar\"}}", json);
         }
     }

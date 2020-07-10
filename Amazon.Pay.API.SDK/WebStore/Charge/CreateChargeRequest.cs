@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Types;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
@@ -13,6 +13,7 @@ namespace Amazon.Pay.API.WebStore.Charge
 
             ChargePermissionId = chargePermissionId;
             ChargeAmount = new Price(chargeAmount, currencyCode);
+            MerchantMetadata = new MerchantMetadata();
         }
 
         [OnSerializing]
@@ -22,6 +23,15 @@ namespace Amazon.Pay.API.WebStore.Charge
             if (string.IsNullOrEmpty(ProviderMetadata.ProviderReferenceId))
             {
                 ProviderMetadata = null;
+            }
+        }
+
+        [OnSerialized]
+        internal void OnSerialized(StreamingContext content)
+        {
+            if (ProviderMetadata == null)
+            {
+                ProviderMetadata = new ProviderMetadata();
             }
         }
 
@@ -60,5 +70,11 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// </summary>
         [JsonProperty(PropertyName = "providerMetadata")]
         public ProviderMetadata ProviderMetadata { get; internal set; }
+
+        /// <summary>
+        /// Merchant-provided order info.
+        /// </summary>
+        [JsonProperty(PropertyName = "merchantMetadata")]
+        public MerchantMetadata MerchantMetadata { get; internal set; }
     }
 }

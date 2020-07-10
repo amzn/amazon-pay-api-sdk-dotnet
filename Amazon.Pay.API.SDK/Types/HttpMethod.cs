@@ -1,4 +1,4 @@
-﻿namespace Amazon.Pay.API.Types
+namespace Amazon.Pay.API.Types
 {
     /// <summary>
     /// This enum class represents REST methods used in the API

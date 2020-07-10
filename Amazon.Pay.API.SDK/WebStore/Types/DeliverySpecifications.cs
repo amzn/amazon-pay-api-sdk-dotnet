@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -25,6 +25,20 @@ namespace Amazon.Pay.API.WebStore.Types
             if (AddressRestrictions != null && AddressRestrictions.Restrictions != null && AddressRestrictions.Restrictions.Count == 0)
             {
                 AddressRestrictions = null;
+            }
+        }
+
+        [OnSerialized]
+        internal void OnSerialized(StreamingContext content)
+        {
+            if (SpecialRestrictions == null)
+            {
+                SpecialRestrictions = new List<SpecialRestriction>();
+            }
+
+            if (AddressRestrictions == null)
+            {
+                AddressRestrictions = new AddressRestrictions();
             }
         }
 

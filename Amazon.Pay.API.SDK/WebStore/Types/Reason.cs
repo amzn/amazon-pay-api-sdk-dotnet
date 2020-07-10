@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
 
 namespace Amazon.Pay.API.WebStore.Types

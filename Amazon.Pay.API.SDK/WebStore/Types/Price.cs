@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Converters;
+using Amazon.Pay.API.Converters;
 using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
 

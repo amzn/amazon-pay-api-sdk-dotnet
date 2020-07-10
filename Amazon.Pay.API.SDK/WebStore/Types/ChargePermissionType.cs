@@ -4,13 +4,12 @@ using Newtonsoft.Json.Converters;
 namespace Amazon.Pay.API.WebStore.Types
 {
     /// <summary>
-    /// Payment flow for charging the buyer.
+    /// The type of Charge Permission requested.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum PaymentIntent
+    public enum ChargePermissionType
     {
-        Confirm,
-        Authorize,
-        AuthorizeWithCapture
+        OneTime,
+        Recurring
     }
 }

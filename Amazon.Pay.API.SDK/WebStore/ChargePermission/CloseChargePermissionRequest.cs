@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
 using System;
 
@@ -14,7 +14,6 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         [Obsolete("Use constructor with closureReason instead")]
         public CloseChargePermissionRequest()
         {
-            
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Amazon.Pay.API.Types
@@ -38,7 +38,9 @@ namespace Amazon.Pay.API.Types
             set
             {
                 body = value;
+                #pragma warning disable CS0618
                 BodyAsJsonString = body.ToJson();
+                #pragma warning restore CS0618
             }
         }
 

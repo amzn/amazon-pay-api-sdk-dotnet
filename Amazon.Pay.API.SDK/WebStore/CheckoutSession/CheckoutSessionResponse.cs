@@ -19,6 +19,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             BillingAddress = new Address();
             PaymentPreferences = new List<PaymentPreferences>();
             Constraints = new List<Constraint>();
+            RecurringMetadata = new RecurringMetadata();
         }
 
         /// <summary>
@@ -147,5 +148,17 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "releaseEnvironment")]
         public string ReleaseEnvironment { get; internal set; }
+
+        /// <summary>
+        /// Configure OneTime or Recurring payment chargePermissionType
+        /// </summary>
+        [JsonProperty(PropertyName = "chargePermissionType")]
+        public ChargePermissionType? ChargePermissionType { get; internal set; }
+
+        /// <summary>
+        /// Metadata about how the recurring Charge Permission will be used. Amazon Pay only uses this information to calculate the Charge Permission expiration date and in buyer communication.
+        /// </summary>
+        [JsonProperty(PropertyName = "recurringMetadata")]
+        public RecurringMetadata RecurringMetadata { get; internal set; }
     }
 }

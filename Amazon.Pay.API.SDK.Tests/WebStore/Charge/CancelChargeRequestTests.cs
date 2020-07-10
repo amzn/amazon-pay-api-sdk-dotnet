@@ -25,8 +25,10 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
 
             // act
             string json = request.ToJson();
+            string json2 = request.ToJson();
 
             // assert
+            Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"cancellationReason\":\"foo\"}", json);
         }
     }
