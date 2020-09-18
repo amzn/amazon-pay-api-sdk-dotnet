@@ -1,3 +1,6 @@
+### Version 2.3.1 - September 2020
+* Replace enums for ReasonCode and State with static class to avoid JSON exception on introduction of new non-breaking changes in the API
+
 ### Version 2.3.0 - July 2020
 * Add suppport for Recurring and Multi-ship API features
 * Remove duplicate code in SDK's CreateCheckoutSessionRequest and UpdateCheckoutSessionRequest objects

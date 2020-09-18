@@ -9,6 +9,6 @@ namespace Amazon.Pay.API.InStore.Types
         /// State of the charge.
         /// </summary>
         [JsonProperty(PropertyName = "state")]
-        public State State { get; set; }
+        public string State { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Reason code for current state.
         /// </summary>
         [JsonProperty(PropertyName = "reasonCode")]
-        public ReasonCode ReasonCode { get; internal set; }
+        public string ReasonCode { get; internal set; }
 
         /// <summary>
         /// An optional description of the Checkout Session state.

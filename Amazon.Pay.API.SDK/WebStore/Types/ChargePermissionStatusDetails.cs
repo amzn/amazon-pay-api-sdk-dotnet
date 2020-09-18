@@ -11,7 +11,7 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Current object state.
         /// </summary>
         [JsonProperty(PropertyName = "state")]
-        public State State { get; internal set; }
+        public string State { get; internal set; }
 
         /// <summary>
         /// List of reasons for current state
