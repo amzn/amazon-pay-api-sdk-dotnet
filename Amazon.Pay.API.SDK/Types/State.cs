@@ -18,6 +18,6 @@ namespace Amazon.Pay.API.Types
         public static string Open = nameof(Open);
         public static string Pending = nameof(Pending);
         public static string RefundInitiated = nameof(RefundInitiated);
-        public static string Refunde = nameof(Refunde);
+        public static string Refunded = nameof(Refunded);
     }
 }
