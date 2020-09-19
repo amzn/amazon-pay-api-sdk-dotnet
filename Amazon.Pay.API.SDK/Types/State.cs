@@ -3,7 +3,7 @@ namespace Amazon.Pay.API.Types
     /// <summary>
     /// States available for Amazon Pay objects like ChargePermission, Charge, CheckoutSession and Refund.
     /// </summary>
-    public class State
+    public static class State
     {
         public const string AuthorizationInitiated = nameof(AuthorizationInitiated);
         public const string Authorized = nameof(Authorized);
