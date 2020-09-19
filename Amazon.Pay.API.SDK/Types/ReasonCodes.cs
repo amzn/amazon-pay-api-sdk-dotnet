@@ -1,7 +1,5 @@
 namespace Amazon.Pay.API.Types
 {
-    // TODO: change to static string fields for avoiding that parsing of JSON response from API leads to converter exceptions
-
     public static class ReasonCode
     {
         public const string AmazonCanceled = nameof(AmazonCanceled);
