@@ -3,21 +3,21 @@ namespace Amazon.Pay.API.Types
     /// <summary>
     /// States available for Amazon Pay objects like ChargePermission, Charge, CheckoutSession and Refund.
     /// </summary>
-    public class State
+    public static class State
     {
-        public static string AuthorizationInitiated = nameof(AuthorizationInitiated);
-        public static string Authorized = nameof(Authorized);
-        public static string Canceled = nameof(Canceled);
-        public static string Captured = nameof(Captured);
-        public static string CaptureInitiated = nameof(CaptureInitiated);
-        public static string Chargeable = nameof(Chargeable);
-        public static string Closed = nameof(Closed);
-        public static string Completed = nameof(Completed);
-        public static string Declined = nameof(Declined);
-        public static string NonChargeable = nameof(NonChargeable);
-        public static string Open = nameof(Open);
-        public static string Pending = nameof(Pending);
-        public static string RefundInitiated = nameof(RefundInitiated);
-        public static string Refunde = nameof(Refunde);
+        public const string AuthorizationInitiated = nameof(AuthorizationInitiated);
+        public const string Authorized = nameof(Authorized);
+        public const string Canceled = nameof(Canceled);
+        public const string Captured = nameof(Captured);
+        public const string CaptureInitiated = nameof(CaptureInitiated);
+        public const string Chargeable = nameof(Chargeable);
+        public const string Closed = nameof(Closed);
+        public const string Completed = nameof(Completed);
+        public const string Declined = nameof(Declined);
+        public const string NonChargeable = nameof(NonChargeable);
+        public const string Open = nameof(Open);
+        public const string Pending = nameof(Pending);
+        public const string RefundInitiated = nameof(RefundInitiated);
+        public const string Refunded = nameof(Refunded);
     }
 }
