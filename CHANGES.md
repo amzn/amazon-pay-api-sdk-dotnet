@@ -1,3 +1,6 @@
+### Version 2.3.2 - September 2020
+* Correct State.Refunded name and other improvements to State and ReasonCode (static to const)
+
 ### Version 2.3.1 - September 2020
 * Replace enums for ReasonCode and State with static class to avoid JSON exception on introduction of new non-breaking changes in the API
 
