@@ -21,5 +21,12 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "amazonPayRedirectUrl")]
         public string AmazonPayRedirectUrl { get; internal set; }
+
+        /// <summary>
+        /// Specify whether the buyer will return to your website to review their order before completing checkout
+        /// </summary>
+        [JsonProperty(PropertyName = "checkoutMode")]
+        public CheckoutMode? CheckoutMode { get; set; }
+
     }
 }

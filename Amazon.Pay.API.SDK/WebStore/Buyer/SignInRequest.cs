@@ -1,4 +1,4 @@
-﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Types;
 using Newtonsoft.Json;
 
@@ -7,7 +7,7 @@ namespace Amazon.Pay.API.WebStore.Buyer
     public class SignInRequest : ApiRequestBody
     {
         /// <summary>
-        /// Initializes a new instance of the SignInRequest class. 
+        /// Initializes a new instance of the SignInRequest class.
         /// </summary>
         /// <param name="checkoutReviewReturnUrl">Checkout review URL provided by the merchant. Amazon Pay will redirect to this URL after the buyer selects their preferred payment instrument and shipping address.</param>
         /// <param name="storeId">Store ID as defined in Seller Central.</param>
@@ -18,7 +18,7 @@ namespace Amazon.Pay.API.WebStore.Buyer
         }
 
         /// <summary>
-        /// Initializes a new instance of the SignInRequest class. 
+        /// Initializes a new instance of the SignInRequest class.
         /// </summary>
         /// <param name="checkoutReviewReturnUrl">Checkout review URL provided by the merchant. Amazon Pay will redirect to this URL after the buyer selects their preferred payment instrument and shipping address.</param>
         /// <param name="storeId">Store ID as defined in Seller Central.</param>

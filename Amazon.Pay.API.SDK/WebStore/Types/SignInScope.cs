@@ -25,6 +25,18 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Request access to buyer default shipping address postal code and country code.
         /// </summary>
         [EnumMember(Value = "postalCode")]
-        PostalCode
+        PostalCode,
+
+        /// <summary>
+        /// Request access to buyer default full shipping address (including postal code and country code).
+        /// </summary>
+        [EnumMember(Value = "shippingAddress")]
+        ShippingAddress,
+
+        /// <summary>
+        /// Request access to buyer default phone number.
+        /// </summary>
+        [EnumMember(Value = "phoneNumber")]
+        PhoneNumber
     }
 }

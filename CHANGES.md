@@ -1,3 +1,7 @@
+### Verion 2.4.0 - October 2020
+* Added support for Additional Payment Button (APB) flow, see https://amazonpaycheckoutintegrationguide.s3.amazonaws.com/amazon-pay-apb-checkout/add-the-amazon-pay-button.html, which adds WebCheckoutDetails.CheckoutMode and AddressDetails to CreateCheckoutSessionRequest
+* Added missing property SoftDescriptor to PaymentDetails
+
 ### Version 2.3.2 - September 2020
 * Correct State.Refunded name and other improvements to State and ReasonCode (static to const)
 

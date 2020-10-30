@@ -73,13 +73,6 @@ namespace Amazon.Pay.API.WebStore.Types
         public Currency? PresentmentCurrency { get; set; }
 
         /// <summary>
-        /// Description shown on the buyer payment instrument statement, if paymentIntent is set to AuthorizeWithCapture.
-        /// Do not set this value when using a different paymentIntent
-        /// </summary>
-        [JsonProperty(PropertyName = "softDescriptor")]
-        public string SoftDescriptor { get; set; }
-
-        /// <summary>
         /// Boolean that indicates whether merchant can charge the buyer beyond the specified order amount.
         /// </summary>
         [JsonProperty(PropertyName = "allowOvercharge")]
@@ -91,5 +84,12 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "extendExpiration")]
         public bool? ExtendExpiration { get; set; }
+
+        /// <summary>
+        /// Description shown on the buyer payment instrument statement, if PaymentIntent is set to AuthorizeWithCapture.
+        /// Do not use if PaymentIntent is set to Confirm or Authorize.
+        /// </summary>
+        [JsonProperty(PropertyName = "softDescriptor")]
+        public string SoftDescriptor { get; set; }
     }
 }

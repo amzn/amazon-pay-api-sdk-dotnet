@@ -17,6 +17,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             WebCheckoutDetails.CheckoutReviewReturnUrl = checkoutReviewReturnUrl;
             StoreId = storeId;
             DeliverySpecifications = new DeliverySpecifications();
+            AddressDetails = new AddressDetails();
         }
 
         /// <summary>
@@ -30,6 +31,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "deliverySpecifications")]
         public DeliverySpecifications DeliverySpecifications { get; internal set; }
+
+        /// <summary>
+        /// Specify shipping address when CheckoutMode=ProcessOrder (Additional Payment Button, APB, mode).
+        /// </summary>
+        [JsonProperty(PropertyName = "addressDetails")]
+        public AddressDetails AddressDetails { get; internal set; }
 
     }
 }

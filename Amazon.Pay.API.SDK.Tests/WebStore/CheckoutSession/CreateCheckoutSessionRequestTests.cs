@@ -1,6 +1,8 @@
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Types;
 using Amazon.Pay.API.Types;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NUnit.Framework;
 
 namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
@@ -147,6 +149,74 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"chargePermissionType\":\"Recurring\",\"recurringMetadata\":{\"frequency\":{\"unit\":\"Variable\",\"value\":2},\"amount\":{\"amount\":12.34,\"currencyCode\":\"USD\"}}}", json);
         }
 
+
+        [Test]
+        public void AdditionalPaymentButton()
+        {
+            // arrange
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000"
+            );
+            request.WebCheckoutDetails.CheckoutMode = CheckoutMode.ProcessOrder;
+            request.AddressDetails.Name = "Paul Smith";
+            request.AddressDetails.AddressLine1 = "9999 First Avenue";
+            request.AddressDetails.City = "New York";
+            request.AddressDetails.StateOrRegion = "NY";
+            request.AddressDetails.PostalCode = "10016";
+            request.AddressDetails.CountryCode = "US";
+            request.AddressDetails.PhoneNumber = "212555555";
+            request.AddressDetails.DistrictOrCounty = "Manhattan";
+            request.PaymentDetails.PaymentIntent = PaymentIntent.AuthorizeWithCapture;
+            request.PaymentDetails.ChargeAmount.Amount = 10;
+            request.PaymentDetails.ChargeAmount.CurrencyCode = Currency.USD;
+            request.PaymentDetails.PresentmentCurrency = Currency.USD;
+            request.MerchantMetadata.MerchantReferenceId = "Merchant Ref ID";
+            request.MerchantMetadata.MerchantStoreName = "Store Name";
+            request.MerchantMetadata.NoteToBuyer = "Buyer Note";
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"addressDetails\":{\"districtOrCounty\":\"Manhattan\",\"name\":\"Paul Smith\",\"addressLine1\":\"9999 First Avenue\",\"city\":\"New York\",\"stateOrRegion\":\"NY\",\"postalCode\":\"10016\",\"countryCode\":\"US\",\"phoneNumber\":\"212555555\"},\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutMode\":\"ProcessOrder\"},\"paymentDetails\":{\"paymentIntent\":\"AuthorizeWithCapture\",\"chargeAmount\":{\"amount\":10,\"currencyCode\":\"USD\"},\"presentmentCurrency\":\"USD\"},\"merchantMetadata\":{\"merchantReferenceId\":\"Merchant Ref ID\",\"merchantStoreName\":\"Store Name\",\"noteToBuyer\":\"Buyer Note\"}}", json);
+        }
+
+        [Test]
+        public void CheckoutSessionResponseTest()
+        {
+            string json = "{\"checkoutSessionId\":\"7efe55c3-38c7-4a1b-944d-aded27032b9a\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://localhost/cv2v2/CheckoutReview.php\",\"checkoutResultReturnUrl\":\"https://localhost/cv2v2/CheckoutResult.php\",\"amazonPayRedirectUrl\":\"https://apay-us.amazon.com/checkout/processing?amazonCheckoutSessionId=7efe55c3-38c7-4a1b-944d-aded27032b9a\"},\"productType\":\"PayAndShip\",\"paymentDetails\":{\"paymentIntent\":\"Authorize\",\"canHandlePendingAuthorization\":false,\"chargeAmount\":{\"amount\":\"1.40\",\"currencyCode\":\"USD\"},\"totalOrderAmount\":null,\"softDescriptor\":null,\"presentmentCurrency\":\"USD\",\"allowOvercharge\":null,\"extendExpiration\":null},\"chargePermissionType\":\"OneTime\",\"recurringMetadata\":null,\"merchantMetadata\":{\"merchantReferenceId\":\"2020-0001\",\"merchantStoreName\":\"Your Store Name Goes Here\",\"noteToBuyer\":\"Order #12345-67890\",\"customInformation\":\"custom information can go here\"},\"supplementaryData\":null,\"buyer\":{\"name\":\"Sandbox Guillot\",\"email\":\"guillotb+sandbox@amazon.com\",\"buyerId\":\"amzn1.account.AFBDVVLYITS5Q7CJV7UJVFAMU2PA\"},\"billingAddress\":{\"name\":\"Christopher C. Conn\",\"addressLine1\":\"4996 Rockford Mountain Lane\",\"addressLine2\":null,\"addressLine3\":null,\"city\":\"Appleton\",\"county\":null,\"district\":null,\"stateOrRegion\":\"WI\",\"postalCode\":\"54911\",\"countryCode\":\"US\",\"phoneNumber\":null},\"paymentPreferences\":[{\"paymentDescriptor\":\"Your selected Amazon payment method\"}],\"statusDetails\":{\"state\":\"Open\",\"reasonCode\":null,\"reasonDescription\":null,\"lastUpdatedTimestamp\":\"20201023T211923Z\"},\"shippingAddress\":{\"name\":\"Susie Smith\",\"addressLine1\":\"10 Ditka Ave\",\"addressLine2\":\"Suite 2500\",\"addressLine3\":null,\"city\":\"Chicago\",\"county\":null,\"district\":null,\"stateOrRegion\":\"IL\",\"postalCode\":\"60602\",\"countryCode\":\"US\",\"phoneNumber\":\"800-000-0000\"},\"platformId\":null,\"chargePermissionId\":null,\"chargeId\":null,\"constraints\":[],\"creationTimestamp\":\"20201023T211909Z\",\"expirationTimestamp\":\"20201024T211909Z\",\"storeId\":\"amzn1.application-oa2-client.d9da4374abb24732a174be549d99eb7a\",\"providerMetadata\":{\"providerReferenceId\":null},\"releaseEnvironment\":\"Sandbox\",\"deliverySpecifications\":null}";
+            var dateConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyyMMddTHHmmssZ" };
+            CheckoutSessionResponse r = new CheckoutSessionResponse();
+            r = JsonConvert.DeserializeObject<CheckoutSessionResponse>(json, dateConverter);
+
+            Assert.AreEqual("Christopher C. Conn", r.BillingAddress.Name);
+            Assert.AreEqual("4996 Rockford Mountain Lane", r.BillingAddress.AddressLine1);
+            Assert.IsNull(r.BillingAddress.AddressLine2);
+            Assert.IsNull(r.BillingAddress.AddressLine3);
+            Assert.AreEqual("Appleton", r.BillingAddress.City);
+            Assert.IsNull(r.BillingAddress.County);
+            Assert.IsNull(r.BillingAddress.District);
+            Assert.AreEqual("WI", r.BillingAddress.StateOrRegion);
+            Assert.AreEqual("54911", r.BillingAddress.PostalCode);
+            Assert.AreEqual("US", r.BillingAddress.CountryCode);
+            Assert.IsNull(r.BillingAddress.PhoneNumber);
+
+            Assert.AreEqual("Susie Smith", r.ShippingAddress.Name);
+            Assert.AreEqual("10 Ditka Ave", r.ShippingAddress.AddressLine1);
+            Assert.AreEqual("Suite 2500", r.ShippingAddress.AddressLine2);
+            Assert.IsNull(r.ShippingAddress.AddressLine3);
+            Assert.AreEqual("Chicago", r.ShippingAddress.City);
+            Assert.IsNull(r.ShippingAddress.County);
+            Assert.IsNull(r.ShippingAddress.District);
+            Assert.AreEqual("IL", r.ShippingAddress.StateOrRegion);
+            Assert.AreEqual("60602", r.ShippingAddress.PostalCode);
+            Assert.AreEqual("US", r.ShippingAddress.CountryCode);
+            Assert.AreEqual("800-000-0000", r.ShippingAddress.PhoneNumber);
+        }
 
     }
 }
