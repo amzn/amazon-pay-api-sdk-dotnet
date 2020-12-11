@@ -3,13 +3,13 @@ using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore.Interfaces;
 using Amazon.Pay.API.WebStore.Refund;
-using System;
 using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore
 {
-    public class WebStoreClient : Client
+    public class WebStoreClient : Client, IWebStoreClient
     {
         public WebStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {

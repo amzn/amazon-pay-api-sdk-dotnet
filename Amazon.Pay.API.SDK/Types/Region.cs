@@ -10,19 +10,19 @@ namespace Amazon.Pay.API.Types
         /// <summary>
         /// United Kingdom (GBP) and all countries in the EUR region.
         /// </summary>
-        [Region(shortform: "eu",  "eu")]
+        [Region(shortform: "eu", domain: "eu")]
         Europe,
 
         /// <summary>
         /// Japan (JPY)
         /// </summary>
-        [Region(shortform: "jp",  "jp")]
+        [Region(shortform: "jp", domain: "jp")]
         Japan,
 
         /// <summary>
         /// United States (USD)
         /// </summary>
-        [Region(shortform: "na", "com")]
+        [Region(shortform: "na", domain: "com")]
         UnitedStates
     }
 }

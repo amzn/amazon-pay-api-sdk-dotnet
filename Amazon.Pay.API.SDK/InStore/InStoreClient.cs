@@ -1,4 +1,5 @@
 ﻿using Amazon.Pay.API.InStore.Charge;
+using Amazon.Pay.API.InStore.Interfaces;
 using Amazon.Pay.API.InStore.MerchantScan;
 using Amazon.Pay.API.InStore.Refund;
 using Amazon.Pay.API.Types;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Amazon.Pay.API.InStore
 {
-    public class InStoreClient : Client
+    public class InStoreClient : Client, IInStoreClient
     {
         public InStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {

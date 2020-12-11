@@ -1,3 +1,6 @@
+### Version 2.4.1
+* Add Interfaces for WebStoreClient and InstoreClient to allow developers to mock classes in tests.
+
 ### Verion 2.4.0 - October 2020
 * Added support for Additional Payment Button (APB) flow, see https://amazonpaycheckoutintegrationguide.s3.amazonaws.com/amazon-pay-apb-checkout/add-the-amazon-pay-button.html, which adds WebCheckoutDetails.CheckoutMode and AddressDetails to CreateCheckoutSessionRequest
 * Added missing property SoftDescriptor to PaymentDetails
