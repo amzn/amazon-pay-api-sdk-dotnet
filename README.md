@@ -179,7 +179,7 @@ public class Sample : PageModel
     public void OnGet()
     {
         // prepare the request
-        SignInScope[] scopes = { SignInScope.Name, SignInScope.Email, SignInScope.PostalCode };
+        SignInScope[] scopes = { SignInScope.Name, SignInScope.Email, SignInScope.PostalCode, SignInScope.ShippingAddress, SignInScope.PhoneNumber };
         var request = new SignInRequest
         (
             signInReturnUrl: "https://example.com/account.html",
@@ -457,7 +457,7 @@ public class Sample : PageModel
         string buyerToken = HttpContext.Request.Query["buyerToken"];
 
         // get the buyer details
-        // NOTE: the BuyerResponse that is returned here contains properties for buyerId, name, email, etc.
+        // NOTE: the BuyerResponse that is returned here contains properties for buyerId, name, email, shippingAddress, phoneNumber etc.
         Buyer = client.GetBuyer(buyerToken);
     }
 }

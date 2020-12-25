@@ -1,4 +1,5 @@
 ﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.Types;
 using Newtonsoft.Json;
 
 namespace Amazon.Pay.API.WebStore.Buyer
@@ -34,5 +35,11 @@ namespace Amazon.Pay.API.WebStore.Buyer
         /// </summary>
         [JsonProperty(PropertyName = "postalCode")]
         public string PostalCode { get; internal set; }
+
+        /// <summary>
+        /// Shipping address selected by the buyer.
+        /// </summary>
+        [JsonProperty(PropertyName = "shippingAddress")]
+        public Address ShippingAddress { get; internal set; }
     }
 }

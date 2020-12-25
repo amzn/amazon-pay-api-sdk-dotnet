@@ -1,3 +1,6 @@
+### Version 2.4.2 - December 2020
+* Added the "ShippingAdress" property to BuyerResponse which can be accessed by passing "shippingAddress" as signInScopes parameter while rendering Amazon Sign-in button
+
 ### Version 2.4.1
 * Add Interfaces for WebStoreClient and InstoreClient to allow developers to mock classes in tests.
 

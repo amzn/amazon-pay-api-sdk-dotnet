@@ -4,7 +4,7 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.4.1.0";
+        public const string SdkVersion = "2.4.2.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
         public const int    ApiVersion = 2;
 
