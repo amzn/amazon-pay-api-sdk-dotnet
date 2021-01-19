@@ -242,7 +242,6 @@ namespace Amazon.Pay.API.WebStore
         /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
         public string GenerateButtonSignature(string jsonString)
         {
-            var signatureHelper = new SignatureHelper(payConfiguration, new CanonicalBuilder());
             var stringToSign = signatureHelper.CreateStringToSign(jsonString);
             var signature = signatureHelper.GenerateSignature(stringToSign);
 

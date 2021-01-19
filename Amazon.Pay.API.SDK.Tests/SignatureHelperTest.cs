@@ -1,11 +1,9 @@
 ﻿using Amazon.Pay.API.InStore.MerchantScan;
 using Amazon.Pay.API.Types;
-using Amazon.Pay.API.WebStore.CheckoutSession;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using Environment = Amazon.Pay.API.Types.Environment;
 
 namespace Amazon.Pay.API.Tests
 {
@@ -20,6 +18,7 @@ namespace Amazon.Pay.API.Tests
             publicKeyId: "foo",
             privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
         );
+        private readonly string uriToTest = "http://pay-api.amazon.eu/";
 
         [Test]
         public void CreateStringToSignTest()
@@ -79,6 +78,39 @@ namespace Amazon.Pay.API.Tests
             Assert.AreEqual("AMZN-PAY-RSASSA-PSS\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSign);
         }
 
+        [Test]
+        public void CanMockDefaultHeadersTest()
+        {
+            var mockSignatureHelper = new Mock<ISignatureHelper>(MockBehavior.Strict);
+            mockSignatureHelper.SetupAllProperties();
+            mockSignatureHelper.Setup<Dictionary<string, List<string>>>(x => x.CreateDefaultHeaders(It.IsAny<Uri>()))
+                .Returns(CreateHeaders(new Uri(uriToTest)));
+
+            // Ensure the Signature Helper can be mocked
+            var result = mockSignatureHelper.Object.CreateDefaultHeaders(new Uri(uriToTest));
+            Assert.NotNull(result);
+            Assert.AreEqual(5, result.Count);
+        }
+
+        [Test]
+        public void CanCreateDefaultHeaders()
+        {
+            string canonicalRequest = "POST\n/live/in-store/v1/refund\naccept:application/json\ncontent-type:application/json\naccept;content-type\n95b0d65e9efb9f0b9e8c2f3b7744628c765477";
+            var canonicalBuilder = new Mock<CanonicalBuilder>();
+            canonicalBuilder.Setup(p => p.HashThenHexEncode(canonicalRequest)).Returns("95b0d65e9efb9f0b9e8c2f3b77");
+
+            signatureHelper = new SignatureHelper(config, canonicalBuilder.Object);
+            var result = signatureHelper.CreateDefaultHeaders(new Uri(uriToTest));
+            Assert.NotNull(result);
+            Assert.AreEqual(5, result.Count);
+            Assert.True(result.ContainsKey(Constants.Headers.Date));
+            Assert.True(result.ContainsKey(Constants.Headers.Region));
+            Assert.True(result.ContainsKey(Constants.Headers.Host));
+            Assert.True(result.ContainsKey("accept"));
+            Assert.True(result.ContainsKey("content-type"));
+
+        }
+        
         private Dictionary<string, List<string>> CreateHeaders(Uri uri)
         {
             Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>();

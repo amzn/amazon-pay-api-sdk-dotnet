@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Amazon.Pay.API
 {
-    public class SignatureHelper
+    public class SignatureHelper : ISignatureHelper
     {
         private readonly ApiConfiguration payConfiguration;
         private readonly string LineSeparator = "\n";

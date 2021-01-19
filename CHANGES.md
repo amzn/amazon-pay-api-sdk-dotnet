@@ -1,3 +1,8 @@
+### Version 2.4.3 - January 2021
+* Add parameterless constructor for CreateCheckoutSessionRequest to better support Additional Payment Button (APB) workflow
+* Add Interface for SignatureHelper to allow mocking in tests
+* Correct packaging of LICENSE
+
 ### Version 2.4.2 - December 2020
 * Added the "ShippingAdress" property to BuyerResponse which can be accessed by passing "shippingAddress" as signInScopes parameter while rendering Amazon Sign-in button
 

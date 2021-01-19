@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.4.2</Version>
-    <AssemblyVersion>2.4.2.0</AssemblyVersion>
+    <Version>2.4.3</Version>
+    <AssemblyVersion>2.4.3.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Amazon Pay</Authors>
     <Company>Amazon</Company>
@@ -14,7 +14,7 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <OutputType>Library</OutputType>
     <RootNamespace>Amazon.Pay.API</RootNamespace>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/amzn/amazon-pay-api-sdk-dotnet</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
@@ -29,8 +29,8 @@
     <PackageReference Include="BouncyCastle" Version="[1.8.2,1.8.6)" Condition="'$(TargetFramework)' == 'net45'" />
     <PackageReference Include="BouncyCastle.NetCore" Version="[1.8.2,1.8.6)" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <None Include="logo.png" Pack="true" PackagePath="\" />
-    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="logo.png" Pack="true" PackagePath="" />
+    <None Include="..\LICENSE.txt" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

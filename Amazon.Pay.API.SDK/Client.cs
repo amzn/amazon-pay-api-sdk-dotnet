@@ -12,11 +12,11 @@ using System.Text;
 
 namespace Amazon.Pay.API
 {
-    public abstract class Client
+    public abstract class Client 
     {
         protected ApiUrlBuilder apiUrlBuilder;
         protected ApiConfiguration payConfiguration;
-        protected SignatureHelper signatureHelper;
+        protected virtual ISignatureHelper signatureHelper { get; private set; }
         protected CanonicalBuilder canonicalBuilder;
         protected Dictionary<string, List<string>> queryParametersMap = new Dictionary<string, List<string>>();
 
@@ -93,7 +93,7 @@ namespace Amazon.Pay.API
         /// <summary>
         /// Sends the API requests and processes the result by filling the AmazonPayResponse object.
         /// </summary>
-        protected T ProcessRequest<T>(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
+        protected virtual T ProcessRequest<T>(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
             where T : AmazonPayResponse, new()
         {
             var responseObject = new T();
@@ -163,7 +163,7 @@ namespace Amazon.Pay.API
         /// <summary>
         /// Helper method to execute the request
         /// </summary>
-        protected HttpWebResponse SendRequest(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
+        protected virtual HttpWebResponse SendRequest(ApiRequest apiRequest, Dictionary<string, string> postSignedHeaders)
         {
 
             string path = apiRequest.Path.ToString();

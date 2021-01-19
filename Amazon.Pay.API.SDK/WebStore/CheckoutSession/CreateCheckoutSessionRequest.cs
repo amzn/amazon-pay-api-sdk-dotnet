@@ -21,6 +21,15 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         }
 
         /// <summary>
+        /// Initializes a new instance of the CreateCheckoutSessionRequest class.
+        /// </summary>
+        public CreateCheckoutSessionRequest() : base()
+        {
+            DeliverySpecifications = new DeliverySpecifications();
+            AddressDetails = new AddressDetails();
+        }
+
+        /// <summary>
         /// Login with Amazon client ID. Do not use the application ID.
         /// </summary>
         [JsonProperty(PropertyName = "storeId")]
