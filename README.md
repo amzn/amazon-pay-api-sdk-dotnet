@@ -12,27 +12,25 @@ For integrating the API of other Amazon Pay products, please refer to [Amazon Pa
 
 This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well as .NET Framework 4.5 or higher. To support usage in strong-named (signed) .NET Framework applications, the SDK defines a different set of dependencies for .NET Framework and .NET Standard. While dependent libraries for .NET Framework are all strong-named, the libaries for .NET Standard may not be strong-named. The SDK assembly itself is strong-named.
 
-Please note that BouncyCastle 1.8.6 has known to cause issues with the signature generation that is required for API calls. The library has therefore been restricted to version >= 1.8.2 && < 1.8.6 until a fix can be provided.
-
 ### .NET Standard / .NET Core
 
 * Platform: .NET Standard 2.0
 * Newtonsoft.JSON (>= 12.0.2)
-* BouncyCastle.NETCore (>= 1.8.2 && < 1.8.6)
+* Portable.BouncyCastle 1.8.9
 
 ### .NET Framwork
 
 * Platform: .NET Framework 4.5
 * Newtonsoft.JSON (>= 12.0.2)
-* BouncyCastle (>= 1.8.2 && < 1.8.6)
+* Portable.BouncyCastle 1.8.9
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.4.3/Amazon.Pay.API.SDK.2.4.3.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.4.4/Amazon.Pay.API.SDK.2.4.4.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.3
+Install-Package Amazon.Pay.API.SDK -Version 2.4.4
 ```
 
 NuGet install from .NET CLI:
@@ -44,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.3 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.4.4 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.4.3 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.4.4 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -554,6 +552,45 @@ public class Sample : PageModel
         // get the buyer details
         // NOTE: the BuyerResponse that is returned here contains properties for buyerId, name, email, shippingAddress, phoneNumber etc.
         Buyer = client.GetBuyer(buyerToken);
+    }
+}
+```
+
+## Alexa Delivery Notifications
+
+### Initiate Client
+Use any of the channel-specific client classes if you want to send an Alexa delivery notification. See [Initiate WebStoreClient](#initiate-client) for example.
+
+### Send Alexa Delivery Notification
+
+```csharp
+using Amazon.Pay.API;
+using Amazon.Pay.API.DeliveryTracker;
+using Amazon.Pay.API.Types;
+
+public class Sample
+{
+    public DeliveryTrackerResponse SendDeliveryTrackingInformation()
+    {
+        // prepare the request
+        var request = new DeliveryTrackerRequest
+        (
+            objectId: "P00-0000000-0000000", // ChargePermissionID or OrderReferenceID
+            objectIsChargePermission: true,  // true if above is ChargePermissionID, false otherwise 
+            trackingNumber: "1Z999AA10123456784", 
+            carrierCode: "UPS"
+        );
+
+        // send the notification
+        var result = client.SendDeliveryTrackingInformation(request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // do something, e.g. throw an error
+        }
+
+        return result;
     }
 }
 ```

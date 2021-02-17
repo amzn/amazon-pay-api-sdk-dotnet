@@ -1,3 +1,6 @@
+### Version 2.4.4 - February 2021
+* Switch from BouncyCastle and BouncyCastle.Core reference to latest release Portable.BouncyCastle (1.8.9), while also switching to use default trailer for PssSigner in signature generation.  This resolves previous signature generation issues encountered using non-default trailer for PssSigner on BouncyCastle versions 1.8.6 and higher.
+
 ### Version 2.4.3 - January 2021
 * Add parameterless constructor for CreateCheckoutSessionRequest to better support Additional Payment Button (APB) workflow
 * Add Interface for SignatureHelper to allow mocking in tests
