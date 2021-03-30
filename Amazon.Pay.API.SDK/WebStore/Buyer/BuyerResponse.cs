@@ -1,4 +1,5 @@
 ﻿using Amazon.Pay.API.Types;
+using System.Collections.Generic;
 using Amazon.Pay.API.WebStore.Types;
 using Newtonsoft.Json;
 
@@ -41,5 +42,17 @@ namespace Amazon.Pay.API.WebStore.Buyer
         /// </summary>
         [JsonProperty(PropertyName = "shippingAddress")]
         public Address ShippingAddress { get; internal set; }
+
+        /// <summary>
+        ///  Billing address for buyer-selected payment instrument.
+        /// </summary>
+        [JsonProperty(PropertyName = "billingAddress")]
+        public Address BillingAddress { get; internal set; }
+
+        /// <summary>
+        ///  PrimeMembershipTypes of the buyer.
+        /// </summary>
+        [JsonProperty(PropertyName = "primeMembershipTypes")]
+        public IList<string> PrimeMembershipTypes { get; internal set; }
     }
 }

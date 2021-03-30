@@ -266,5 +266,101 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             Assert.AreEqual("800-000-0000", r.ShippingAddress.PhoneNumber);
         }
 
+        [Test]
+        public void CanConstructWithAllCheckoutSessionScopes()
+        {
+            CheckoutSessionScope[] scopes = new CheckoutSessionScope[] {
+                CheckoutSessionScope.Name,
+                CheckoutSessionScope.Email,
+                CheckoutSessionScope.PostalCode,
+                CheckoutSessionScope.ShippingAddress,
+                CheckoutSessionScope.PhoneNumber,
+                CheckoutSessionScope.PrimeStatus,
+                CheckoutSessionScope.BillingAddress
+            };
+            // act
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000",
+                scopes
+            );
+
+            // assert
+            Assert.IsNotNull(request);
+            Assert.IsNotNull(request.WebCheckoutDetails);
+            Assert.IsNotNull(request.DeliverySpecifications);
+            Assert.IsNotNull(request.MerchantMetadata);
+            Assert.IsNotNull(request.PaymentDetails);
+            Assert.IsNotNull(request.ProviderMetadata);
+            Assert.IsNotNull(request.RecurringMetadata);
+            Assert.IsNotNull(request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.Name, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.Email, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.PostalCode, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.ShippingAddress, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.PhoneNumber, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.PrimeStatus, request.CheckoutSessionScope);
+            Assert.Contains(CheckoutSessionScope.BillingAddress, request.CheckoutSessionScope);
+            Assert.AreEqual("https://example.com/review.html", request.WebCheckoutDetails.CheckoutReviewReturnUrl);
+            Assert.AreEqual("amzn1.application-oa2-client.000000000000000000000000000000000", request.StoreId);
+        }
+
+        [Test]
+        public void CanConvertToJsonWithCheckoutSessionScope()
+        {
+            CheckoutSessionScope[] scopes = new CheckoutSessionScope[] {
+                CheckoutSessionScope.Name,
+                CheckoutSessionScope.Email,
+                CheckoutSessionScope.PostalCode,
+            };
+
+            // arrange
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000",
+                scopes
+            );
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"scopes\":[\"name\",\"email\",\"postalCode\"],\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\"}}", json);
+        }
+
+        [Test]
+        public void CanConvertToJsonMinimalWithAllCheckoutSessionScopes()
+        {
+            CheckoutSessionScope[] scopes = new CheckoutSessionScope[] {
+                CheckoutSessionScope.Name,
+                CheckoutSessionScope.Email,
+                CheckoutSessionScope.PostalCode,
+                CheckoutSessionScope.ShippingAddress,
+                CheckoutSessionScope.PhoneNumber,
+                CheckoutSessionScope.PrimeStatus,
+                CheckoutSessionScope.BillingAddress
+            };
+
+            // arrange
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000",
+                scopes
+            );
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"scopes\":[\"name\",\"email\",\"postalCode\",\"shippingAddress\",\"phoneNumber\",\"primeStatus\",\"billingAddress\"],\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\"}}", json);
+        }
+
     }
 }

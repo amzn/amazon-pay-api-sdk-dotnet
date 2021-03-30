@@ -46,7 +46,13 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
         public void CanConstructWithAllPropertiesAndAllScopesInitialized()
         {
             // act
-            SignInScope[] scopes = new SignInScope[] { SignInScope.Name, SignInScope.Email, SignInScope.PostalCode, SignInScope.ShippingAddress, SignInScope.PhoneNumber };
+            SignInScope[] scopes = new SignInScope[] {
+                SignInScope.Name, SignInScope.Email,
+                SignInScope.PostalCode, SignInScope.ShippingAddress,
+                SignInScope.PhoneNumber,
+                SignInScope.BillingAddress,
+                SignInScope.PrimeStatus
+            };
             var request = new SignInRequest
             (
                 signInReturnUrl: "https://example.com/review.html",
@@ -63,6 +69,8 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
             Assert.Contains(SignInScope.PostalCode, request.SignInScopes);
             Assert.Contains(SignInScope.ShippingAddress, request.SignInScopes);
             Assert.Contains(SignInScope.PhoneNumber, request.SignInScopes);
+            Assert.Contains(SignInScope.BillingAddress, request.SignInScopes);
+            Assert.Contains(SignInScope.PrimeStatus, request.SignInScopes);
         }
 
         [Test]
@@ -84,7 +92,15 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
         public void CanConvertToJsonAllScopes()
         {
             // arrange
-            var request = new SignInRequest("https://example.com/review.html", "amzn1.application-oa2-client.000000000000000000000000000000000", SignInScope.Name, SignInScope.Email, SignInScope.PostalCode, SignInScope.ShippingAddress, SignInScope.PhoneNumber);
+            var request = new SignInRequest(
+                "https://example.com/review.html",
+                "amzn1.application-oa2-client.000000000000000000000000000000000",
+                SignInScope.Name, SignInScope.Email,
+                SignInScope.PostalCode,
+                SignInScope.ShippingAddress,
+                SignInScope.PhoneNumber,
+                SignInScope.BillingAddress,
+                SignInScope.PrimeStatus);
 
             // act
             string json = request.ToJson();
@@ -92,7 +108,37 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
 
             // assert
             Assert.AreEqual(json, json2);
-            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"name\",\"email\",\"postalCode\",\"shippingAddress\",\"phoneNumber\"]}", json);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"name\",\"email\",\"postalCode\",\"shippingAddress\",\"phoneNumber\",\"billingAddress\",\"primeStatus\"]}", json);
+        }
+
+        [Test]
+        public void TestBillingAddressInResponseByPassingBillingAddressInScope()
+        {
+            // arrange
+            var request = new SignInRequest("https://example.com/review.html", "amzn1.application-oa2-client.000000000000000000000000000000000", SignInScope.BillingAddress);
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"billingAddress\"]}", json);
+        }
+
+        [Test]
+        public void TestPrimeMemberShipStausInResponseByPassingPrimeStatusInScope()
+        {
+            // arrange
+            var request = new SignInRequest("https://example.com/review.html", "amzn1.application-oa2-client.000000000000000000000000000000000", SignInScope.PrimeStatus);
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"primeStatus\"]}", json);
         }
     }
 }

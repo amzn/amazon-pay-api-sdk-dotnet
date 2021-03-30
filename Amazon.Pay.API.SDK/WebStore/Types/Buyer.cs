@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Amazon.Pay.API.WebStore.Types
@@ -21,5 +22,17 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "email")]
         public string Email { get; internal set; }
+
+        /// <summary>
+        /// Buyer Phone Number.
+        /// </summary>
+        [JsonProperty(PropertyName = "phoneNumber")]
+        public string PhoneNumber { get; internal set; }
+
+        /// <summary>
+        /// Buyer PrimeMembershipTypes.
+        /// </summary>
+        [JsonProperty(PropertyName = "primeMembershipTypes")]
+        public IList<string> PrimeMembershipTypes { get; internal set; }
     }
 }

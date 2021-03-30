@@ -1,5 +1,6 @@
-using Newtonsoft.Json;
+﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Amazon.Pay.API.WebStore.Types
 {
@@ -7,7 +8,7 @@ namespace Amazon.Pay.API.WebStore.Types
     /// The buyer details that you're requesting access for.
     /// </summary>
     [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-    public enum SignInScope
+    public enum CheckoutSessionScope
     {
         /// <summary>
         /// Request access to buyer name.
@@ -42,6 +43,9 @@ namespace Amazon.Pay.API.WebStore.Types
         /// <summary>
         /// Request access to buyer prime membership status.
         /// </summary>
+        /// <remarks>
+        /// Note that Passing "primeStatus" will return value for field "primeMembershipTypes" in response, only if the customer is eligible for prime membership
+        /// </remarks>
         [EnumMember(Value = "primeStatus")]
         PrimeStatus,
 

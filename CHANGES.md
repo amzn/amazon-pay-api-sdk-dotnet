@@ -1,3 +1,10 @@
+### Version 2.4.5 - March 2021
+* Added "phoneNumber" and "primeMembershipTypes" to "Buyer" object for both CheckoutSession and ChargePermission API's
+* Added "phoneNumber" and "primeMembershipTypes" to "BuyerResponse" object for GetBuyer API
+* Added "billingAddress" & "primeStatus" as scopes to SignInScopes
+* Enabled CreateCheckoutSession Scopes for CreateCheckoutSession API
+* Note : Passing "primeStatus" as SignInScope or CheckoutSessionScope will return value for field "primeMembershipTypes" in response, only if the customer is eligible for prime membership
+
 ### Version 2.4.4 - February 2021
 * Switch from BouncyCastle and BouncyCastle.Core reference to latest release Portable.BouncyCastle (1.8.9), while also switching to use default trailer for PssSigner in signature generation.  This resolves previous signature generation issues encountered using non-default trailer for PssSigner on BouncyCastle versions 1.8.6 and higher.
 
