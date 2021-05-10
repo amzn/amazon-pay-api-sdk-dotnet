@@ -17,6 +17,12 @@ namespace Amazon.Pay.API.WebStore.Types
         public string CheckoutResultReturnUrl { get; set; }
 
         /// <summary>
+        /// Checkout cancel URL provided by the merchant. Amazon Pay will redirect to this URL when the checkout is cancelled on any of the Amazon Pay hosted sites.
+        /// </summary>
+        [JsonProperty(PropertyName = "checkoutCancelUrl")]
+        public string CheckoutCancelUrl { get; set; }
+
+        /// <summary>
         /// URL provided by Amazon Pay. Merchant will redirect to this page after setting transaction details to complete checkout.
         /// </summary>
         [JsonProperty(PropertyName = "amazonPayRedirectUrl")]

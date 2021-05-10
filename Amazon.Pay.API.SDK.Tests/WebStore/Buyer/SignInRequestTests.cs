@@ -1,7 +1,11 @@
-﻿using Amazon.Pay.API.WebStore.Buyer;
+﻿using System;
+using System.Collections.Generic;
+using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Types;
+using Moq;
 using NUnit.Framework;
+using System.Reflection;
 
 namespace Amazon.Pay.API.Tests.WebStore.Buyer
 {
@@ -139,6 +143,31 @@ namespace Amazon.Pay.API.Tests.WebStore.Buyer
             // assert
             Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"signInReturnUrl\":\"https://example.com/review.html\",\"signInScopes\":[\"primeStatus\"]}", json);
+        }
+
+        [Test]
+        public void TestBuyerResponseHasPrimeMembershipType()
+        {
+            var membershipTypes = new List<string>() {"PRIME_GENERAL", "PRIME_STUDENT", "PRIME_GENERAL_US"};
+            var buyer = new BuyerResponse();
+            var I = buyer.GetType().GetProperty(nameof(BuyerResponse.PrimeMembershipTypes), BindingFlags.Public | BindingFlags.Instance);
+            I.SetValue(buyer, membershipTypes);
+            Assert.True(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL));
+            Assert.True(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL_US));
+            Assert.True(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_STUDENT));
+            Assert.False(buyer.HasPrimeMembershipType(PrimeMembershipType.NONE));
+
+            I.SetValue(buyer, new List<string>());
+            Assert.True(buyer.HasPrimeMembershipType(PrimeMembershipType.NONE));
+            Assert.False(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL));
+            Assert.False(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL_US));
+            Assert.False(buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_STUDENT));
+
+            I.SetValue(buyer, null);
+            Assert.Throws<UnauthorizedAccessException>(() =>buyer.HasPrimeMembershipType(PrimeMembershipType.NONE));
+            Assert.Throws<UnauthorizedAccessException>(() =>buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL));
+            Assert.Throws<UnauthorizedAccessException>(() =>buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_GENERAL_US));
+            Assert.Throws<UnauthorizedAccessException>(() =>buyer.HasPrimeMembershipType(PrimeMembershipType.PRIME_STUDENT));
         }
     }
 }

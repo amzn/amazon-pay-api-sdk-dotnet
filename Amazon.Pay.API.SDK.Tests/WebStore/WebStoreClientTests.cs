@@ -189,6 +189,34 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
         }
 
         [Test]
+        public void CanUpdateCheckoutSessionWithCancelUrl()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<CheckoutSessionResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<CheckoutSessionResponse>(request, headers, HttpMethod.PATCH,
+                    $"{Constants.Resources.WebStore.CheckoutSessions}/{checkoutSessionIdToTest}/"));
+
+            var testRequest = new UpdateCheckoutSessionRequest()
+            {
+                WebCheckoutDetails = { CheckoutCancelUrl = "http://localhost:5000/cancel" },
+                PaymentDetails =
+                {
+                    PaymentIntent = PaymentIntent.Authorize,
+                    // todo: this indicates asynchronous processing, so need to separate indication of Auth with sync/async 
+                    CanHandlePendingAuthorization = true,
+                    AllowOvercharge = false,
+                    ChargeAmount = {Amount = 10, CurrencyCode = Currency.USD},
+                    ExtendExpiration = false,
+                },
+                MerchantMetadata = { MerchantReferenceId = "123456", MerchantStoreName = "MerchantStoreName", NoteToBuyer = "NoteToBuyer" }
+            }; ;
+
+            var result = mockClient.Object.UpdateCheckoutSession(checkoutSessionIdToTest, testRequest);
+
+        }
+
+        [Test]
         public void CanCompleteCheckoutSession()
         {
             mockClient.Protected().As<IClientMapping>()

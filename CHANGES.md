@@ -1,3 +1,11 @@
+### Version 2.4.7 - May 2021
+* Added "recurringMetadata" to UpdateChargePermissionRequest for ChargePermission API
+* Added "HasPrimeMembershipType" to BuyerResponse for Buyer API
+* Added "SendDeliveryTrackingInformation" and "GetAuthorizationToken" to IClient, inherited by IInStoreClient and IWebStoreClient 
+
+### Version 2.4.6 - April 2021
+* Added "checkoutCancelUrl" to WebCheckoutDetails for CheckoutSession API
+
 ### Version 2.4.5 - March 2021
 * Added "phoneNumber" and "primeMembershipTypes" to "Buyer" object for both CheckoutSession and ChargePermission API's
 * Added "phoneNumber" and "primeMembershipTypes" to "BuyerResponse" object for GetBuyer API

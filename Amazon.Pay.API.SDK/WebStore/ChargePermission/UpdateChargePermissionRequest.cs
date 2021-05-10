@@ -9,6 +9,7 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         public UpdateChargePermissionRequest()
         {
             MerchantMetadata = new MerchantMetadata();
+            RecurringMetadata = new RecurringMetadata();
         }
 
         /// <summary>
@@ -16,5 +17,12 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// </summary>
         [JsonProperty(PropertyName = "merchantMetadata")]
         public MerchantMetadata MerchantMetadata { get; internal set; }
+
+        /// <summary>
+        /// Metadata about how the recurring Charge Permission will be used.
+        /// </summary>
+        [JsonProperty(PropertyName = "recurringMetadata")]
+        public RecurringMetadata RecurringMetadata { get; internal set; }
+
     }
 }

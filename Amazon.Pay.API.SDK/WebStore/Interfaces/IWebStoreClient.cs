@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
@@ -7,7 +8,7 @@ using Amazon.Pay.API.WebStore.Refund;
 
 namespace Amazon.Pay.API.WebStore.Interfaces
 {
-    public interface IWebStoreClient
+    public interface IWebStoreClient : IClient
     {
         /// <summary>
         /// Creates a new Checkout Session.
@@ -122,5 +123,6 @@ namespace Amazon.Pay.API.WebStore.Interfaces
         /// <param name="request">The payload for generating a SignIn Request.</param>
         /// <returns>Signature string that can be assigned to the front-end button's "signature" parameter.</returns>
         string GenerateButtonSignature(SignInRequest request);
+
     }
 }

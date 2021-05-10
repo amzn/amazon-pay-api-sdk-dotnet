@@ -127,6 +127,22 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
         }
 
         [Test]
+        public void CanConvertToJsonWithCancelUrl()
+        {
+            // arrange
+            var request = new UpdateCheckoutSessionRequest();
+            request.WebCheckoutDetails.CheckoutCancelUrl = "https://example.com/cancel.html";;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"webCheckoutDetails\":{\"checkoutCancelUrl\":\"https://example.com/cancel.html\"}}", json);
+        }
+
+        [Test]
         public void CanConvertToJsonFull()
         {
             // arrange

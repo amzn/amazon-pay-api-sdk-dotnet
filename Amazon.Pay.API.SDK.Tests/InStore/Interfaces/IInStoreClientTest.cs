@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Amazon.Pay.API.AuthorizationToken;
+using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.InStore.Charge;
 using Amazon.Pay.API.InStore.Interfaces;
 using Amazon.Pay.API.InStore.MerchantScan;
@@ -60,5 +62,31 @@ namespace Amazon.Pay.API.SDK.Tests.InStore.Interfaces
             Assert.That(result, Is.EqualTo(refundResponse));
             this.mockInStoreClient.Verify(mwsc => mwsc.Refund(It.IsAny<CreateRefundRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
+
+        
+        [Test]
+        public void SendDeliveryTrackingInformationCanBeMocked()
+        {
+            var response = new DeliveryTrackerResponse();
+            this.mockInStoreClient.Setup(mwsc => mwsc.SendDeliveryTrackingInformation(It.IsAny<DeliveryTrackerRequest>(), It.IsAny<Dictionary<string, string>>())).Returns(response);
+
+            var result = this.mockInStoreClient.Object.SendDeliveryTrackingInformation(new DeliveryTrackerRequest("123456789", false, "1Z654686546835464", "UPS"));
+            Assert.That(result, Is.EqualTo(response));
+            this.mockInStoreClient.Verify(mwsc => mwsc.SendDeliveryTrackingInformation(It.IsAny<DeliveryTrackerRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
+        }
+
+        [Test]
+        public void GetAuthorizationTokenCanBeMocked()
+        {
+            var response = new AuthorizationTokenResponse();
+            this.mockInStoreClient.Setup(mwsc =>
+                mwsc.GetAuthorizationToken(It.IsAny<string>(), It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, string>>())).Returns(response);
+
+            var result = this.mockInStoreClient.Object.GetAuthorizationToken("123456789", "ASFW3OT8A35468");
+            Assert.That(result, Is.EqualTo(response));
+            this.mockInStoreClient.Verify(mwsc => mwsc.GetAuthorizationToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
+        }
+
     }
 }

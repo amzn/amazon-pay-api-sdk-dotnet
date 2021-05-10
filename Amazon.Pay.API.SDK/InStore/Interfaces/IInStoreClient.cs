@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.InStore.Charge;
 using Amazon.Pay.API.InStore.MerchantScan;
 using Amazon.Pay.API.InStore.Refund;
 
 namespace Amazon.Pay.API.InStore.Interfaces
 {
-    public interface IInStoreClient
+    public interface IInStoreClient : IClient
     {
         /// <summary>
         /// Informs Amazon Pay that a buyer wants to initiate a purchase with a merchant.
@@ -34,5 +31,5 @@ namespace Amazon.Pay.API.InStore.Interfaces
         /// <param name="headers"></param>
         /// <returns>AmazonPayResponse response</returns>
         RefundResponse Refund(CreateRefundRequest refundRequest, Dictionary<string, string> headers = null);
-    }
+   }
 }

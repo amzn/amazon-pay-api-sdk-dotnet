@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Amazon.Pay.API.AuthorizationToken;
+using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
@@ -219,6 +221,30 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
 
             Assert.That(result, Is.EqualTo(response));
             this.mockWebStoreClient.Verify(mwsc => mwsc.GenerateButtonSignature(It.IsAny<SignInRequest>()), Times.Once);
+        }
+
+        [Test]
+        public void SendDeliveryTrackingInformationCanBeMocked()
+        {
+            var response = new DeliveryTrackerResponse();
+            this.mockWebStoreClient.Setup(mwsc => mwsc.SendDeliveryTrackingInformation(It.IsAny<DeliveryTrackerRequest>(), It.IsAny<Dictionary<string, string>>())).Returns(response);
+
+            var result = this.mockWebStoreClient.Object.SendDeliveryTrackingInformation(new DeliveryTrackerRequest("123456789", false, "1Z654686546835464", "UPS"));
+            Assert.That(result, Is.EqualTo(response));
+            this.mockWebStoreClient.Verify(mwsc => mwsc.SendDeliveryTrackingInformation(It.IsAny<DeliveryTrackerRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
+        }
+
+        [Test]
+        public void GetAuthorizationTokenCanBeMocked()
+        {
+            var response = new AuthorizationTokenResponse();
+            this.mockWebStoreClient.Setup(mwsc =>
+                mwsc.GetAuthorizationToken(It.IsAny<string>(), It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, string>>())).Returns(response);
+
+            var result = this.mockWebStoreClient.Object.GetAuthorizationToken("123456789", "ASFW3OT8A35468");
+            Assert.That(result, Is.EqualTo(response));
+            this.mockWebStoreClient.Verify(mwsc => mwsc.GetAuthorizationToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
     }
 }

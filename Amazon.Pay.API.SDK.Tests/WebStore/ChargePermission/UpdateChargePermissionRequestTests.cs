@@ -1,4 +1,6 @@
-﻿using Amazon.Pay.API.WebStore.ChargePermission;
+﻿using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.ChargePermission;
+using Amazon.Pay.API.WebStore.Types;
 using NUnit.Framework;
 
 namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
@@ -56,5 +58,26 @@ namespace Amazon.Pay.API.Tests.WebStore.ChargePermission
             Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"merchantMetadata\":{\"merchantReferenceId\":\"345\",\"merchantStoreName\":\"anotherShop\",\"noteToBuyer\":\"mee\",\"customInformation\":\"bar\"}}", json);
         }
+
+        [Test]
+        public void CanConvertToJsonRecurringMetadata()
+        {
+            // arrange
+            var request = new UpdateChargePermissionRequest();
+            request.RecurringMetadata.Frequency.Unit = FrequencyUnit.Month;
+            request.RecurringMetadata.Frequency.Value = 3;
+            request.RecurringMetadata.Amount.Amount = 23.45m;
+            request.RecurringMetadata.Amount.CurrencyCode = Currency.GBP;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"recurringMetadata\":{\"frequency\":{\"unit\":\"Month\",\"value\":3},\"amount\":{\"amount\":23.45,\"currencyCode\":\"GBP\"}}}", json);
+
+        }
+
     }
 }
