@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.4.7/Amazon.Pay.API.SDK.2.4.7.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.4.8/Amazon.Pay.API.SDK.2.4.8.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.7
+Install-Package Amazon.Pay.API.SDK -Version 2.4.8
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.7 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.4.8 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.4.7 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.4.8 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -110,6 +110,31 @@ public class Sample
             region: Region.Europe,
             environment: Environment.Sandbox,
             publicKeyId: "MY_PUBLIC_KEY_ID",
+            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
+        );
+
+        // init API client
+        var client = new WebStoreClient(payConfiguration);
+
+        return client;
+    }
+}
+```
+
+If you have created envrionment specific keys (i.e Public Key Starts with LIVE or SANDBOX) in Seller Central, then use those PublicKeyId & PrivateKey. In this case, there is no need to pass the Environment parameter to the ApiConfiguration.
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+
+public class Sample
+{
+    public WebStoreClient InitiateClient()
+    {
+        // set up config
+        var payConfiguration = new ApiConfiguration
+        (
+            region: Region.Europe,
+            publicKeyId: "MY_PUBLIC_KEY_ID", // LIVE-XXXXX or SANDBOX-XXXXX
             privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
         );
 

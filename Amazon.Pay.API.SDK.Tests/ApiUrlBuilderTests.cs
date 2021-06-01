@@ -11,6 +11,9 @@ namespace Amazon.Pay.API.Tests
     {
         private ApiUrlBuilder apiUrlBuilder;
         private ApiConfiguration payConfig;
+        // Fake Public keys
+        private const string livePublicKeyId = "LIVE-XXXXXXXXXXXXXXXXXXXXXXXX";
+        private const string sandboxPublicKeyId = "SANDBOX-XXXXXXXXXXXXXXXXXXXXXXXX";
 
         [SetUp]
         public void SetUp()
@@ -133,6 +136,158 @@ namespace Amazon.Pay.API.Tests
             Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.TokenExchange);
 
             // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        [Test]
+        public void GetApiUnifiedEndPointBaseUrlForUnitedStates()
+        {
+            string expectedURL = "https://pay-api.amazon.com/";
+
+            // Scenario 1 : Testing Unified endpoint base URL by passing Live specific PublicKeyId for UnitedStates
+            VerifyUnifiedEndpointBaseURL(Region.UnitedStates, livePublicKeyId, expectedURL);
+
+            // Scenario 2 : Testing Unified endpoint base URL by passing Sandbox specific PublicKeyId for UnitedStates
+            VerifyUnifiedEndpointBaseURL(Region.UnitedStates, sandboxPublicKeyId, expectedURL);
+        }
+
+        [Test]
+        public void GetApiUnifiedEndPointBaseUrlForForEurope()
+        {
+            string expectedURL = "https://pay-api.amazon.eu/";
+
+            // Scenario 1 : Testing Unified endpoint base URL by passing Live specific PublicKeyId for Europe
+            VerifyUnifiedEndpointBaseURL(Region.Europe, livePublicKeyId, expectedURL);
+
+            // Scenario 2 : Testing Unified endpoint base URL by passing Sandbox specific PublicKeyId for Europe
+            VerifyUnifiedEndpointBaseURL(Region.Europe, sandboxPublicKeyId, expectedURL);
+        }
+
+        [Test]
+        public void GetApiUnifiedEndPointBaseUrlForForJapan()
+        {
+            string expectedURL = "https://pay-api.amazon.jp/";
+
+            // Scenario 1 : Testing Unified endpoint base URL by passing Live specific PublicKeyId for Japan
+            VerifyUnifiedEndpointBaseURL(Region.Japan, livePublicKeyId, expectedURL);
+
+            // Scenario 2 : Testing Unified endpoint base URL by passing Sandbox specific PublicKeyId for Japan
+            VerifyUnifiedEndpointBaseURL(Region.Japan, sandboxPublicKeyId, expectedURL);
+        }
+
+        // Generic method used to verify Unified Endpoint Base URL
+        public void VerifyUnifiedEndpointBaseURL(Region region, string publicKeyId, string url)
+        {
+            // Configuration
+            payConfig.Region = region;
+            payConfig.PublicKeyId = publicKeyId;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+
+            // Building URL
+            Uri expectedURL = new Uri(url);
+            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+
+            // Assertion
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        [Test]
+        public void GetUnifiedEndpointFullPathForInStoreApiService()
+        {
+            string expectedUnitedStatesURL = "https://pay-api.amazon.com/v2/in-store/merchantScan/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for UnitedStates
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, livePublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, sandboxPublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+
+            string expectedEuropeURL = "https://pay-api.amazon.eu/v2/in-store/merchantScan/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Europe
+            VerifyUnifiedEndpointFullPath(Region.Europe, livePublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+            VerifyUnifiedEndpointFullPath(Region.Europe, sandboxPublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+
+            string expectedJapanURL = "https://pay-api.amazon.jp/v2/in-store/merchantScan/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Japan
+            VerifyUnifiedEndpointFullPath(Region.Japan, livePublicKeyId, expectedJapanURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+            VerifyUnifiedEndpointFullPath(Region.Japan, sandboxPublicKeyId, expectedJapanURL,
+                Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+        }
+
+        [Test]
+        public void GetUnifiedEndpointFullPathForDeliveryTrackerApiService()
+        {
+            string expectedUnitedStatesURL = "https://pay-api.amazon.com/v2/deliveryTrackers/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for UnitedStates
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, livePublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, sandboxPublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+
+            string expectedEuropeURL = "https://pay-api.amazon.eu/v2/deliveryTrackers/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Europe
+            VerifyUnifiedEndpointFullPath(Region.Europe, livePublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+            VerifyUnifiedEndpointFullPath(Region.Europe, sandboxPublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+
+            string expectedJapanURL = "https://pay-api.amazon.jp/v2/deliveryTrackers/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Japan
+            VerifyUnifiedEndpointFullPath(Region.Japan, livePublicKeyId, expectedJapanURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+            VerifyUnifiedEndpointFullPath(Region.Japan, sandboxPublicKeyId, expectedJapanURL,
+                Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+        }
+
+        [Test]
+        public void GetUnifiedEndpointFullPathForTokenExchangeApi()
+        {
+            string expectedUnitedStatesURL = "https://pay-api.amazon.com/v2/authorizationTokens/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for UnitedStates
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, livePublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+            VerifyUnifiedEndpointFullPath(Region.UnitedStates, sandboxPublicKeyId, expectedUnitedStatesURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+
+            string expectedEuropeURL = "https://pay-api.amazon.eu/v2/authorizationTokens/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Europe
+            VerifyUnifiedEndpointFullPath(Region.Europe, livePublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+            VerifyUnifiedEndpointFullPath(Region.Europe, sandboxPublicKeyId, expectedEuropeURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+
+            string expectedJapanURL = "https://pay-api.amazon.jp/v2/authorizationTokens/";
+
+            // Testing Unified endpoint full path by passing environment specific PublicKeyId for Japan
+            VerifyUnifiedEndpointFullPath(Region.Japan, livePublicKeyId, expectedJapanURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+            VerifyUnifiedEndpointFullPath(Region.Japan, sandboxPublicKeyId, expectedJapanURL,
+                Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+        }
+
+        // Generic method used to verify Unified Endpoint Full Path
+        public void VerifyUnifiedEndpointFullPath(Region region, string publicKeyId, string url, string apiService, string resource)
+        {
+            // Configuration
+            payConfig.Region = region;
+            payConfig.PublicKeyId = publicKeyId;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+
+            // Building URL
+            Uri expectedURL = new Uri(url);
+            Uri actualURL = apiUrlBuilder.BuildFullApiPath(apiService, resource);
+
+            // Assertion
             Assert.AreEqual(expectedURL, actualURL);
         }
     }

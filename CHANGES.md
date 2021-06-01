@@ -1,3 +1,7 @@
+### Version 2.4.8 - May 2021
+* Enabled support for environment specific keys (i.e Public key & Private key). The changes are fully backwards-compatible, where merchants can also use non environment specific keys
+* Added "EstimateOrderTotal" to PaymentDetails
+
 ### Version 2.4.7 - May 2021
 * Added "recurringMetadata" to UpdateChargePermissionRequest for ChargePermission API
 * Added "HasPrimeMembershipType" to BuyerResponse for Buyer API

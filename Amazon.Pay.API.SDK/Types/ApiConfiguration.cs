@@ -26,6 +26,20 @@ namespace Amazon.Pay.API
         }
 
         /// <summary>
+        /// Initializes a new instance of the ApiConfiguration class without Enviroment.
+        /// Use this initialization for having environment specific publicKeyId (i.e PublicKeyId starts with prefix LIVE or SANDBOX)
+        /// </summary>
+        /// <param name="region">The payment region the Amazon Pay merchant account is registered in.</param>
+        /// <param name="publicKeyId">The identifier for the registered key pair.</param>
+        /// <param name="privateKey">The private key in form of a file path, or directly as a string.</param>
+        public ApiConfiguration(Region region, string publicKeyId, string privateKey)
+        {
+            Region = region;
+            PublicKeyId = publicKeyId;
+            PrivateKey = privateKey;
+        }
+
+        /// <summary>
         /// The payment region the Amazon Pay merchant account is registered in.
         /// </summary>
         public Region Region { get; set; }

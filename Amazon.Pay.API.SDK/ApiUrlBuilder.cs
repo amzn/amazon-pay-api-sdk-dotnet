@@ -48,9 +48,16 @@ namespace Amazon.Pay.API
         {
             string regionDomain = config.Region.ToDomain();
             string environment = config.Environment.ToString().ToLower();
+            string serviceURL;
 
-            string serviceURL = $"https://pay-api.amazon.{regionDomain}/{environment}/";
-
+            if (config.PublicKeyId.ToUpper().StartsWith("LIVE") || config.PublicKeyId.ToUpper().StartsWith("SANDBOX"))
+            {
+                serviceURL = $"https://pay-api.amazon.{regionDomain}/";
+            }
+            else
+            {
+                serviceURL = $"https://pay-api.amazon.{regionDomain}/{environment}/";
+            }
             return new Uri(serviceURL);
         }
     }

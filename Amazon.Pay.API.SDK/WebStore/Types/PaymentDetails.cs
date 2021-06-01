@@ -91,5 +91,11 @@ namespace Amazon.Pay.API.WebStore.Types
         /// </summary>
         [JsonProperty(PropertyName = "softDescriptor")]
         public string SoftDescriptor { get; set; }
+
+        /// <summary>
+        /// Estimate Order Total. TODO : Replace this with the version from the guide, once available
+        /// </summary>
+        [JsonProperty(PropertyName = "estimateOrderTotal")]
+        public Price EstimateOrderTotal { get; set; }
     }
 }
