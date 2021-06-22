@@ -4,7 +4,7 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.4.8.0";
+        public const string SdkVersion = "2.4.9.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
         public const int    ApiVersion = 2;
 
@@ -12,7 +12,9 @@ namespace Amazon.Pay.API
 
         public static readonly Dictionary<string, int> serviceErrors = new Dictionary<string, int>() {
              {"Internal Server Error", 500},
+             {"HTTP Bad Gateway", 502},
              {"Service Unavailable", 503},
+             {"HTTP Gateway Timeout", 504},
              {"Too Many Requests", 429}
          };
 
