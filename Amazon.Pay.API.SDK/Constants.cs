@@ -4,11 +4,11 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.4.9.0";
+        public const string SdkVersion = "2.5.0.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
         public const int    ApiVersion = 2;
-
-        public const string AmazonSignatureAlgorithm = "AMZN-PAY-RSASSA-PSS";
+        public const int SaltLength = 32;
+        public const string AmazonSignatureAlgorithm = "AMZN-PAY-RSASSA-PSS-V2";
 
         public static readonly Dictionary<string, int> serviceErrors = new Dictionary<string, int>() {
              {"Internal Server Error", 500},

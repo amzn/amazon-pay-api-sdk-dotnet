@@ -18,7 +18,8 @@ namespace Amazon.Pay.API.Types
 
             var serializerSettings = new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.None
             };
 
             var jsonString = JsonConvert.SerializeObject(this, serializerSettings);

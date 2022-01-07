@@ -1,3 +1,8 @@
+#### Version 2.5.0 - January 2022
+* Updated "ExpirationTimestamp" property on ChargePermissionResponse to nullable
+* Migrated signature generating algorithm from AMZN-PAY-RSASSA-PSS to AMZN-PAY-RSASSA-PSS-V2 & increased salt length from 20 to 32
+* Note : From this SDK version, "algorithm" need to be provided as additional field in "createCheckoutSessionConfig" while rendering Amazon Pay button.
+
 #### Version 2.4.9 - June 2021
 * Added API Retry mechanism for error codes 502 & 504
 

@@ -73,7 +73,7 @@ namespace Amazon.Pay.API.WebStore.ChargePermission
         /// </summary>
         /// <remarks>The Charge Permission will expire 180 days after it's confirmed</remarks>
         [JsonProperty(PropertyName = "expirationTimestamp")]
-        public DateTime ExpirationTimestamp { get; internal set; }
+        public DateTime? ExpirationTimestamp { get; internal set; }
 
         /// <summary>
         /// State of the Charge Permission object.

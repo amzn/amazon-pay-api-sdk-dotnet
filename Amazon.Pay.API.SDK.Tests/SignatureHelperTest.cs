@@ -38,7 +38,7 @@ namespace Amazon.Pay.API.Tests
 
             signatureHelper = new SignatureHelper(config, canonicalBuilder.Object);
             string actualStringTosign = signatureHelper.CreateStringToSign(canonicalRequest);
-            string expectedStringToSign = "AMZN-PAY-RSASSA-PSS" + "\n" + "95b0d65e9efb9f0b9e8c2f3b77";
+            string expectedStringToSign = Constants.AmazonSignatureAlgorithm + "\n" + "95b0d65e9efb9f0b9e8c2f3b77";
 
             canonicalBuilder.VerifyAll();
             Assert.AreEqual(expectedStringToSign, actualStringTosign);
@@ -84,7 +84,7 @@ namespace Amazon.Pay.API.Tests
 
             var stringToSign = signatureHelper.CreateStringToSign(payload);
 
-            Assert.AreEqual("AMZN-PAY-RSASSA-PSS\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSign);
+            Assert.AreEqual(Constants.AmazonSignatureAlgorithm + "\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSign);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace Amazon.Pay.API.Tests
             var result = helper.GenerateSignature(message);
             var sigBytes = Convert.FromBase64String(result);
 
-            PssSigner signer = new PssSigner(new RsaEngine(), new Sha256Digest(), 20);
+            PssSigner signer = new PssSigner(new RsaEngine(), new Sha256Digest(), Constants.SaltLength);
             signer.Init(true, pub1);
             signer.BlockUpdate(bytesToSign, 0, bytesToSign.Length);
             var resultVerify = signer.VerifySignature(sigBytes);

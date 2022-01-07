@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.4.9/Amazon.Pay.API.SDK.2.4.9.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.5.0/Amazon.Pay.API.SDK.2.5.0.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.9
+Install-Package Amazon.Pay.API.SDK -Version 2.5.0
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.4.9 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.5.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.4.9 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.5.0 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -315,6 +315,18 @@ public class Sample : PageModel
 }
 ```
 
+Note : 
+As part of signature button integration, "algorithm" need to be provided as additional field in "createCheckoutSessionConfig" while rendering Amazon Pay button.
+          
+Example of "createCheckoutSessionConfig" :
+``` js
+    createCheckoutSessionConfig: {           
+        payloadJSON: '{"webCheckoutDetails":{"checkoutReviewReturnUrl":"https://localhost/test/checkoutReview.html"},"storeId": "amzn1.application-oa2-client.xxxxx","scopes": ["name", "email", "phoneNumber", "billingAddress"]}',
+        signature: 'SIGNATURE', // Signature Obtained by calling "generateButtonSignature(payload)" method
+        algorithm: 'AMZN-PAY-RSASSA-PSS-V2' // This Parameter is mandatory
+    }
+```
+
 #### Passing Signature and Payload to Front-End
 
 The code below shows how you could pass the signature and payload generated with code samples above back to the front-end. This sample uses an ASP.NET Core Razor Page, but the concept is similar for other .NET web project types.
@@ -345,7 +357,8 @@ The code below shows how you could pass the signature and payload generated with
             createCheckoutSessionConfig: {
                 payloadJSON: '@Html.Raw(Model.Payload)',
                 signature: '@Html.Raw(Model.Signature)',
-                publicKeyId: 'xxxxxxxxxx'
+                publicKeyId: 'xxxxxxxxxx',
+                algorithm: 'AMZN-PAY-RSASSA-PSS-V2'
             }
         });
 </script>
@@ -428,6 +441,31 @@ public class Sample
         }
 
         return result;
+    }
+}
+```
+
+### Get CheckoutSession
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.CheckoutSession;
+
+public class Sample
+{
+    public void GetCheckoutSession(string checkoutSessionId)
+    {
+        // send the request
+        CheckoutSessionResponse result = client.GetCheckoutSession(checkoutSessionId);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+            // do something with the result, for instance:
+            Buyer buyer = result.Buyer;
+            BillingAddress billingAddress = result.BillingAddress;
     }
 }
 ```
