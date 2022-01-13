@@ -17,6 +17,7 @@ namespace Amazon.Pay.API
     {
         private readonly ApiConfiguration payConfiguration;
         private readonly string LineSeparator = "\n";
+        private readonly int SaltLength = 20;
         private readonly CanonicalBuilder canonicalBuilder;
 
         public SignatureHelper(ApiConfiguration payConfiguration, CanonicalBuilder canonicalBuilder)
@@ -159,7 +160,7 @@ namespace Amazon.Pay.API
             }
 
             // initiate the signing object
-            PssSigner pssSigner = new PssSigner(new RsaEngine(), new Sha256Digest(), Constants.SaltLength);
+            PssSigner pssSigner = new PssSigner(new RsaEngine(), new Sha256Digest(), SaltLength);
             pssSigner.Init(true, new ParametersWithRandom(parameters, random));
             pssSigner.BlockUpdate(bytesToSign, 0, bytesToSign.Length);
 

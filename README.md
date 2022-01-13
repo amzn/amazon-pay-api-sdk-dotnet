@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.5.0/Amazon.Pay.API.SDK.2.5.0.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.5.1/Amazon.Pay.API.SDK.2.5.1.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.5.0
+Install-Package Amazon.Pay.API.SDK -Version 2.5.1
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.5.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.5.1 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.5.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.5.1 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -313,18 +313,6 @@ public class Sample : PageModel
         Payload = request.ToJson();
     }
 }
-```
-
-Note : 
-As part of signature button integration, "algorithm" need to be provided as additional field in "createCheckoutSessionConfig" while rendering Amazon Pay button.
-          
-Example of "createCheckoutSessionConfig" :
-``` js
-    createCheckoutSessionConfig: {           
-        payloadJSON: '{"webCheckoutDetails":{"checkoutReviewReturnUrl":"https://localhost/test/checkoutReview.html"},"storeId": "amzn1.application-oa2-client.xxxxx","scopes": ["name", "email", "phoneNumber", "billingAddress"]}',
-        signature: 'SIGNATURE', // Signature Obtained by calling "generateButtonSignature(payload)" method
-        algorithm: 'AMZN-PAY-RSASSA-PSS-V2' // This Parameter is mandatory
-    }
 ```
 
 #### Passing Signature and Payload to Front-End

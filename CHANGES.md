@@ -1,3 +1,7 @@
+#### Version 2.5.1 - January 2022
+* Applied patch to address issues occurred in Version 2.5.0.
+**Please dont use Version 2.5.0**
+
 #### Version 2.5.0 - January 2022
 * Updated "ExpirationTimestamp" property on ChargePermissionResponse to nullable
 * Migrated signature generating algorithm from AMZN-PAY-RSASSA-PSS to AMZN-PAY-RSASSA-PSS-V2 & increased salt length from 20 to 32
