@@ -1,6 +1,10 @@
+#### Version 2.6.0 - July 2022
+* Fixed security vulnerabilities in the SDK version 2.5.1.
+* Adding a new parameter "PlatformId" in Charge object which will in help Solution Provider monitoring
+**Please dont use Version 2.5.0**
+
 #### Version 2.5.1 - January 2022
 * Applied patch to address issues occurred in Version 2.5.0.
-**Please dont use Version 2.5.0**
 
 #### Version 2.5.0 - January 2022
 * Updated "ExpirationTimestamp" property on ChargePermissionResponse to nullable

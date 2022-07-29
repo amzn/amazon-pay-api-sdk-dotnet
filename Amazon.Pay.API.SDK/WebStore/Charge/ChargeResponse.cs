@@ -44,6 +44,12 @@ namespace Amazon.Pay.API.WebStore.Charge
         public string SoftDescriptor { get; internal set; }
 
         /// <summary>
+        /// Platform ID for each Charge to be set by Solution Providers
+        /// </summary>
+        [JsonProperty(PropertyName = "platformId")]
+        public string PlatformId { get; internal set; }
+
+        /// <summary>
         /// Boolean that indicates whether or not Charge should be captured immediately after a successful authorization.
         /// </summary>
         [JsonProperty(PropertyName = "captureNow")]

@@ -60,6 +60,12 @@ namespace Amazon.Pay.API.WebStore.Charge
         public string SoftDescriptor { get; set; }
 
         /// <summary>
+        /// Platform ID for each Charge to set by Solution Providers
+        /// </summary>
+        [JsonProperty(PropertyName = "platformId")]
+        public string PlatformId { get; set; }
+
+        /// <summary>
         /// Boolean that indicates whether merchant can handle pending response.
         /// </summary>
         [JsonProperty(PropertyName = "canHandlePendingAuthorization")]

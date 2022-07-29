@@ -15,22 +15,22 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 ### .NET Standard / .NET Core
 
 * Platform: .NET Standard 2.0
-* Newtonsoft.JSON (>= 12.0.2)
+* Newtonsoft.JSON (>= 13.0.1)
 * Portable.BouncyCastle 1.8.9
 
 ### .NET Framwork
 
 * Platform: .NET Framework 4.5
-* Newtonsoft.JSON (>= 12.0.2)
+* Newtonsoft.JSON (>= 13.0.1)
 * Portable.BouncyCastle 1.8.9
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.5.1/Amazon.Pay.API.SDK.2.5.1.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.6.0/Amazon.Pay.API.SDK.2.6.0.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.5.1
+Install-Package Amazon.Pay.API.SDK -Version 2.6.0
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.5.1 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.6.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.5.1 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.6.0 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -81,7 +81,7 @@ To associate the key with your account, please follow the steps 1 and 2 describe
 * Click "Use an existing public key to create API credentials"
 * Copy/paste your public key into the edit field
 * Provide a descriptive name for the credentials, e.g. "My Shop - API Credentials"
-* Click on the “Create keys” button to create the public/private key pair
+* Click on the Create keys button to create the public/private key pair
 * After the dialog has closed, you will find you 'Public Key ID' under "Existing API keys"
 
 # Convenience Functions (Code Samples)

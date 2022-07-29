@@ -27,6 +27,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             Assert.IsNull(request.CanHandlePendingAuthorization);
             Assert.IsNull(request.CaptureNow);
             Assert.IsNull(request.SoftDescriptor);
+            Assert.IsNull(request.PlatformId);
         }
 
         [Test]
@@ -48,6 +49,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             request.ProviderMetadata.ProviderReferenceId = "foo";
             request.SoftDescriptor = "foo";
             request.CaptureNow = true;
+            request.PlatformId = "My Platform Id";
             request.CanHandlePendingAuthorization = true;
             request.MerchantMetadata.MerchantReferenceId = "123abc!";
             request.MerchantMetadata.MerchantStoreName = "My Store Name";
@@ -64,6 +66,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             request.ProviderMetadata.ProviderReferenceId = "foo";
             request.SoftDescriptor = "foo";
             request.CaptureNow = true;
+            request.PlatformId = "My Platform Id";
             request.CanHandlePendingAuthorization = true;
 
             // act
@@ -72,7 +75,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
 
             // assert
             Assert.AreEqual(json, json2);
-            Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo\"}}", json);
+            Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo\",\"platformId\":\"My Platform Id\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo\"}}", json);
         }
 
         [Test]
@@ -84,6 +87,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             request.ProviderMetadata.ProviderReferenceId = "foo1";
             request.SoftDescriptor = "foo2";
             request.CaptureNow = true;
+            request.PlatformId = "My Platform Id";
             request.CanHandlePendingAuthorization = true;
             request.MerchantMetadata.MerchantReferenceId = "123abc!";
             request.MerchantMetadata.MerchantStoreName = "My Store Name";
@@ -96,7 +100,7 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
 
             // assert
             Assert.AreEqual(json, json2);
-            Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo2\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo1\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123abc!\",\"merchantStoreName\":\"My Store Name\",\"noteToBuyer\":\"My Note to Buyer\",\"customInformation\":\"My Custom Info\"}}", json);
+            Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo2\",\"platformId\":\"My Platform Id\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo1\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123abc!\",\"merchantStoreName\":\"My Store Name\",\"noteToBuyer\":\"My Note to Buyer\",\"customInformation\":\"My Custom Info\"}}", json);
         }
 
 
