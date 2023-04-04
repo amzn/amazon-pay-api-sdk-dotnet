@@ -1,16 +1,17 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Amazon.Pay.API.WebStore.Types
 {
     /// <summary>
-    /// The type of Charge Permission requested.
+    /// Represents who initiated the payment.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ChargePermissionType
+    public enum ChargeInitiator
     {
-        OneTime,
-        Recurring,
-        PaymentMethodOnFile
+        CITU,
+        MITU,
+        CITR,
+        MITR
     }
 }

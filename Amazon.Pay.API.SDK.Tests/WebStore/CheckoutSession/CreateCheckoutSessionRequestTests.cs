@@ -197,6 +197,29 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"chargePermissionType\":\"Recurring\",\"recurringMetadata\":{\"frequency\":{\"unit\":\"Variable\",\"value\":2},\"amount\":{\"amount\":12.34,\"currencyCode\":\"USD\"}}}", json);
         }
 
+        [Test]
+        public void CanConvertToJsonPaymentMethodOnFile()
+        {
+            // arrange
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000"
+            );
+            request.WebCheckoutDetails.CheckoutResultReturnUrl = "https://example.com/return.html";
+            request.ChargePermissionType = ChargePermissionType.PaymentMethodOnFile;
+            request.PaymentMethodOnFileMetadata.SetupOnly = true;
+            request.PaymentDetails.PaymentIntent = PaymentIntent.Confirm;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"paymentMethodOnFileMetadata\":{\"setupOnly\":true},\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/return.html\"},\"paymentDetails\":{\"paymentIntent\":\"Confirm\"},\"chargePermissionType\":\"PaymentMethodOnFile\"}", json);
+        }
+
 
         [Test]
         public void AdditionalPaymentButton()

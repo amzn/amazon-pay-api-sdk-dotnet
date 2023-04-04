@@ -1,6 +1,7 @@
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Types;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
@@ -8,6 +9,12 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
     [TestFixture]
     public class UpdateCheckoutSessionRequestTests
     {
+        private readonly List<MultiAddressesCheckoutMetadata> multiAddressesCheckoutMetadataToTest = new List<MultiAddressesCheckoutMetadata>()
+        {
+            new MultiAddressesCheckoutMetadata() { AddressId = "amzn1.address.ABC", Price = new Price(33, Currency.JPY) },
+            new MultiAddressesCheckoutMetadata() { AddressId = "amzn1.address.DEF", Price = new Price(33, Currency.JPY) }
+        };
+
         [Test]
         public void CanConstructWithAllPropertiesInitialized()
         {
@@ -21,6 +28,7 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             Assert.IsNotNull(request.PaymentDetails);
             Assert.IsNotNull(request.ProviderMetadata);
             Assert.IsNotNull(request.RecurringMetadata);
+            Assert.IsNotNull(request.MultiAddressesCheckoutMetadataList);
             Assert.IsNull(request.PlatformId);
             Assert.IsNull(request.SupplementaryData);
         }
@@ -159,6 +167,7 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             request.PaymentDetails.PaymentIntent = PaymentIntent.Authorize;
             request.ProviderMetadata.ProviderReferenceId = "foo";
             request.SupplementaryData = "foo";
+            request.MultiAddressesCheckoutMetadataList = multiAddressesCheckoutMetadataToTest;
 
             // act
             string json = request.ToJson();
@@ -166,7 +175,7 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
 
             // assert
             Assert.AreEqual(json, json2);
-            Assert.AreEqual("{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/thankyou.html\"},\"paymentDetails\":{\"paymentIntent\":\"Authorize\",\"chargeAmount\":{\"amount\":1080,\"currencyCode\":\"EUR\"}},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"supplementaryData\":\"foo\",\"providerMetadata\":{\"providerReferenceId\":\"foo\"}}", json);
+            Assert.AreEqual("{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/thankyou.html\"},\"paymentDetails\":{\"paymentIntent\":\"Authorize\",\"chargeAmount\":{\"amount\":1080,\"currencyCode\":\"EUR\"}},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"supplementaryData\":\"foo\",\"providerMetadata\":{\"providerReferenceId\":\"foo\"},\"multiAddressesCheckoutMetadata\":[{\"addressId\":\"amzn1.address.ABC\",\"price\":{\"amount\":33,\"currencyCode\":\"JPY\"}},{\"addressId\":\"amzn1.address.DEF\",\"price\":{\"amount\":33,\"currencyCode\":\"JPY\"}}]}", json);
         }
 
         [Test]
@@ -224,6 +233,28 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             // assert
             Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/thankyou.html\"},\"paymentDetails\":{\"paymentIntent\":\"Authorize\",\"chargeAmount\":{\"amount\":1080,\"currencyCode\":\"EUR\"},\"totalOrderAmount\":{\"amount\":1234.56,\"currencyCode\":\"EUR\"},\"allowOvercharge\":true,\"extendExpiration\":true},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"supplementaryData\":\"foo\",\"providerMetadata\":{\"providerReferenceId\":\"foo\"}}", json);
+        }
+
+        [Test]
+        public void CanConvertToJsonMultiAddressesCheckoutMetadataList()
+        {
+            // arrange
+            var request = new UpdateCheckoutSessionRequest();
+            request.WebCheckoutDetails.CheckoutResultReturnUrl = "https://example.com/thankyou.html";
+            request.WebCheckoutDetails.CheckoutReviewReturnUrl = "https://example.com/review.html";
+            request.MerchantMetadata.CustomInformation = "foo";
+            request.MerchantMetadata.MerchantReferenceId = "123";
+            request.MerchantMetadata.MerchantStoreName = "myStore";
+            request.MerchantMetadata.NoteToBuyer = "myBuyerNote";
+            request.MultiAddressesCheckoutMetadataList = multiAddressesCheckoutMetadataToTest;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/thankyou.html\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123\",\"merchantStoreName\":\"myStore\",\"noteToBuyer\":\"myBuyerNote\",\"customInformation\":\"foo\"},\"multiAddressesCheckoutMetadata\":[{\"addressId\":\"amzn1.address.ABC\",\"price\":{\"amount\":33,\"currencyCode\":\"JPY\"}},{\"addressId\":\"amzn1.address.DEF\",\"price\":{\"amount\":33,\"currencyCode\":\"JPY\"}}]}", json);
         }
 
     }

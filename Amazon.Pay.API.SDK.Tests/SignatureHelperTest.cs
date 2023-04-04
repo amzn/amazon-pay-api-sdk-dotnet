@@ -27,6 +27,14 @@ namespace Amazon.Pay.API.Tests
             publicKeyId: "foo",
             privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
         );
+        private readonly ApiConfiguration configWithAlgorithm = new ApiConfiguration
+        (
+            region: Region.Europe,
+            environment: Types.Environment.Live,
+            publicKeyId: "foo",
+            privateKey: "-----BEGIN RSA PRIVATE KEY-----", // fake a private key ..);
+            algorithm: AmazonSignatureAlgorithm.V2
+        );
         private readonly string uriToTest = "http://pay-api.amazon.eu/";
 
         [Test]
@@ -80,11 +88,14 @@ namespace Amazon.Pay.API.Tests
         public void ButtonPayloadAsJsonResultsInExpectedSignatureString()
         {
             var signatureHelper = new SignatureHelper(config, new CanonicalBuilder());
+            var signatureHelperWithAlgorithm = new SignatureHelper(configWithAlgorithm, new CanonicalBuilder());
             var payload = "{\"storeId\":\"amzn1.application-oa2-client.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://localhost/test/CheckoutReview.php\",\"checkoutResultReturnUrl\":\"https://localhost/test/CheckoutResult.php\"}}";
 
             var stringToSign = signatureHelper.CreateStringToSign(payload);
+            var stringToSignWithAlgorithm = signatureHelperWithAlgorithm.CreateStringToSign(payload);
 
             Assert.AreEqual("AMZN-PAY-RSASSA-PSS\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSign);
+            Assert.AreEqual("AMZN-PAY-RSASSA-PSS-V2\n8dec52d799607be40f82d5c8e7ecb6c171e6591c41b1111a576b16076c89381c", stringToSignWithAlgorithm);
         }
 
         [Test]

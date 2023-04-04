@@ -3,6 +3,7 @@ using Amazon.Pay.API.DeliveryTracker;
 using Amazon.Pay.API.Exceptions;
 using Amazon.Pay.API.Types;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -123,6 +124,16 @@ namespace Amazon.Pay.API
                             if (!string.IsNullOrEmpty(response))
                             {
                                 var dateConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyyMMddTHHmmssZ" };
+
+                                JObject jsonResponse = JObject.Parse(response);
+                                if (jsonResponse.ContainsKey("shippingAddressList")) {
+                                    JArray shippingAddressList = (JArray)jsonResponse["shippingAddressList"];
+                                    for (int i = 0; i < shippingAddressList.Count; i++)
+                                    {
+                                        shippingAddressList[i] = JObject.Parse(shippingAddressList[i].ToString());
+                                    }
+                                    response = jsonResponse.ToString();
+                                }
                                 responseObject = JsonConvert.DeserializeObject<T>(response, dateConverter);
                             }
 
@@ -246,7 +257,7 @@ namespace Amazon.Pay.API
         /// </summary>
         protected string BuildAuthorizationHeader(Dictionary<string, List<string>> preSignedHeaders, string signature)
         {
-            StringBuilder authorizationBuilder = new StringBuilder(Constants.AmazonSignatureAlgorithm)
+            StringBuilder authorizationBuilder = new StringBuilder(payConfiguration.Algorithm.GetName())
                     .Append(" PublicKeyId=").Append(payConfiguration.PublicKeyId).Append(", ").Append("SignedHeaders=")
                     .Append(canonicalBuilder.GetSignedHeadersString(preSignedHeaders))
                     .Append(", Signature=").Append(signature);

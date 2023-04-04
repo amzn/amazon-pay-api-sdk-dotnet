@@ -10,7 +10,9 @@ namespace Amazon.Pay.API.Tests
     public class ApiUrlBuilderTests
     {
         private ApiUrlBuilder apiUrlBuilder;
+        private ApiUrlBuilder apiUrlBuilderWithAlgorithm;
         private ApiConfiguration payConfig;
+        private ApiConfiguration payConfigWithAlgorithm;
         // Fake Public keys
         private const string livePublicKeyId = "LIVE-XXXXXXXXXXXXXXXXXXXXXXXX";
         private const string sandboxPublicKeyId = "SANDBOX-XXXXXXXXXXXXXXXXXXXXXXXX";
@@ -25,130 +27,71 @@ namespace Amazon.Pay.API.Tests
                 publicKeyId: "foo",
                 privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
             );
+
+            payConfigWithAlgorithm = new ApiConfiguration
+            (
+                region: Region.Europe,
+                environment: Environment.Live,
+                publicKeyId: "foo",
+                privateKey: "-----BEGIN RSA PRIVATE KEY-----", // fake a private key ..);
+                algorithm: AmazonSignatureAlgorithm.V2
+            );
         }
 
         [Test]
         public void GetApiEndPointBaseUrlForUnitedStatesLive()
         {
-            // arrange
-            payConfig.Region = Region.UnitedStates;
-            payConfig.Environment = Environment.Live;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/live/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetApiEndPointBaseUrlForUnitedStatesLive(payConfig);
+            GetApiEndPointBaseUrlForUnitedStatesLive(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetApiEndPointBaseUrlForUnitedStatesSandbox()
         {
-            // arrange
-            payConfig.Region = Region.UnitedStates;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetApiEndPointBaseUrlForUnitedStatesSandbox(payConfig);
+            GetApiEndPointBaseUrlForUnitedStatesSandbox(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetApiEndPointBaseUrlForEuropeSandbox()
         {
-            // arrange
-            payConfig.Region = Region.Europe;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.eu/sandbox/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetApiEndPointBaseUrlForEuropeSandbox(payConfig);
+            GetApiEndPointBaseUrlForEuropeSandbox(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetApiEndPointBaseUrlForJapanSandbox()
         {
-            // arrange
-            payConfig.Region = Region.Japan;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.jp/sandbox/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetApiEndPointBaseUrlForJapanSandbox(payConfig);
+            GetApiEndPointBaseUrlForJapanSandbox(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetFullPathForInStoreApiService()
         {
-            // arrange
-            payConfig.Region = Region.UnitedStates;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/in-store/merchantScan/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetFullPathForInStoreApiService(payConfig);
+            GetFullPathForInStoreApiService(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetFullPathForDeliveryTrackerApiService()
         {
-            // arrange
-            payConfig.Region = Region.UnitedStates;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/deliveryTrackers/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetFullPathForDeliveryTrackerApiService(payConfig);
+            GetFullPathForDeliveryTrackerApiService(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetFullPathForTokenExchangeApi()
         {
-            // arrange
-            payConfig.Region = Region.UnitedStates;
-            payConfig.Environment = Environment.Sandbox;
-            apiUrlBuilder = new ApiUrlBuilder(payConfig);
-            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/authorizationTokens/");
-
-            // act
-            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.TokenExchange);
-
-            // assert
-            Assert.AreEqual(expectedURL, actualURL);
+            GetFullPathForTokenExchangeApi(payConfig);
+            GetFullPathForTokenExchangeApi(payConfigWithAlgorithm);
         }
 
         [Test]
         public void GetApiUnifiedEndPointBaseUrlForUnitedStates()
         {
-            string expectedURL = "https://pay-api.amazon.com/";
-
-            // Scenario 1 : Testing Unified endpoint base URL by passing Live specific PublicKeyId for UnitedStates
-            VerifyUnifiedEndpointBaseURL(Region.UnitedStates, livePublicKeyId, expectedURL);
-
-            // Scenario 2 : Testing Unified endpoint base URL by passing Sandbox specific PublicKeyId for UnitedStates
-            VerifyUnifiedEndpointBaseURL(Region.UnitedStates, sandboxPublicKeyId, expectedURL);
+            GetFullPathForTokenExchangeApi(payConfig);
+            GetFullPathForTokenExchangeApi(payConfigWithAlgorithm);
         }
 
         [Test]
@@ -181,14 +124,19 @@ namespace Amazon.Pay.API.Tests
             // Configuration
             payConfig.Region = region;
             payConfig.PublicKeyId = publicKeyId;
+            payConfigWithAlgorithm.Region = region;
+            payConfigWithAlgorithm.PublicKeyId = publicKeyId;
             apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            apiUrlBuilderWithAlgorithm = new ApiUrlBuilder(payConfigWithAlgorithm);
 
             // Building URL
             Uri expectedURL = new Uri(url);
             Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+            Uri actualURLWithAlgorithm = apiUrlBuilderWithAlgorithm.GetApiEndPointBaseUrl();
 
             // Assertion
             Assert.AreEqual(expectedURL, actualURL);
+            Assert.AreEqual(expectedURL, actualURLWithAlgorithm);
         }
 
         [Test]
@@ -281,13 +229,123 @@ namespace Amazon.Pay.API.Tests
             // Configuration
             payConfig.Region = region;
             payConfig.PublicKeyId = publicKeyId;
+            payConfigWithAlgorithm.Region = region;
+            payConfigWithAlgorithm.PublicKeyId = publicKeyId;
             apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            apiUrlBuilderWithAlgorithm = new ApiUrlBuilder(payConfigWithAlgorithm);
 
             // Building URL
             Uri expectedURL = new Uri(url);
             Uri actualURL = apiUrlBuilder.BuildFullApiPath(apiService, resource);
+            Uri actualURLWithAlgorithm = apiUrlBuilderWithAlgorithm.BuildFullApiPath(apiService, resource);
 
             // Assertion
+            Assert.AreEqual(expectedURL, actualURL);
+            Assert.AreEqual(expectedURL, actualURLWithAlgorithm);
+        }
+
+        public void GetApiEndPointBaseUrlForUnitedStatesLive(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.UnitedStates;
+            payConfig.Environment = Environment.Live;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/live/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetApiEndPointBaseUrlForUnitedStatesSandbox(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.UnitedStates;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetApiEndPointBaseUrlForEuropeSandbox(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.Europe;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.eu/sandbox/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetApiEndPointBaseUrlForJapanSandbox(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.Japan;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.jp/sandbox/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.GetApiEndPointBaseUrl();
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetFullPathForInStoreApiService(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.UnitedStates;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/in-store/merchantScan/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.InStore, Constants.Resources.InStore.MerchantScan);
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetFullPathForDeliveryTrackerApiService(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.UnitedStates;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/deliveryTrackers/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.DeliveryTracker);
+
+            // assert
+            Assert.AreEqual(expectedURL, actualURL);
+        }
+
+        public void GetFullPathForTokenExchangeApi(ApiConfiguration payConfig)
+        {
+            // arrange
+            payConfig.Region = Region.UnitedStates;
+            payConfig.Environment = Environment.Sandbox;
+            apiUrlBuilder = new ApiUrlBuilder(payConfig);
+            Uri expectedURL = new Uri("https://pay-api.amazon.com/sandbox/v2/authorizationTokens/");
+
+            // act
+            Uri actualURL = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.TokenExchange);
+
+            // assert
             Assert.AreEqual(expectedURL, actualURL);
         }
     }

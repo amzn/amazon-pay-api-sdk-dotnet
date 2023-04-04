@@ -1,6 +1,7 @@
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Types;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 
@@ -16,6 +17,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             MerchantMetadata = new MerchantMetadata();
             ProviderMetadata = new ProviderMetadata();
             RecurringMetadata = new RecurringMetadata();
+            MultiAddressesCheckoutMetadataList = new List<MultiAddressesCheckoutMetadata>();
         }
 
         [OnSerializing]
@@ -26,6 +28,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             {
                 RecurringMetadata = null;
             }
+
+            // skip 'multiAddressesCheckoutMetadata' if there weren't any provided
+            if (MultiAddressesCheckoutMetadataList != null && MultiAddressesCheckoutMetadataList.Count == 0)
+            {
+                MultiAddressesCheckoutMetadataList = null;
+            }
         }
 
         [OnSerialized]
@@ -34,6 +42,11 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             if (RecurringMetadata == null)
             {
                 RecurringMetadata = new RecurringMetadata();
+            }
+
+            if (MultiAddressesCheckoutMetadataList == null)
+            {
+                MultiAddressesCheckoutMetadataList = new List<MultiAddressesCheckoutMetadata>();
             }
         }
 
@@ -47,7 +60,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// Payment details specified by the merchant, such as the amount and method for charging the buyer
         /// </summary>
         [JsonProperty(PropertyName = "paymentDetails")]
-        public PaymentDetails PaymentDetails { get; internal set; }
+        public PaymentDetails PaymentDetails { get; set; }
 
         /// <summary>
         /// Merchant-provided order info.
@@ -74,7 +87,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         public ProviderMetadata ProviderMetadata { get; internal set; }
 
         /// <summary>
-        /// Configure OneTime or Recurring payment chargePermissionType
+        /// Configure OneTime, Recurring or PaymentMethodOnFile payment chargePermissionType
         /// </summary>
         [JsonProperty(PropertyName = "chargePermissionType")]
         public ChargePermissionType? ChargePermissionType { get; set; }
@@ -84,6 +97,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "recurringMetadata")]
         public RecurringMetadata RecurringMetadata { get; internal set; }
+
+        /// <summary>
+        /// Metadata about the the addresses and the amounts selected by buyer on Merchant Review page in PayAndShipMultiAddress productType.
+        /// </summary>
+        [JsonProperty(PropertyName = "multiAddressesCheckoutMetadata")]
+        public List<MultiAddressesCheckoutMetadata> MultiAddressesCheckoutMetadataList { get; set; }
 
     }
 }

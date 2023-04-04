@@ -17,7 +17,6 @@ namespace Amazon.Pay.API
     {
         private readonly ApiConfiguration payConfiguration;
         private readonly string LineSeparator = "\n";
-        private readonly int SaltLength = 20;
         private readonly CanonicalBuilder canonicalBuilder;
 
         public SignatureHelper(ApiConfiguration payConfiguration, CanonicalBuilder canonicalBuilder)
@@ -115,7 +114,7 @@ namespace Amazon.Pay.API
         {
             string hashedCanonicalRequest = canonicalBuilder.HashThenHexEncode(canonicalRequest);
 
-            StringBuilder stringToSignBuilder = new StringBuilder(Constants.AmazonSignatureAlgorithm);
+            StringBuilder stringToSignBuilder = new StringBuilder(payConfiguration.Algorithm.GetName());
             stringToSignBuilder.Append(LineSeparator)
                                 .Append(hashedCanonicalRequest);
 
@@ -132,6 +131,9 @@ namespace Amazon.Pay.API
             SecureRandom random = new SecureRandom();
 
             byte[] bytesToSign = Encoding.UTF8.GetBytes(stringToSign);
+
+            //AMZN-PAY-RSASSA-PSS-V2 uses 32 and AMZN-PAY-RSASSA-PSS uses 20 as salt length 
+            int SaltLength = payConfiguration.Algorithm.GetSaltLength();
 
             // read the private key
             PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey)); // TODO: replace by method parameter to get rid of config dependency

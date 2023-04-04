@@ -5,11 +5,14 @@ using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Interfaces;
 using Amazon.Pay.API.WebStore.Refund;
+using Amazon.Pay.API.WebStore.Reports;
+using Amazon.Pay.API.WebStore.Types;
+
 using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore
 {
-    public class WebStoreClient : Client, IWebStoreClient
+    public class WebStoreClient : Client, IWebStoreClient, IReportsClient
     {
         public WebStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {
@@ -271,5 +274,194 @@ namespace Amazon.Pay.API.WebStore
 
             return signature;
         }
+
+
+        // ----------------------------------- CV2 REPORTING APIS -----------------------------------
+
+        /// <summary>
+        /// Returns report details for the reports that match the filters that you specify.
+        /// </summary>
+        /// <param name="queryParamters">The queryParameters for the request.</param>
+        /// <param name="headers"></param>
+        /// <returns>Details for the reports that match the filters that you specify.</returns>
+        public GetReportsResponse GetReports(GetReportsRequest getReportsRequest = null, Dictionary<string, string> headers = null)
+        {
+            // Utility function to convert GetReportsRequest to a Dictionary:
+            var queryParameters = new Dictionary<string, List<string>>();
+            string isoFormat = "yyyyMMddTHHmmssZ";
+
+            if(getReportsRequest != null) 
+            {
+                if(getReportsRequest.ReportTypes != null)
+                    queryParameters.Add("reportTypes", new List<string>() { string.Join(",", getReportsRequest.ReportTypes) });
+                    
+                if(getReportsRequest.ProcessingStatuses !=null)
+                    queryParameters.Add("processingStatuses", new List<string>() { string.Join(",", getReportsRequest.ProcessingStatuses) });
+                    
+                if(getReportsRequest.CreatedSince != null)
+                    queryParameters.Add("createdSince", new List<string>() { getReportsRequest.CreatedSince.Value.ToString(isoFormat) });
+
+                if(getReportsRequest.CreatedUntil != null)
+                    queryParameters.Add("createdUntil", new List<string>() { getReportsRequest.CreatedUntil.Value.ToString(isoFormat) });
+                    
+                queryParameters.Add("pageSize", new List<string>() { getReportsRequest.PageSize.ToString() });
+                if(getReportsRequest.NextToken != null)
+                {
+                    queryParameters.Add("nextToken", new List<string>() { getReportsRequest.NextToken });
+                    queryParameters.Remove("createdSince");
+                    queryParameters.Remove("createdUntil");
+                    queryParameters.Remove("pageSize");
+                }
+            }
+
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Reports);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                QueryParameters = queryParameters,
+                Headers = headers
+            };
+
+            var result = CallAPI<GetReportsResponse>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Returns report details for the given reportId.
+        /// </summary>
+        /// <param name="reportId">The Report Id for filtering.</param>
+        /// /// <param name="headers"></param>
+        /// <returns>Report details for the given reportId.</returns>
+        public Report GetReportById(string reportId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Reports, reportId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                Headers = headers
+            };
+
+            var result = CallAPI<Report>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Returns the pre-signed S3 URL for the report. The report can be downloaded using this URL.
+        /// </summary>
+        /// <param name="reportDocumentId">The Report Document Id for filtering.</param>
+        /// <param name="headers"></param>
+        /// <returns>Pre-signed S3 URL for the report.</returns>
+        public GetReportDocumentResponse GetReportDocument(string reportDocumentId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportDocuments, reportDocumentId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                Headers = headers
+            };
+
+            var result = CallAPI<GetReportDocumentResponse>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Returns report schedule details that match the filters criteria specified.
+        /// </summary>
+        /// <param name="reportTypes">The Report Types for filtering.</param>
+        /// <param name="headers"></param>
+        /// <returns>Report schedule details that match the filters criteria specified.</returns>
+        public GetReportSchedulesResponse GetReportSchedules(GetReportSchedulesRequest getReportSchedulesRequest = null, Dictionary<string, string> headers = null)
+        {
+            // Utility function to convert GetReportScheduleRequest to Dictionary for QueryParameters:
+            var queryParameters = new Dictionary<string, List<string>>();
+            if(getReportSchedulesRequest != null) 
+                queryParameters.Add("reportTypes", new List<string>() { string.Join(",", getReportSchedulesRequest.ReportTypes) });
+
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportSchedules);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                QueryParameters = queryParameters,
+                Headers = headers
+            };
+
+            var result = CallAPI<GetReportSchedulesResponse>(apiRequest);
+
+            return result;
+        }
+        
+
+        /// <summary>
+        /// Returns the report schedule details that match the given ID.
+        /// </summary>
+        /// <param name="reportScheduleId">The Report Schedule Id for filtering</param>
+        /// <param name="headers"></param>
+        /// <returns>Report schedule details that match the given ID.</returns>
+        public ReportSchedule GetReportScheduleById(string reportScheduleId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportSchedules, reportScheduleId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                Headers = headers
+            };
+
+            var result = CallAPI<ReportSchedule>(apiRequest);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Submits a request to generate a report based on the reportType and date range specified.
+        /// </summary>
+        /// <param name="requestPayload">The payload for creating a Report.</param>
+        /// <param name="headers"></param>
+        /// <returns>Report ID which is created via the Request Payload</returns>
+        public CreateReportResponse CreateReport(CreateReportRequest requestPayload, Dictionary<string, string> headers)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Reports);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, requestPayload, headers);
+
+            var result = CallAPI<CreateReportResponse>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Creates a report schedule for the given reportType. Only one schedule per report type allowed.
+        /// </summary>
+        /// <param name="requestPayload">The payload for creating a Report Schedule.</param>
+        /// <param name="headers"></param>
+        /// <returns>Report Schedule ID which is created via the Request Payload</returns>
+        public CreateReportScheduleResponse CreateReportSchedule(CreateReportScheduleRequest requestPayload, Dictionary<string, string> headers)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportSchedules);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, requestPayload, headers);
+
+            var result = CallAPI<CreateReportScheduleResponse>(apiRequest);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Cancels the report schedule with the given reportScheduleId.
+        /// </summary>
+        /// <param name="reportScheduleId">The Report Schedule ID for cancelling a Report.</param>
+        /// <param name="headers"></param>
+        /// <returns>HTTP Response after cancelling the Report Schedule mentioned</returns>
+        public CancelReportScheduleResponse CancelReportSchedule(string reportScheduleId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportSchedules, reportScheduleId);
+            CancelReportScheduleRequest cancelReportScheduleRequest = new CancelReportScheduleRequest();
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.DELETE, cancelReportScheduleRequest, headers);
+
+            var result = CallAPI<CancelReportScheduleResponse>(apiRequest);
+
+            return result;
+        }
+
     }
 }

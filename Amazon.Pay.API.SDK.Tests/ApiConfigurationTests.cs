@@ -30,6 +30,27 @@ namespace Amazon.Pay.API.SDK.Tests
         }
 
         [Test]
+        public void CanInstantiateApiConfigurationWithAlgorithm()
+        {
+            var payConfig = new ApiConfiguration
+            (
+                region: Region.UnitedStates,
+                environment: Environment.Sandbox,
+                publicKeyId: "foo",
+                privateKey: "-----BEGIN RSA PRIVATE KEY-----", // fake a private key ..);
+                algorithm: AmazonSignatureAlgorithm.V2
+            );
+            Assert.NotNull(payConfig);
+            Assert.AreEqual(Region.UnitedStates, payConfig.Region);
+            Assert.AreEqual(Environment.Sandbox, payConfig.Environment);
+            Assert.AreEqual("foo", payConfig.PublicKeyId);
+            Assert.AreEqual(3, payConfig.MaxRetries);
+            Assert.AreEqual(Constants.ApiVersion, payConfig.ApiVersion);
+            payConfig.PrivateKey.Should().StartWith("-----BEGIN RSA");
+            Assert.AreEqual(AmazonSignatureAlgorithm.V2, payConfig.Algorithm);
+        }
+
+        [Test]
         public void CanSetMaxRetries()
         {
             var payConfig = new ApiConfiguration

@@ -9,7 +9,6 @@ namespace Amazon.Pay.API
     public class ApiConfiguration
     {
         private string privateKey;
-
         /// <summary>
         /// Initializes a new instance of the ApiConfiguration class.
         /// </summary>
@@ -17,12 +16,14 @@ namespace Amazon.Pay.API
         /// <param name="environment">The Amazon Pay environment (live or sandbox).</param>
         /// <param name="publicKeyId">The identifier for the registered key pair.</param>
         /// <param name="privateKey">The private key in form of a file path, or directly as a string.</param>
-        public ApiConfiguration(Region region, Environment environment, string publicKeyId, string privateKey)
+        /// <param name="algorithm">The Amazon Signature algorithm, uses AmazonSignatureAlgorithm.Default, if not specified.</param>
+        public ApiConfiguration(Region region, Environment environment, string publicKeyId, string privateKey, AmazonSignatureAlgorithm algorithm = AmazonSignatureAlgorithm.Default)
         {
             Region = region;
             Environment = environment;
             PublicKeyId = publicKeyId;
             PrivateKey = privateKey;
+            Algorithm = algorithm;
         }
 
         /// <summary>
@@ -32,11 +33,13 @@ namespace Amazon.Pay.API
         /// <param name="region">The payment region the Amazon Pay merchant account is registered in.</param>
         /// <param name="publicKeyId">The identifier for the registered key pair.</param>
         /// <param name="privateKey">The private key in form of a file path, or directly as a string.</param>
-        public ApiConfiguration(Region region, string publicKeyId, string privateKey)
+        /// <param name="algorithm">The Amazon Signature algorithm, uses AmazonSignatureAlgorithm.Default, if not specified.</param>
+        public ApiConfiguration(Region region, string publicKeyId, string privateKey, AmazonSignatureAlgorithm algorithm = AmazonSignatureAlgorithm.Default)
         {
             Region = region;
             PublicKeyId = publicKeyId;
             PrivateKey = privateKey;
+            Algorithm = algorithm;
         }
 
         /// <summary>
@@ -95,6 +98,11 @@ namespace Amazon.Pay.API
         /// The Amazon Pay environment (live or sandbox).
         /// </summary>
         public Environment Environment { get; set; }
+
+        /// <summary>
+        /// The Amazon Signature algorithm, uses AmazonSignatureAlgorithm.Default, if not specified.
+        /// </summary>
+        public AmazonSignatureAlgorithm Algorithm { get; set; }
 
         /// <summary>
         /// Returns the API Version associated to this configuration.

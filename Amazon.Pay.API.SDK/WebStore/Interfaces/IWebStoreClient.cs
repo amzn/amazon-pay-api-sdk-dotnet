@@ -5,6 +5,7 @@ using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Refund;
+using Amazon.Pay.API.WebStore.Types;
 
 namespace Amazon.Pay.API.WebStore.Interfaces
 {

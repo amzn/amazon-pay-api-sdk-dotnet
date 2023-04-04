@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.6.0/Amazon.Pay.API.SDK.2.6.0.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.0/Amazon.Pay.API.SDK.2.7.0.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.6.0
+Install-Package Amazon.Pay.API.SDK -Version 2.7.0
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.6.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.7.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.6.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.7.0 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -110,7 +110,8 @@ public class Sample
             region: Region.Europe,
             environment: Environment.Sandbox,
             publicKeyId: "MY_PUBLIC_KEY_ID",
-            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
+            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY",
+            algorithm: AmazonSignatureAlgorithm.V2 // Amazon Signing Algorithm 'AMZN-PAY-RSASSA-PSS-V2', Optional: uses old algorithm 'AMZN-PAY-RSASSA-PSS'if not specified
         );
 
         // init API client
@@ -135,7 +136,8 @@ public class Sample
         (
             region: Region.Europe,
             publicKeyId: "MY_PUBLIC_KEY_ID", // LIVE-XXXXX or SANDBOX-XXXXX
-            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
+            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY",
+            algorithm: AmazonSignatureAlgorithm.V2 // Amazon Signing Algorithm 'AMZN-PAY-RSASSA-PSS-V2', Optional: uses old algorithm 'AMZN-PAY-RSASSA-PSS'if not specified
         );
 
         // init API client
@@ -213,6 +215,52 @@ public class Sample : PageModel
         request.RecurringMetadata.Frequency.Value = 2;
         request.RecurringMetadata.Amount.Amount = 12.34m;
         request.RecurringMetadata.Amount.CurrencyCode = Currency.USD;
+
+        // generate the button signature
+        var signature = client.GenerateButtonSignature(request);
+
+        // generate the signature and payload string that is passed back to the frontend
+        Signature = client.GenerateButtonSignature(request);
+        Payload = request.ToJson();
+    }
+}
+```
+
+#### Amazon Pay Button (Payment Method On File)
+
+```csharp
+using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Types;
+using Amazon.Pay.API.Types;
+
+public class Sample : PageModel
+{
+    // ..
+
+    public string Signature { get; private set; }
+
+    public string Payload { get; private set; }
+
+    public void OnGet()
+    {
+        // prepare the request
+        var request = new CreateCheckoutSessionRequest(
+            checkoutReviewReturnUrl: "https://example.com/review.html",
+            storeId: "amzn1.application-oa2-client.000000000000000000000000000000000"
+        )
+        {
+            ChargePermissionType = ChargePermissionType.PaymentMethodOnFile,
+            PaymentMethodOnFileMetadata = new PaymentMethodOnFileMetadata()
+            {
+                SetupOnly = true
+            },
+            PaymentDetails = new PaymentDetails()
+            {
+                PaymentIntent = PaymentIntent.Confirm
+            }
+        };
+        request.WebCheckoutDetails.CheckoutResultReturnUrl = "https://example.com/return.html"
 
         // generate the button signature
         var signature = client.GenerateButtonSignature(request);
@@ -493,6 +541,43 @@ public class Sample
 }
 ```
 
+### Update CheckoutSession for PayAndShipMultiAddress productType
+```csharp
+using Amazon.Pay.API;
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Types;
+
+public class Sample {
+    static public CheckoutSessionResponse UpdateCheckoutSession(string checkoutSessionId)
+    {
+
+        // prepare the request
+        var request = new UpdateCheckoutSessionRequest();
+        request.MultiAddressesCheckoutMetadataList = new List<MultiAddressesCheckoutMetadata>()
+        {
+            new MultiAddressesCheckoutMetadata(){ AddressId = "Amazon Address ID 1 from shippingAddressList", Price = new Price(33, Currency.JPY) },
+            new MultiAddressesCheckoutMetadata(){ AddressId = "Amazon Address ID 2 from shippingAddressList", Price = new Price(33, Currency.JPY) },
+            new MultiAddressesCheckoutMetadata(){ AddressId = "Amazon Address ID 3 from shippingAddressList", Price = new Price(33, Currency.JPY) }
+
+        };
+
+        // send the request
+        var result = client.UpdateCheckoutSession(checkoutSessionId, request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // do something, e.g. throw an error
+        }
+
+        return result;
+    }
+}
+```
+
+
 ### Complete CheckoutSession
 ```csharp
 using Amazon.Pay.API.Types;
@@ -719,7 +804,8 @@ public class Sample
             region: Region.Europe,
             environment: Environment.Live, // IMPORTANT: only available in "Live" mode
             publicKeyId: "MY_PUBLIC_KEY_ID",
-            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY"
+            privateKey: "PATH_OR_CONTENT_OF_MY_PRIVATE_KEY",
+            algorithm: AmazonSignatureAlgorithm.V2 // Amazon Signing Algorithm 'AMZN-PAY-RSASSA-PSS-V2', Optional: uses old algorithm 'AMZN-PAY-RSASSA-PSS'if not specified
         );
 
         // init API client
@@ -759,6 +845,315 @@ public class Sample
             // do something, e.g. throw an error
         }
 
+    }
+}
+```
+
+# Reporting APIs code samples
+
+## Amazon Checkout v2 Reporting APIs - GetReport API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportsAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        GetReportsRequest reportRequest = new GetReportsRequest(
+            reportTypes: new List<ReportTypes> {ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_}, 
+            processingStatuses: new List<ProcessingStatus> {ProcessingStatus.CANCELLED},
+            createdSince: DateTime.Now.AddDays(-10), 
+            createdUntil: DateTime.Now.AddDays(-5), 
+            pageSize: 5
+        );
+
+        // send the request
+        GetReportsResponse report = client.GetReports(reportRequest, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - GetReportById API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportByIdAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        string reportId = "1234567890";
+
+        // send the request
+        Report report = client.GetReportById(reportId, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - GetReportDocument API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportDocumentAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        string reportDocumentId = "1234567890";
+
+        // send the request
+        GetReportDocumentResponse report = client.GetReportDocument(reportDocumentId, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - GetReportSchedules API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportSchedulesAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        GetReportSchedulesRequest reportTypes = new GetReportSchedulesRequest(
+            reportTypes: new List<ReportTypes> {ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_, ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_AUTHORIZATION_DATA_}
+        );
+
+        // send the request
+        GetReportScheduleResponse report = client.GetReportSchedules(reportTypes, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - GetReportScheduleById API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportSchedulesAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        string reportScheduleId = "1234567890";
+
+        // send the request
+        ReportSchedule report = client.GetReportScheduleById(reportScheduleId, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - CreateReport API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+using Amazon.Pay.API.WebStore.Types;
+
+public class Sample
+{
+    public void GetReportSchedulesAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        CreateReportRequest requestPayload = new CreateReportRequest(
+            reportType: ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_,
+            startTime: "20221225T150630Z", // Can also use DateTime.Now or any DateTime object value
+            endTime: "20230223T111530Z" // Can also use DateTime.Now or any DateTime object value
+        );
+
+        // send the request
+        CreateReportResponse report = client.CreateReport(requestPayload, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - CreateReportSchedule API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+using Amazon.Pay.API.WebStore.Types;
+
+public class Sample
+{
+    public void GetReportSchedulesAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        CreateReportScheduleRequest requestPayload = new CreateReportScheduleRequest(
+            reportType: ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_,
+            scheduleFrequency: ScheduleFrequency.P14D,
+            nextReportCreationTime: "20221114T074550Z", // Can also use DateTime.Now or any DateTime object value
+            deleteExistingSchedule: true // Can also use DateTime.Now or any DateTime object value
+        );
+
+        // send the request
+        CreateReportScheduleResponse report = client.CreateReportSchedule(requestPayload, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
+    }
+}
+```
+
+## Amazon Checkout v2 Reporting APIs - CancelReportSchedule API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Reports;
+
+public class Sample
+{
+    public void GetReportSchedulesAPI()
+    {
+        // init API client
+        var client = new WebStoreClient(config);
+
+        // init Headers
+        var myHeaderKey = "my-header-key";
+        var myHeaderValue = "some string";
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // init Request Payload
+        string reportScheduleId = "1234567890";
+
+        // send the request
+        CancelReportScheduleResponse report = client.CancelReportSchedule(reportScheduleId, headers);
+
+        // check if API call was successful
+        if (!report.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        }
+
+        // do something with the result, for instance:
+        Console.WriteLine(report.RawResponse);
     }
 }
 ```

@@ -20,6 +20,8 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             PaymentPreferences = new List<PaymentPreferences>();
             Constraints = new List<Constraint>();
             RecurringMetadata = new RecurringMetadata();
+            ShippingAddressList = new List<AddressWithId>();
+            MultiAddressesCheckoutMetadataList = new List<MultiAddressesCheckoutMetadata>();
         }
 
         /// <summary>
@@ -95,6 +97,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         public Address ShippingAddress { get; internal set; }
 
         /// <summary>
+        /// List of shipping addresses selected by the buyer in PayAndShipMultiAddress productType.
+        /// </summary>
+        [JsonProperty(PropertyName = "shippingAddressList")]
+        public List<AddressWithId> ShippingAddressList { get; internal set; }
+
+        /// <summary>
         /// Billing address for buyer-selected payment instrument. Billing address is only available in EU or for PayOnly product type.
         /// </summary>
         [JsonProperty(PropertyName = "billingAddress")]
@@ -160,5 +168,17 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "recurringMetadata")]
         public RecurringMetadata RecurringMetadata { get; internal set; }
+
+        /// <summary>
+        /// Metadata about how payment method on file charge permission will be used. Amazon Pay will use it to get additional information related to payment method on file.
+        /// </summary>
+        [JsonProperty(PropertyName = "paymentMethodOnFileMetadata")]
+        public PaymentMethodOnFileMetadata PaymentMethodOnFileMetadata { get; internal set; }
+
+        /// <summary>
+        /// Metadata about the the addresses and the amounts selected by buyer on Merchant Review page in PayAndShipMultiAddress productType.
+        /// </summary>
+        [JsonProperty(PropertyName = "multiAddressesCheckoutMetadata")]
+        public List<MultiAddressesCheckoutMetadata> MultiAddressesCheckoutMetadataList { get; internal set; }
     }
 }

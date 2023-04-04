@@ -1,5 +1,6 @@
 ﻿using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
 using NUnit.Framework;
 
 namespace Amazon.Pay.API.Tests.WebStore.Charge
@@ -28,6 +29,8 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             Assert.IsNull(request.CaptureNow);
             Assert.IsNull(request.SoftDescriptor);
             Assert.IsNull(request.PlatformId);
+            Assert.IsNull(request.ChargeInitiator);
+            Assert.IsNull(request.Channel);
         }
 
         [Test]
@@ -101,6 +104,29 @@ namespace Amazon.Pay.API.Tests.WebStore.Charge
             // assert
             Assert.AreEqual(json, json2);
             Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo2\",\"platformId\":\"My Platform Id\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo1\"},\"merchantMetadata\":{\"merchantReferenceId\":\"123abc!\",\"merchantStoreName\":\"My Store Name\",\"noteToBuyer\":\"My Note to Buyer\",\"customInformation\":\"My Custom Info\"}}", json);
+        }
+
+        [Test]
+        public void CanConvertToJsonPaymentMethodOnFile()
+        {
+            // arrange
+            var chargePermissionId = "S02-7331650-8246451";
+            var request = new CreateChargeRequest(chargePermissionId, 12.99M, Currency.EUR);
+            request.ProviderMetadata.ProviderReferenceId = "foo";
+            request.SoftDescriptor = "foo";
+            request.CaptureNow = true;
+            request.PlatformId = "My Platform Id";
+            request.CanHandlePendingAuthorization = true;
+            request.ChargeInitiator = ChargeInitiator.CITR;
+            request.Channel = Channel.Web;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"chargePermissionId\":\"S02-7331650-8246451\",\"chargeAmount\":{\"amount\":12.99,\"currencyCode\":\"EUR\"},\"captureNow\":true,\"softDescriptor\":\"foo\",\"platformId\":\"My Platform Id\",\"canHandlePendingAuthorization\":true,\"providerMetadata\":{\"providerReferenceId\":\"foo\"},\"chargeInitiator\":\"CITR\",\"channel\":\"Web\"}", json);
         }
 
 

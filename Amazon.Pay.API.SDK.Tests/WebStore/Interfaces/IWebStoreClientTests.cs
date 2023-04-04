@@ -246,5 +246,6 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
             Assert.That(result, Is.EqualTo(response));
             this.mockWebStoreClient.Verify(mwsc => mwsc.GetAuthorizationToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
+
     }
 }

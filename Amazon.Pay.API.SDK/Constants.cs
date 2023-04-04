@@ -4,17 +4,16 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.6.0.0";
+        public const string SdkVersion = "2.7.0.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
         public const int    ApiVersion = 2;
-
-        public const string AmazonSignatureAlgorithm = "AMZN-PAY-RSASSA-PSS";
 
         public static readonly Dictionary<string, int> serviceErrors = new Dictionary<string, int>() {
              {"Internal Server Error", 500},
              {"HTTP Bad Gateway", 502},
              {"Service Unavailable", 503},
              {"HTTP Gateway Timeout", 504},
+             {"Request Timeout", 408},
              {"Too Many Requests", 429}
          };
 
@@ -43,6 +42,11 @@ namespace Amazon.Pay.API
                 public const string Charges = "charges";
                 public const string Refunds = "refunds";
                 public const string Buyer = "buyers";
+
+                // CV2 Reporting API Constants
+                public const string Reports = "reports";
+                public const string ReportDocuments = "report-documents";
+                public const string ReportSchedules = "report-schedules";
             }
 
             public class InStore

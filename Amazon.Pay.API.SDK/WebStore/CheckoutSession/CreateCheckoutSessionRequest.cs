@@ -18,6 +18,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             StoreId = storeId;
             DeliverySpecifications = new DeliverySpecifications();
             AddressDetails = new AddressDetails();
+            PaymentMethodOnFileMetadata = new PaymentMethodOnFileMetadata();
         }
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         {
             DeliverySpecifications = new DeliverySpecifications();
             AddressDetails = new AddressDetails();
+            PaymentMethodOnFileMetadata = new PaymentMethodOnFileMetadata();
         }
 
         /// <summary>
@@ -42,6 +44,7 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
             DeliverySpecifications = new DeliverySpecifications();
             AddressDetails = new AddressDetails();
             CheckoutSessionScope = checkoutSessionScopes;
+            PaymentMethodOnFileMetadata = new PaymentMethodOnFileMetadata();
         }
 
         /// <summary>
@@ -67,6 +70,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "scopes")]
         public CheckoutSessionScope[] CheckoutSessionScope { get; internal set; }
+
+        /// <summary>
+        /// Metadata about how payment method on file charge permission will be used. Amazon Pay will use it to get additional information related to payment method on file.
+        /// </summary>
+        [JsonProperty(PropertyName = "paymentMethodOnFileMetadata")]
+        public PaymentMethodOnFileMetadata PaymentMethodOnFileMetadata { get; set; }
 
     }
 }

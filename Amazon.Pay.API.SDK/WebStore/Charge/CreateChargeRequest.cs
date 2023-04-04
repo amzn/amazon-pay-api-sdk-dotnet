@@ -82,5 +82,17 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// </summary>
         [JsonProperty(PropertyName = "merchantMetadata")]
         public MerchantMetadata MerchantMetadata { get; internal set; }
+
+        /// <summary>
+        /// Represents who initiated the payment.
+        /// </summary>
+        [JsonProperty(PropertyName = "chargeInitiator")]
+        public ChargeInitiator? ChargeInitiator { get; set; }
+
+        /// <summary>
+        /// Channel of transaction.
+        /// </summary>
+        [JsonProperty(PropertyName = "channel")]
+        public Channel? Channel { get; set; }
     }
 }
