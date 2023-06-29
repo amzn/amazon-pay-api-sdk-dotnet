@@ -180,5 +180,11 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "multiAddressesCheckoutMetadata")]
         public List<MultiAddressesCheckoutMetadata> MultiAddressesCheckoutMetadataList { get; internal set; }
+
+        /// <summary>
+        /// The text a merchant can use for checkout Button after redirecting to checkout page.
+        /// </summary>
+        [JsonProperty(PropertyName = "checkoutButtonText")]
+        public string CheckoutButtonText { get; internal set; }
     }
 }

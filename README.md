@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.0/Amazon.Pay.API.SDK.2.7.0.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.1/Amazon.Pay.API.SDK.2.7.1.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.0
+Install-Package Amazon.Pay.API.SDK -Version 2.7.1
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.0 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.7.1 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.7.0 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.7.1 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -322,7 +322,6 @@ public class Sample : PageModel
         // generate the signature and payload string that is passed back to the frontend
         Signature = client.GenerateButtonSignature(request);
         Payload = request.ToJson();
-    }
     }
 }
 ```
@@ -711,6 +710,170 @@ public class Sample
 }
 ```
 
+### Get Charge
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+
+public class Sample
+{
+    // ...
+
+    public void GetCharge(string chargeId)
+    {
+        // send the request
+        ChargeResponse result = client.GetCharge(chargeId);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            string chargeState = result.StatusDetails.State;
+            Price chargeAmount = result.ChargeAmount;
+            Price captureAmount = result.CaptureAmount;
+            DateTime chargeExpiryDate = result.ExpirationTimestamp;
+
+            // ...
+        }
+    }
+}
+```
+
+### Create Charge
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    // ...
+
+    public void CreateCharge(string chargePermissionId)
+    {
+        // prepare the request
+        var request = new CreateChargeRequest(chargePermissionId, 1.23M, Currency.USD)
+        {
+            CaptureNow = true,
+            SoftDescriptor = "My Soft Descriptor", // This is the information shown on buyer payment instrument statement
+            CanHandlePendingAuthorization = false
+        };
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey,  myHeaderValue } };
+
+        // send the request
+        ChargeResponse result = client.CreateCharge(request, headers);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            string chargeId = result.ChargeId;
+            DateTime chargeCreationTimestamp = result.CreationTimestamp;
+            DateTime chargeExpiryTimestamp = result.ExpirationTimestamp;
+
+            // ...
+        }
+    }
+}
+```
+
+### Capture Charge
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    // ...
+
+    public void CaptureCharge(string chargeId)
+    {
+        // prepare the request
+        var request = new CaptureChargeRequest(1.23M, Currency.USD)
+        {
+            SoftDescriptor = "My Soft Descriptor" // This is the information shown on buyer payment instrument statement"
+        };
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey,  myHeaderValue } };
+
+        // send the request
+        ChargeResponse result = client.CaptureCharge(chargeId, request, headers);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            string chargeState = result.StatusDetails.State;
+            Price chargeAmount = result.ChargeAmount;
+            Price captureAmount = result.CaptureAmount;
+            DateTime chargeExpiryDate = result.ExpirationTimestamp;
+
+            // ...
+        }
+    }
+}
+```
+
+### Cancel Charge
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+
+public class Sample
+{
+    // ...
+
+    public void CancelCharge(string chargeId, string cancellationReason)
+    {
+        // prepare the request
+        var request = new CancelChargeRequest(cancellationReason);
+
+        // send the request
+        ChargeResponse result = client.CancelCharge(chargeId, request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            string chargeState = result.StatusDetails.State;
+            Price chargeAmount = result.ChargeAmount;
+            Price captureAmount = result.CaptureAmount;
+            DateTime chargeExpiryDate = result.ExpirationTimestamp;
+
+            // ...
+        }
+    }
+}
+```
+
 ### Get Buyer information
 
 This API call can be used only in conjunction with the Sign-In Button. The buyer token required for the API call is available as URL parameter after the user was redirect to the URL specified by `signInReturnUrl` (see [Amazon Sign-In Button](#amazon-sign-in-button)).
@@ -856,6 +1019,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -865,14 +1030,14 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
         GetReportsRequest reportRequest = new GetReportsRequest(
             reportTypes: new List<ReportTypes> {ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_}, 
-            processingStatuses: new List<ProcessingStatus> {ProcessingStatus.CANCELLED},
+            processingStatuses: new List<ProcessingStatus> {ProcessingStatus.COMPLETED},
             createdSince: DateTime.Now.AddDays(-10), 
             createdUntil: DateTime.Now.AddDays(-5), 
             pageSize: 5
@@ -898,6 +1063,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -907,8 +1074,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
@@ -934,6 +1101,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -943,12 +1112,12 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
-        string reportDocumentId = "1234567890";
+        string reportDocumentId = "amzn1.tortuga.0.000000000-0000-0000-0000-000000000000.00000000000000";
 
         // send the request
         GetReportDocumentResponse report = client.GetReportDocument(reportDocumentId, headers);
@@ -970,6 +1139,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -979,8 +1150,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
@@ -989,7 +1160,7 @@ public class Sample
         );
 
         // send the request
-        GetReportScheduleResponse report = client.GetReportSchedules(reportTypes, headers);
+        GetReportSchedulesResponse report = client.GetReportSchedules(reportTypes, headers);
 
         // check if API call was successful
         if (!report.Success)
@@ -1008,6 +1179,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -1017,8 +1190,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
@@ -1045,6 +1218,8 @@ using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
 using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
 
 public class Sample
 {
@@ -1054,8 +1229,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
@@ -1086,6 +1261,8 @@ using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
 using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -1095,8 +1272,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload
@@ -1127,6 +1304,8 @@ public class Sample
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
 using Amazon.Pay.API.WebStore.Reports;
+using System;
+using System.Collections.Generic;
 
 public class Sample
 {
@@ -1136,8 +1315,8 @@ public class Sample
         var client = new WebStoreClient(config);
 
         // init Headers
-        var myHeaderKey = "my-header-key";
-        var myHeaderValue = "some string";
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
         var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
 
         // init Request Payload

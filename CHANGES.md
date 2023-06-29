@@ -1,3 +1,8 @@
+#### Version 2.7.1 - June 2023
+* Added new parameters "CheckoutButtonText" in GetCheckoutSession Response, as a part of Affirm changes in Place Order Button. Change is fully backwards compatible.
+* Added the Sample Code snippets for the Charge APIs.
+* Corrected README.md file related to Reporting APIs.
+
 #### Version 2.7.0 - April 2023
 * Introducing new v2 Reporting APIs. Reports allow you to retrieve consolidated data about Amazon Pay transactions and settlements. In addition to managing and downloading reports using Seller Central, Amazon Pay offers APIs to manage and retrieve your reports.
 * Introducing new signature generation algorithm AMZN-PAY-RSASSA-PSS-V2 & increasing salt length from 20 to 32.
