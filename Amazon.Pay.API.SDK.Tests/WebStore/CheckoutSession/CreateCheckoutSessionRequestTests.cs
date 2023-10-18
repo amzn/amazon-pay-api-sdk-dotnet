@@ -220,6 +220,30 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
             Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"paymentMethodOnFileMetadata\":{\"setupOnly\":true},\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/return.html\"},\"paymentDetails\":{\"paymentIntent\":\"Confirm\"},\"chargePermissionType\":\"PaymentMethodOnFile\"}", json);
         }
 
+        [Test]
+        public void CanConvertToJsonPaymentMethodOnFileForUpdateFlow()
+        {
+            // arrange
+            var request = new CreateCheckoutSessionRequest
+            (
+                checkoutReviewReturnUrl: "https://example.com/review.html",
+                storeId: "amzn1.application-oa2-client.000000000000000000000000000000000",
+                chargePermissionId: "B01-0000000-0000000"
+            );
+            request.WebCheckoutDetails.CheckoutResultReturnUrl = "https://example.com/return.html";
+            request.ChargePermissionType = ChargePermissionType.PaymentMethodOnFile;
+            request.PaymentMethodOnFileMetadata.SetupOnly = true;
+            request.PaymentDetails.PaymentIntent = PaymentIntent.Confirm;
+            request.PaymentDetails.CanHandlePendingAuthorization = false;
+
+            // act
+            string json = request.ToJson();
+            string json2 = request.ToJson();
+
+            // assert
+            Assert.AreEqual(json, json2);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"paymentMethodOnFileMetadata\":{\"setupOnly\":true},\"chargePermissionId\":\"B01-0000000-0000000\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutResultReturnUrl\":\"https://example.com/return.html\"},\"paymentDetails\":{\"paymentIntent\":\"Confirm\",\"canHandlePendingAuthorization\":false},\"chargePermissionType\":\"PaymentMethodOnFile\"}", json);
+        }
 
         [Test]
         public void AdditionalPaymentButton()
@@ -253,7 +277,7 @@ namespace Amazon.Pay.API.Tests.WebStore.CheckoutSession
 
             // assert
             Assert.AreEqual(json, json2);
-            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"addressDetails\":{\"districtOrCounty\":\"Manhattan\",\"name\":\"Paul Smith\",\"addressLine1\":\"9999 First Avenue\",\"city\":\"New York\",\"stateOrRegion\":\"NY\",\"postalCode\":\"10016\",\"countryCode\":\"US\",\"phoneNumber\":\"212555555\"},\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutMode\":\"ProcessOrder\"},\"paymentDetails\":{\"paymentIntent\":\"AuthorizeWithCapture\",\"chargeAmount\":{\"amount\":10,\"currencyCode\":\"USD\"},\"presentmentCurrency\":\"USD\"},\"merchantMetadata\":{\"merchantReferenceId\":\"Merchant Ref ID\",\"merchantStoreName\":\"Store Name\",\"noteToBuyer\":\"Buyer Note\"}}", json);
+            Assert.AreEqual("{\"storeId\":\"amzn1.application-oa2-client.000000000000000000000000000000000\",\"addressDetails\":{\"districtOrCounty\":\"Manhattan\",\"name\":\"Paul Smith\",\"phoneNumber\":\"212555555\",\"addressLine1\":\"9999 First Avenue\",\"city\":\"New York\",\"stateOrRegion\":\"NY\",\"postalCode\":\"10016\",\"countryCode\":\"US\"},\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"https://example.com/review.html\",\"checkoutMode\":\"ProcessOrder\"},\"paymentDetails\":{\"paymentIntent\":\"AuthorizeWithCapture\",\"chargeAmount\":{\"amount\":10,\"currencyCode\":\"USD\"},\"presentmentCurrency\":\"USD\"},\"merchantMetadata\":{\"merchantReferenceId\":\"Merchant Ref ID\",\"merchantStoreName\":\"Store Name\",\"noteToBuyer\":\"Buyer Note\"}}", json);
         }
 
         [Test]

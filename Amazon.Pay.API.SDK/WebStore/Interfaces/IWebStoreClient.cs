@@ -30,6 +30,11 @@ namespace Amazon.Pay.API.WebStore.Interfaces
         /// Completes a Checkout Session.
         /// </summary>
         CheckoutSessionResponse CompleteCheckoutSession(string checkoutSessionId, CompleteCheckoutSessionRequest completeRequest, Dictionary<string, string> headers = null);
+        
+        /// <summary>
+        /// FinalizeCheckoutSession API which enables Pay to validate payment critical attributes and also update book-keeping attributes present in merchantMetadata
+        /// </summary>
+        CheckoutSessionResponse FinalizeCheckoutSession(string checkoutSessionId, FinalizeCheckoutSessionRequest finalizeCheckoutSessionRequest, Dictionary<string, string> headers = null);
 
         /// <summary>
         /// Helps the solution provider get details of a chargePermission

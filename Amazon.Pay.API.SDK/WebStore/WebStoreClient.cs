@@ -1,4 +1,5 @@
 using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore.AccountManagement;
 using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
@@ -12,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore
 {
-    public class WebStoreClient : Client, IWebStoreClient, IReportsClient
+    public class WebStoreClient : Client, IWebStoreClient, IReportsClient, IMerchantOnboardingClient
     {
         public WebStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {
@@ -463,5 +464,66 @@ namespace Amazon.Pay.API.WebStore
             return result;
         }
 
+        // ----------------------------------- Merchant Onboarding & Account Management APIs --------------------
+
+        /// <summary>
+        /// Creates a non-logginable account for your merchant partners. These would be special accounts through which Merchants would not be able to login to Amazon or access Seller Central.
+        /// </summary>
+        /// <param name="registerAmazonPayAccountRequest">The payload for creating a amazon pay account.</param>
+        /// <param name="headers"></param>
+        /// <returns>Merchant Account ID which is created via the Request Payload</returns>
+        public RegisterAmazonPayAccountResponse RegisterAmazonPayAccount(RegisterAmazonPayAccountRequest registerAmazonPayAccountRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.AccountManagement);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, registerAmazonPayAccountRequest, headers);
+
+            return CallAPI<RegisterAmazonPayAccountResponse>(apiRequest);
+        }
+
+        /// <summary>
+        /// Updates a merchant account for the given Merchant Account ID. We would be allowing our partners to update only a certain set of fields which won’t change the legal business entity itself.
+        /// </summary>
+        /// <param name="merchantAccountId">Internal Merchant Account ID for Updating the Amazon Pay Account</param>
+        /// <param name="updateAmazonPayAccountRequest">The payload for updating amazon pay account.</param>
+        /// <param name="headers"></param>
+        /// <returns>HTTP Response after Updating the Merchant Account ID mentioned</returns>
+        public UpdateAmazonPayAccountResponse UpdateAmazonPayAccount(string merchantAccountId, UpdateAmazonPayAccountRequest updateAmazonPayAccountRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.AccountManagement, merchantAccountId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.PATCH, updateAmazonPayAccountRequest, headers);
+
+            return CallAPI<UpdateAmazonPayAccountResponse>(apiRequest);
+        }
+
+        /// <summary>
+        /// Deletes the Merchant account for the given Merchant Account ID. Partners can close the merchant accounts created for their merchant partners.
+        /// </summary>
+        /// <param name="merchantAccountId">Internal Merchant Account ID for Deleting the Amazon Pay Account</param>
+        /// <param name="headers"></param>
+        /// <returns>HTTP Response after Deleting the Merchant Account ID mentioned</returns>
+        public DeleteAmazonPayAccountResponse DeleteAmazonPayAccount(string merchantAccountId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.AccountManagement, merchantAccountId);
+            DeleteAmazonPayAccountRequest deleteAmazonPayAccountRequest = new DeleteAmazonPayAccountRequest();
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.DELETE, deleteAmazonPayAccountRequest, headers);
+
+            return CallAPI<DeleteAmazonPayAccountResponse>(apiRequest);
+        }
+        
+        /// <summary>
+        /// FinalizeCheckoutSession API which enables Pay to validate payment critical attributes and also update book-keeping attributes present in merchantMetadata
+        /// </summary>
+        /// <param name="checkoutSessionId">The checkout session Id</param>
+        /// <param name="finalizeCheckoutSessionRequest">The payload for finalize checkout session</param>
+        /// <param name="headers"></param>
+        public CheckoutSessionResponse FinalizeCheckoutSession(string checkoutSessionId, FinalizeCheckoutSessionRequest finalizeCheckoutSessionRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.CheckoutSessions, checkoutSessionId, Constants.Methods.Finalize);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, finalizeCheckoutSessionRequest, headers);
+
+            var result = CallAPI<CheckoutSessionResponse>(apiRequest);
+
+            return result;
+        }
     }
 }

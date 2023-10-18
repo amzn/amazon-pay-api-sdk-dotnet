@@ -1,3 +1,8 @@
+#### Version 2.7.2 - October 2023
+* Introducing new Merchant Onboarding & Account Management APIs, which allows our partners to onboard merchants programatically and as part of account management offer them creation, updation and deletion/dissociation capability.
+* Introducing new API called finalizeCheckoutSession which validates checkout attributes and finalizes checkout session. On success returns charge permission id and charge id. Use this API to process payments for JavaScript-based integrations.
+* Added new parameter "chargePermissionId" in CreateCheckoutSession Request, as a part of PMOF(Payment Method On File) changes.
+
 #### Version 2.7.1 - June 2023
 * Added new parameters "CheckoutButtonText" in GetCheckoutSession Response, as a part of Affirm changes in Place Order Button. Change is fully backwards compatible.
 * Added the Sample Code snippets for the Charge APIs.

@@ -8,12 +8,12 @@ namespace Amazon.Pay.API.WebStore.Types
         /// County of the address.
         /// </summary>
         [JsonProperty(PropertyName = "county")]
-        public string County { get; internal set; }
+        public string County { get; set; }
 
         /// <summary>
         /// District of the address.
         /// </summary>
         [JsonProperty(PropertyName = "district")]
-        public string District { get; internal set; }
+        public string District { get; set; }
     }
 }

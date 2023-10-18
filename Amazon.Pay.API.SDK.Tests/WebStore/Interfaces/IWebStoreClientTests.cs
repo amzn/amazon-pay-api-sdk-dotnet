@@ -7,6 +7,7 @@ using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Interfaces;
 using Amazon.Pay.API.WebStore.Refund;
+using Amazon.Pay.API.WebStore.Types;
 using Moq;
 using NUnit.Framework;
 
@@ -65,6 +66,18 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
 
             Assert.That(result, Is.EqualTo(checkoutSessionResponse));
             this.mockWebStoreClient.Verify(mwsc => mwsc.CompleteCheckoutSession(It.IsAny<string>(), It.IsAny<CompleteCheckoutSessionRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
+        }
+        
+        [Test]
+        public void FinalizeCheckoutSessionCanBeMocked()
+        {
+            var checkoutSessionResponse = new CheckoutSessionResponse();
+            this.mockWebStoreClient.Setup(mwsc => mwsc.FinalizeCheckoutSession(It.IsAny<string>(), It.IsAny<FinalizeCheckoutSessionRequest>(), It.IsAny<Dictionary<string, string>>())).Returns(checkoutSessionResponse);
+
+            var result = this.mockWebStoreClient.Object.FinalizeCheckoutSession("SessionId", new FinalizeCheckoutSessionRequest(10, Types.Currency.USD, PaymentIntent.Confirm), new Dictionary<string, string>());
+
+            Assert.That(result, Is.EqualTo(checkoutSessionResponse));
+            this.mockWebStoreClient.Verify(mwsc => mwsc.FinalizeCheckoutSession(It.IsAny<string>(), It.IsAny<FinalizeCheckoutSessionRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
 
         [Test]

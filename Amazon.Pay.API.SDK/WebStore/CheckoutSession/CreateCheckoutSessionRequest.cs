@@ -24,6 +24,22 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// <summary>
         /// Initializes a new instance of the CreateCheckoutSessionRequest class.
         /// </summary>
+        /// <param name="checkoutReviewReturnUrl">Checkout review URL provided by the merchant. Amazon Pay will redirect to this URL after the buyer selects their preferred payment instrument and shipping address.</param>
+        /// <param name="storeId">Store ID as defined in Seller Central.</param>
+        /// <param name="chargePermissionId">The buyer's saved payment method on file charge permission id with the merchant</param>
+        public CreateCheckoutSessionRequest(string checkoutReviewReturnUrl, string storeId, string chargePermissionId) : base()
+        {
+            WebCheckoutDetails.CheckoutReviewReturnUrl = checkoutReviewReturnUrl;
+            StoreId = storeId;
+            DeliverySpecifications = new DeliverySpecifications();
+            AddressDetails = new AddressDetails();
+            PaymentMethodOnFileMetadata = new PaymentMethodOnFileMetadata();
+            ChargePermissionId = chargePermissionId;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the CreateCheckoutSessionRequest class.
+        /// </summary>
         public CreateCheckoutSessionRequest() : base()
         {
             DeliverySpecifications = new DeliverySpecifications();
@@ -76,6 +92,12 @@ namespace Amazon.Pay.API.WebStore.CheckoutSession
         /// </summary>
         [JsonProperty(PropertyName = "paymentMethodOnFileMetadata")]
         public PaymentMethodOnFileMetadata PaymentMethodOnFileMetadata { get; set; }
+
+        /// <summary>
+        /// The buyer's saved payment method on file charge permission id with the merchant.
+        /// </summary>
+        [JsonProperty(PropertyName = "chargePermissionId")]
+        public string ChargePermissionId { get; set; }
 
     }
 }

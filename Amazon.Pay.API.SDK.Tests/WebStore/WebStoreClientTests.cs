@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Amazon.Pay.API.Types;
 using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.AccountManagement;
 using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
@@ -25,6 +26,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
         private ApiConfiguration payConfig;
         Mock<ISignatureHelper> mockSignatureHelper;
         private readonly string checkoutSessionIdToTest = "123456789";
+        private readonly string merchantAccountIdToTest = "ABCD12345";
 
         [OneTimeSetUp]
         public void Init()
@@ -228,6 +230,18 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                     $"{Constants.Resources.WebStore.CheckoutSessions}/{checkoutSessionIdToTest}/complete"));
             var testRequest = new CompleteCheckoutSessionRequest(10, Currency.USD);
             var result = mockClient.Object.CompleteCheckoutSession(checkoutSessionIdToTest, testRequest);
+        }
+
+        [Test]
+        public void CanFinalizeCheckoutSession()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<CheckoutSessionResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<CheckoutSessionResponse>(request, headers, HttpMethod.POST,
+                    $"{Constants.Resources.WebStore.CheckoutSessions}/{checkoutSessionIdToTest}/finalize"));
+            var testRequest = new FinalizeCheckoutSessionRequest(10, Currency.USD, PaymentIntent.Confirm);
+            var finalizeCheckoutSessionResponse = mockClient.Object.FinalizeCheckoutSession(checkoutSessionIdToTest, testRequest);
         }
 
         [Test]
@@ -571,6 +585,82 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
             
             string reportScheduleId = "1234567890";
             var result = mockClient.Object.CancelReportSchedule(reportScheduleId);
+        }
+
+        // ----------- Testing the Merchant Onboarding & Account Management APIs ---------
+
+        [Test]
+        public void GivenValidRegistrationRequest_CanRegisterAmazonPayAccountSuccessfully()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<RegisterAmazonPayAccountResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<RegisterAmazonPayAccountResponse>(request, headers, HttpMethod.POST,
+                    $"{Constants.Resources.WebStore.AccountManagement}"));
+            var request = new RegisterAmazonPayAccountRequest(uniqueReferenceId: "ABCD1234", ledgerCurrency: LedgerCurrency.JPY)
+            {
+                BusinessInfo =
+                {
+                    BusinessType = BusinessType.INDIVIDUAL,
+                    CountryOfEstablishment = "JP",
+                    BusinessLegalName = "TestingSubmerchant",
+                    BusinessAddress =
+                    {
+                        AddressLine1 = "450 Noda",
+                        City = "香取市",
+                        StateOrRegion = "千葉県",
+                        PostalCode = "289-0314",
+                        CountryCode = "JP"
+                    }
+                }
+            };
+            var result = mockClient.Object.RegisterAmazonPayAccount(request);
+        }
+
+        [Test]
+        public void GivenValidUpdationRequest_CanUpdateAmazonPayAccountSuccessfully()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<UpdateAmazonPayAccountResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<UpdateAmazonPayAccountResponse>(request, headers, HttpMethod.PATCH,
+                    $"{Constants.Resources.WebStore.AccountManagement}/{merchantAccountIdToTest}/"));
+
+            var request = new UpdateAmazonPayAccountRequest()
+            {
+                BusinessInfo =
+                {
+                    BusinessType = BusinessType.CORPORATE,
+                    CountryOfEstablishment = "JP",
+                    BusinessLegalName = "TestingSubmerchant",
+                    BusinessAddress =
+                    {
+                        AddressLine1 = "450 Noda",
+                        City = "香取市",
+                        StateOrRegion = "千葉県",
+                        PostalCode = "289-0314",
+                        CountryCode = "JP"
+                    }
+                },
+                PrimaryContactPerson =
+                {
+                    DateOfBirth = "19971111",
+                    PersonFullName = "Testing"
+                }
+            };
+
+            var result = mockClient.Object.UpdateAmazonPayAccount(merchantAccountIdToTest, request);
+        }
+
+        [Test]
+        public void GivenValidDeletionRequest_CanDeleteAmazonPayAccountSuccessfully()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<DeleteAmazonPayAccountResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DeleteAmazonPayAccountResponse>(request, headers, HttpMethod.DELETE, Constants.Resources.WebStore.AccountManagement));
+
+            var result = mockClient.Object.DeleteAmazonPayAccount(merchantAccountIdToTest);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.7.1.0";
+        public const string SdkVersion = "2.7.2.0";
         public const string SdkName    = "amazon-pay-api-sdk-dotnet";
         public const int    ApiVersion = 2;
 
@@ -47,6 +47,9 @@ namespace Amazon.Pay.API
                 public const string Reports = "reports";
                 public const string ReportDocuments = "report-documents";
                 public const string ReportSchedules = "report-schedules";
+
+                // Merchant Account Management API Constants
+                public const string AccountManagement = "merchantAccounts";
             }
 
             public class InStore
@@ -67,6 +70,7 @@ namespace Amazon.Pay.API
             internal const string Delete = "delete";
             internal const string Cancel = "cancel";
             internal const string Complete = "complete";
+            internal const string Finalize = "finalize";
         }
     }
 }

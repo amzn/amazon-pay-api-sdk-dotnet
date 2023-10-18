@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.1/Amazon.Pay.API.SDK.2.7.1.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.2/Amazon.Pay.API.SDK.2.7.2.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.1
+Install-Package Amazon.Pay.API.SDK -Version 2.7.2
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.1 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.7.2 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.7.1 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.7.2 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -1336,3 +1336,64 @@ public class Sample
     }
 }
 ```
+
+## Amazon Checkout v2 SPC - Finalize Checkout Session API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic;
+
+public class Sample
+{
+    public WebStoreClient InitiateClient()
+    {
+        // set up config
+        var payConfiguration = new ApiConfiguration
+        (
+            region: Region.YOUR_REGION_CODE,
+            publicKeyId: "YOUR_PUBLIC_KEY_ID",
+            privateKey: "PATH_OR_CONTENT_OF_YOUR_PRIVATE_KEY",
+            algorithm: AmazonSignatureAlgorithm.V2
+        );
+
+        // init API client
+        var client = new WebStoreClient(payConfiguration);
+
+        return client;
+    }
+    public CheckoutSessionResponse FinalizeCheckoutSessionAPI(string checkoutSessionId)
+    {
+
+        // prepare the request
+        var request = new FinalizeCheckoutSessionRequest(10, Currency.USD, PaymentIntent.Confirm);
+        request.ShippingAddress.Name = "Susie Smith";
+        request.ShippingAddress.AddressLine1 = "10 Ditka Ave";
+        request.ShippingAddress.AddressLine2 = "Suite 2500";
+        request.ShippingAddress.City = "Chicago";
+        request.ShippingAddress.County = null;
+        request.ShippingAddress.District = null;
+        request.ShippingAddress.StateOrRegion = "IL";
+        request.ShippingAddress.PostalCode = "60602";
+        request.ShippingAddress.CountryCode = "US";
+        request.ShippingAddress.PhoneNumber = "800-000-0000";
+        request.TotalOrderAmount.Amount = 10;
+        request.TotalOrderAmount.CurrencyCode = Currency.USD;
+        request.CanHandlePendingAuthorization = false;
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey, myHeaderValue } };
+
+        // send the request
+        CheckoutSessionResponse response = client.FinalizeCheckoutSession(checkoutSessionId, request, headers);
+        if (!response.Success)
+        {
+            Console.WriteLine(response);
+        }
+        return response;
+    }
+}
