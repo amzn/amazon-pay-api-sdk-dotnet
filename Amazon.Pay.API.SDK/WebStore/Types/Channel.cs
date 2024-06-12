@@ -15,6 +15,7 @@ namespace Amazon.Pay.API.WebStore.Types
         Alexa,
         PointOfSale,
         FireTv,
-        Offline
+        Offline,
+        Amazon
     }
 }

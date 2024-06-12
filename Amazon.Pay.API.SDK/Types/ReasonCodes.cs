@@ -26,5 +26,6 @@ namespace Amazon.Pay.API.Types
         public const string ProcessingFailure = nameof(ProcessingFailure);
         public const string TransactionAmountExceeded = nameof(TransactionAmountExceeded);
         public const string TransactionTimedOut = nameof(TransactionTimedOut);
+        public const string BuyerClosed = nameof(BuyerClosed);
     }
 }

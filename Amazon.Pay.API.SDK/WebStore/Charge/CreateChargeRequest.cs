@@ -16,6 +16,19 @@ namespace Amazon.Pay.API.WebStore.Charge
             MerchantMetadata = new MerchantMetadata();
         }
 
+        // Handle Saved Wallet transactions
+        public CreateChargeRequest(string chargePermissionId, decimal chargeAmount, Currency currencyCode, string checkoutResultReturnUrl)
+        {
+            ProviderMetadata = new ProviderMetadata();
+            ChargePermissionId = chargePermissionId;
+            ChargeAmount = new Price(chargeAmount, currencyCode);
+            MerchantMetadata = new MerchantMetadata();
+            WebCheckoutDetails = new WebCheckoutDetails
+            {
+                CheckoutResultReturnUrl = checkoutResultReturnUrl
+            };
+        }
+
         [OnSerializing]
         internal void OnSerializing(StreamingContext content)
         {
@@ -75,13 +88,13 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// Payment service provider (PSP)-provided order information.
         /// </summary>
         [JsonProperty(PropertyName = "providerMetadata")]
-        public ProviderMetadata ProviderMetadata { get; internal set; }
+        public ProviderMetadata ProviderMetadata { get; set; }
 
         /// <summary>
         /// Merchant-provided order info.
         /// </summary>
         [JsonProperty(PropertyName = "merchantMetadata")]
-        public MerchantMetadata MerchantMetadata { get; internal set; }
+        public MerchantMetadata MerchantMetadata { get; set; }
 
         /// <summary>
         /// Represents who initiated the payment.
@@ -94,5 +107,11 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// </summary>
         [JsonProperty(PropertyName = "channel")]
         public Channel? Channel { get; set; }
+
+        /// <summary>
+        /// URLs associated to the Checkout Session used for completing checkout
+        /// </summary>
+        [JsonProperty(PropertyName = "webCheckoutDetails")]
+        public WebCheckoutDetails WebCheckoutDetails { get; set; }
     }
 }

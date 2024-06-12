@@ -1,3 +1,9 @@
+#### Version 2.7.3 - June 2024
+* Added checkoutResultReturnUrl in the CreateChargeRequest API.
+* Added webCheckoutDetails object in the CreateChargeResponse.
+* Added CreateChargeRequest API sample code for Saved Wallet transactions.
+* Added BuyerClosed in the ReasonCodes.
+
 #### Version 2.7.2 - October 2023
 * Introducing new Merchant Onboarding & Account Management APIs, which allows our partners to onboard merchants programatically and as part of account management offer them creation, updation and deletion/dissociation capability.
 * Introducing new API called finalizeCheckoutSession which validates checkout attributes and finalizes checkout session. On success returns charge permission id and charge id. Use this API to process payments for JavaScript-based integrations.

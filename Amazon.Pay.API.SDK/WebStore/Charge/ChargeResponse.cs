@@ -7,6 +7,11 @@ namespace Amazon.Pay.API.WebStore.Charge
 {
     public class ChargeResponse : AmazonPayResponse
     {
+        public ChargeResponse()
+        {
+            WebCheckoutDetails = new WebCheckoutDetails();
+        }
+
         /// <summary>
         /// Charge identifer.
         /// </summary>
@@ -109,5 +114,11 @@ namespace Amazon.Pay.API.WebStore.Charge
         /// </summary>
         [JsonProperty(PropertyName = "merchantMetadata")]
         public MerchantMetadata MerchantMetadata { get; internal set; }
+
+        /// <summary>
+        /// URLs associated to the Checkout Session used for completing checkout
+        /// </summary>
+        [JsonProperty(PropertyName = "webCheckoutDetails")]
+        public WebCheckoutDetails WebCheckoutDetails { get; internal set; }
     }
 }

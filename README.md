@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.2/Amazon.Pay.API.SDK.2.7.2.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.3/Amazon.Pay.API.SDK.2.7.3.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.2
+Install-Package Amazon.Pay.API.SDK -Version 2.7.3
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.2 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.7.3 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.7.2 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.7.3 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -765,6 +765,55 @@ public class Sample
             CaptureNow = true,
             SoftDescriptor = "My Soft Descriptor", // This is the information shown on buyer payment instrument statement
             CanHandlePendingAuthorization = false
+        };
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey,  myHeaderValue } };
+
+        // send the request
+        ChargeResponse result = client.CreateCharge(request, headers);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            string chargeId = result.ChargeId;
+            DateTime chargeCreationTimestamp = result.CreationTimestamp;
+            DateTime chargeExpiryTimestamp = result.ExpirationTimestamp;
+
+            // ...
+        }
+    }
+}
+```
+
+### Create Charge (Saved Wallet transactions)
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    // ...
+
+    public void CreateCharge(string chargePermissionId)
+    {
+        // prepare the request
+        var request = new CreateChargeRequest(chargePermissionId, 1.23M, Currency.USD, checkoutResultReturnUrl)
+        {
+            CaptureNow = true,
+            SoftDescriptor = "My Soft Descriptor", // This is the information shown on buyer payment instrument statement
+            CanHandlePendingAuthorization = false,
+            ChargeInitiator = ChargeInitiator.CITU,
+            Channel = Channel.Web
         };
 
         // init Headers
