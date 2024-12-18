@@ -16,7 +16,7 @@ namespace Amazon.Pay.API
         /// <param name="preSignedHeaders"></param>
         /// <param name="requestPayload"></param>
         /// <returns>canonical request string</returns>
-        /// <seealso cref="http://amazonpaycheckoutintegrationguide.s3.amazonaws.com/amazon-pay-api-v2/signing-requests.html"/>
+        /// <seealso cref="https://developer.amazon.com/docs/amazon-pay-api-v2/signing-requests.html"/>
         string CreateCanonicalRequest(ApiRequest apiRequest, Dictionary<String, List<String>> preSignedHeaders);
 
         /// <summary>

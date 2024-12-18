@@ -55,7 +55,7 @@ dotnet add package Amazon.Pay.API.SDK -v 2.7.3 -s %USERPROFILE%\Downloads\
 
 Amazon Pay uses asymmetric encryption to secure communication. You will need a public/private key pair and a corresponding Public Key ID (a unique Amazon Pay identifier for the key pair) to access Amazon Pay APIs. 
 
-Information on how to retrieve the required API credentials can be found [here](http://amazonpaycheckoutintegrationguide.s3.amazonaws.com/amazon-pay-checkout/get-set-up-for-integration.html#4-get-your-public-key-id).
+Information on how to retrieve the required API credentials can be found [here](https://developer.amazon.com/docs/amazon-pay-checkout/get-set-up-for-integration.html#5-get-your-public-key-id).
 
 Please note that as an alternative to generating the private key via Seller Central as described in the link above, you can also generate the private key directly on your system.
 
@@ -75,7 +75,7 @@ openssl rsa -in private.pem -pubout > public.pub
 
 The first command above generates a private key and the second line uses the private key to generate a public key.
 
-To associate the key with your account, please follow the steps 1 and 2 described [here](http://amazonpaycheckoutintegrationguide.s3.amazonaws.com/amazon-pay-checkout/get-set-up-for-integration.html#4-get-your-public-key-id). Then:
+To associate the key with your account, please follow the steps 1 and 2 described [here](https://developer.amazon.com/docs/amazon-pay-checkout/get-set-up-for-integration.html#5-get-your-public-key-id). Then:
 * Navigate to the "API keys" section
 * Click on the "Create keys" button
 * Click "Use an existing public key to create API credentials"
