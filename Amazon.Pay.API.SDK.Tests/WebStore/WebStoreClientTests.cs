@@ -12,6 +12,8 @@ using Amazon.Pay.API.WebStore.CheckoutSession;
 using Amazon.Pay.API.WebStore.Refund;
 using Amazon.Pay.API.WebStore.Types;
 using Amazon.Pay.API.WebStore.Reports;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.File;
 using Moq;
 using NUnit.Framework;
 using Environment = Amazon.Pay.API.Types.Environment;
@@ -27,6 +29,8 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
         Mock<ISignatureHelper> mockSignatureHelper;
         private readonly string checkoutSessionIdToTest = "123456789";
         private readonly string merchantAccountIdToTest = "ABCD12345";
+        private readonly string pspChargeId = "P01-1111111-1111111-C123456";
+        private readonly string disputeId = "P01-1111111-1111111-B123456";
 
         [OneTimeSetUp]
         public void Init()
@@ -329,6 +333,17 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
 
         }
 
+        [Test]
+        public void CanUpdateCharge()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<ChargeResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<ChargeResponse>(request, headers, HttpMethod.PATCH,
+                    $"{Constants.Resources.WebStore.Charges}/{pspChargeId}"));
+            var updateChargeRequest = new UpdateChargeRequest(state: "Canceled", reasonCode: "ExpiredUnused");
+            var result = mockClient.Object.UpdateCharge(pspChargeId, updateChargeRequest);
+        }
 
         [Test]
         public void CanGetCharge()
@@ -492,7 +507,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<Report>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<Report>(request, headers, HttpMethod.GET, Constants.Resources.WebStore.Reports));
-            
+
             string reportId = "1234567890";
             var result = mockClient.Object.GetReportById(reportId);
         }
@@ -504,7 +519,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<GetReportDocumentResponse>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<GetReportDocumentResponse>(request, headers, HttpMethod.GET, Constants.Resources.WebStore.ReportDocuments));
-            
+
             string reportDocumentId = "1234567890";
             var result = mockClient.Object.GetReportDocument(reportDocumentId);
         }
@@ -516,7 +531,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<GetReportSchedulesResponse>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<GetReportSchedulesResponse>(request, headers, HttpMethod.GET, Constants.Resources.WebStore.ReportSchedules));
-            
+
             var result = mockClient.Object.GetReportSchedules();
         }
 
@@ -527,7 +542,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<ReportSchedule>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<ReportSchedule>(request, headers, HttpMethod.GET, Constants.Resources.WebStore.ReportSchedules));
-            
+
             string reportScheduleId = "1234567890";
             var result = mockClient.Object.GetReportScheduleById(reportScheduleId);
         }
@@ -539,7 +554,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<CreateReportResponse>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<CreateReportResponse>(request, headers, HttpMethod.POST, Constants.Resources.WebStore.Reports));
-            
+
             CreateReportRequest requestPayload = new CreateReportRequest(
                 reportType: ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_ORDER_REFERENCE_DATA_,
                 startTime: "20221225T150630Z",
@@ -560,7 +575,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<CreateReportScheduleResponse>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<CreateReportScheduleResponse>(request, headers, HttpMethod.POST, Constants.Resources.WebStore.ReportSchedules));
-            
+
             CreateReportScheduleRequest requestPayload = new CreateReportScheduleRequest(
                 reportType: ReportTypes._GET_FLAT_FILE_OFFAMAZONPAYMENTS_BILLING_AGREEMENT_DATA_,
                 scheduleFrequency: ScheduleFrequency.P14D,
@@ -582,7 +597,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Setup(c => c.ProcessRequest<CancelReportScheduleResponse>(It.IsAny<ApiRequest>(),
                     It.IsAny<Dictionary<string, string>>()))
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<CancelReportScheduleResponse>(request, headers, HttpMethod.DELETE, Constants.Resources.WebStore.ReportSchedules));
-            
+
             string reportScheduleId = "1234567890";
             var result = mockClient.Object.CancelReportSchedule(reportScheduleId);
         }
@@ -661,6 +676,105 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore
                 .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DeleteAmazonPayAccountResponse>(request, headers, HttpMethod.DELETE, Constants.Resources.WebStore.AccountManagement));
 
             var result = mockClient.Object.DeleteAmazonPayAccount(merchantAccountIdToTest);
+        }
+
+        // ------------ Testing the Disputes APIs ---------------
+
+        [Test]
+        public void CanCreateDispute()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<DisputeResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DisputeResponse>(request, headers, HttpMethod.POST, Constants.Resources.WebStore.Disputes));
+            var createDisputeRequest = new CreateDisputeRequest(
+                chargeId: "S03-0000000-0000000-C000000",
+                chargeAmount: 1,
+                currencyCode: Currency.JPY
+            )
+            {
+                ProviderMetadata = new ProviderMetadata
+                {
+                    ProviderDisputeId = "A2CQXQ2TUSYG7J"
+                },
+                FilingReason = "ProductNotReceived",
+                FilingTimestamp = DateTime.UtcNow,
+                MerchantResponseDeadline = DateTime.UtcNow.AddDays(14),
+                StatusDetails = new StatusDetailsRequest
+                {
+                    State = "ActionRequired",
+                    ReasonCode = "MerchantResponseRequired"
+                }
+            };
+
+            var result = mockClient.Object.CreateDispute(createDisputeRequest);
+        }
+
+        [Test]
+        public void CanGetDispute()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<DisputeResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DisputeResponse>(request, headers, HttpMethod.GET, $"{Constants.Resources.WebStore.Disputes}/{disputeId}"));
+
+            var result = mockClient.Object.GetDispute(disputeId);
+        }
+
+        [Test]
+        public void CanUpdateDispute()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<DisputeResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DisputeResponse>(request, headers, HttpMethod.PATCH, $"{Constants.Resources.WebStore.Disputes}/{disputeId}"));
+
+            var updateDisputeRequest = new UpdateDisputeRequest(
+                    state: "UnderReview",
+                    reasonCode: "MerchantResponseRequired",
+                    closureTimestamp: DateTime.UtcNow
+            );
+
+            var result = mockClient.Object.UpdateDispute(disputeId, updateDisputeRequest);
+        }
+
+        [Test]
+        public void CanContestDispute()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<DisputeResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<DisputeResponse>(request, headers, HttpMethod.POST, $"{Constants.Resources.WebStore.Disputes}/{disputeId}/{Constants.Resources.WebStore.Contest}"));
+
+            var merchantEvidences = new List<MerchantEvidence>{
+                new MerchantEvidence
+                {
+                    EvidenceType = "TrackingNumber",
+                    FileId = "file_123456789",
+                    EvidenceText = "Customer confirmed receipt over email on 2025-04-25."
+                }
+            };
+            var contestDisputeRequest = new ContestDisputeRequest(merchantEvidences);
+
+            var result = mockClient.Object.ContestDispute(disputeId, contestDisputeRequest);
+
+        }
+
+        // ------------ Testing the Files APIs ---------------
+        [Test]
+        public void CanUploadFile()
+        {
+            mockClient.Protected().As<IClientMapping>()
+                .Setup(c => c.ProcessRequest<FileResponse>(It.IsAny<ApiRequest>(),
+                    It.IsAny<Dictionary<string, string>>()))
+                .Returns((ApiRequest request, Dictionary<string, string> headers) => AssertPreProcessRequestFlow<FileResponse>(request, headers, HttpMethod.POST, Constants.Resources.WebStore.Files));
+
+            var uploadFileRequest = new UploadFileRequest(
+                type: "jpg",
+                purpose: "disputeEvidence"
+            );
+
+            var result = mockClient.Object.UploadFile(uploadFileRequest);
         }
     }
 }

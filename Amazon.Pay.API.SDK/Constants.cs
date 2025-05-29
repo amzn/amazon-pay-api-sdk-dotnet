@@ -4,9 +4,9 @@ namespace Amazon.Pay.API
 {
     public class Constants
     {
-        public const string SdkVersion = "2.7.3.0";
-        public const string SdkName    = "amazon-pay-api-sdk-dotnet";
-        public const int    ApiVersion = 2;
+        public const string SdkVersion = "2.7.4.0";
+        public const string SdkName = "amazon-pay-api-sdk-dotnet";
+        public const int ApiVersion = 2;
 
         public static readonly Dictionary<string, int> serviceErrors = new Dictionary<string, int>() {
              {"Internal Server Error", 500},
@@ -14,7 +14,8 @@ namespace Amazon.Pay.API
              {"Service Unavailable", 503},
              {"HTTP Gateway Timeout", 504},
              {"Request Timeout", 408},
-             {"Too Many Requests", 429}
+             {"Too Many Requests", 429},
+             {"Too Early", 425}
          };
 
         public class Headers
@@ -50,6 +51,14 @@ namespace Amazon.Pay.API
 
                 // Merchant Account Management API Constants
                 public const string AccountManagement = "merchantAccounts";
+
+                // Dispute API constants
+                public const string Disputes = "disputes";
+                public const string Contest = "contest";
+
+                // File API constants
+                public const string Files = "files";
+
             }
 
             public class InStore

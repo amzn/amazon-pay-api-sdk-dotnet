@@ -67,7 +67,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
             Assert.That(result, Is.EqualTo(checkoutSessionResponse));
             this.mockWebStoreClient.Verify(mwsc => mwsc.CompleteCheckoutSession(It.IsAny<string>(), It.IsAny<CompleteCheckoutSessionRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
-        
+
         [Test]
         public void FinalizeCheckoutSessionCanBeMocked()
         {
@@ -98,7 +98,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
             var chargePermissionResponse = new ChargePermissionResponse();
             this.mockWebStoreClient.Setup(mwsc => mwsc.UpdateChargePermission(It.IsAny<string>(), It.IsAny<UpdateChargePermissionRequest>(), It.IsAny<Dictionary<string, string>>())).Returns(chargePermissionResponse);
 
-            var result = this.mockWebStoreClient.Object.UpdateChargePermission("ChargePermissionId", new UpdateChargePermissionRequest(),  new Dictionary<string, string>());
+            var result = this.mockWebStoreClient.Object.UpdateChargePermission("ChargePermissionId", new UpdateChargePermissionRequest(), new Dictionary<string, string>());
 
             Assert.That(result, Is.EqualTo(chargePermissionResponse));
             this.mockWebStoreClient.Verify(mwsc => mwsc.UpdateChargePermission(It.IsAny<string>(), It.IsAny<UpdateChargePermissionRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
@@ -141,6 +141,20 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
         }
 
         [Test]
+        public void UpdateChargeCanBeMocked()
+        {
+            var chargeResponse = new ChargeResponse();
+            this.mockWebStoreClient.Setup(mwsc => mwsc.UpdateCharge(It.IsAny<string>(), It.IsAny<UpdateChargeRequest>(), It.IsAny<Dictionary<string, string>>())).Returns(chargeResponse);
+
+            var updateChargeRequest = new UpdateChargeRequest(state: "Canceled", reasonCode: "ExpiredUnused");
+
+            var result = this.mockWebStoreClient.Object.UpdateCharge("chargeId", updateChargeRequest, new Dictionary<string, string>());
+
+            Assert.That(result, Is.EqualTo(chargeResponse));
+            this.mockWebStoreClient.Verify(mwsc => mwsc.UpdateCharge(It.IsAny<string>(), It.IsAny<UpdateChargeRequest>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
+        }
+
+        [Test]
         public void GetChargeCanBeMocked()
         {
             var chargeResponse = new ChargeResponse();
@@ -173,7 +187,7 @@ namespace Amazon.Pay.API.SDK.Tests.WebStore.Interfaces
             var result = this.mockWebStoreClient.Object.GetRefund("RefundId", new Dictionary<string, string>());
 
             Assert.That(result, Is.EqualTo(refundResponse));
-            this.mockWebStoreClient.Verify(mwsc => mwsc.GetRefund(It.IsAny<string>(), It.IsAny <Dictionary<string, string>>()), Times.Once);
+            this.mockWebStoreClient.Verify(mwsc => mwsc.GetRefund(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()), Times.Once);
         }
 
         [Test]

@@ -840,6 +840,41 @@ public class Sample
 }
 ```
 
+### Update Charge 
+#### Please note that is API is supported only for PSPs (Payment Service Provider)
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Charge;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    // ...
+
+    public void UpdateCharge(string chargeId)
+    {
+        // prepare the request
+        var request = new UpdateChargeRequest(state:"Canceled", reasonCode:"ExpiredUnused");
+
+        // send the request
+        ChargeResponse result = client.UpdateCharge(chargeId, request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+
+```
+
 ### Capture Charge
 ```csharp
 using Amazon.Pay.API.Types;
@@ -1446,3 +1481,196 @@ public class Sample
         return response;
     }
 }
+```
+
+# Dispute APIs code samples
+
+### Amazon Checkout v2 Dispute APIs - Create Dispute API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    public void CreateDispute()
+    {
+        // prepare the request
+        var request = new CreateDisputeRequest( chargeId: "S03-0000000-0000000-C000000",chargeAmount: 1,currencyCode: Currency.JPY)
+        {
+            ProviderMetadata = new ProviderMetadata
+            {
+                ProviderDisputeId = "A2CQXQ2TUSYG7J"
+            },
+            FilingReason = "ProductNotReceived",
+            FilingTimestamp = DateTime.UtcNow, // Current UTC datetime
+            MerchantResponseDeadline = DateTime.UtcNow.AddDays(14), // 14 days fromx now
+            StatusDetails = new StatusDetailsRequest
+            {
+                State = "ActionRequired",
+                ReasonCode = "MerchantResponseRequired"
+            }
+        };
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey,  myHeaderValue } };
+
+        // send the request
+        DisputeResponse result = client.CreateDispute(request, headers);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+```
+
+### Amazon Checkout v2 Dispute APIs - Get Dispute API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    public void GetDispute(string disputeId)
+    {
+        // send the request
+        DisputeResponse result = client.GetDispute(disputeId);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+```
+
+### Amazon Checkout v2 Dispute APIs - Update Dispute API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    public void UpdateDispute(string disputeId)
+    {
+        // prepare the request
+        var request = new UpdateDisputeRequest(
+            state: "UnderReview",
+            reasonCode:"MerchantResponseRequired",
+            closureTimestamp:DateTime.UtcNow
+        );
+
+        // send the request
+        DisputeResponse result = client.UpdateDispute(disputeId,request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+```
+
+### Amazon Checkout v2 Dispute APIs - Contest Dispute API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    public void ContestDispute(string disputeId)
+    {
+        // prepare the request
+        var merchantEvidences = new List<MerchantEvidence>{
+            new MerchantEvidence
+            {
+                EvidenceType = "TrackingNumber",
+                FileId = "file_123456789",
+                EvidenceText = "raw text supporting merchant evidence"
+            }
+        };
+        var request = new ContestDisputeRequest(merchantEvidences);
+
+        // send the request
+        DisputeResponse result = client.ContestDispute(disputeId,request);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+```
+
+# File APIs code samples
+
+### Amazon Checkout v2 File APIs - Upload File API
+```csharp
+using Amazon.Pay.API.Types;
+using Amazon.Pay.API.WebStore;
+using Amazon.Pay.API.WebStore.File;
+using Amazon.Pay.API.WebStore.Types;
+using System;
+using System.Collections.Generic; 
+
+public class Sample
+{
+    public void UploadFile()
+    {
+        // prepare the request
+        var request = new UploadFileRequest(type:"jpg", purpose:"disputeEvidence");
+
+        // init Headers
+        var myHeaderKey = "x-amz-pay-idempotency-key";
+        var myHeaderValue = Guid.NewGuid().ToString();
+        var headers = new Dictionary<string, string> { { myHeaderKey,  myHeaderValue } };
+
+        // send the request
+        DisputeResponse result = client.UploadFile(request, headers);
+
+        // check if API call was successful
+        if (!result.Success)
+        {
+            // handle the API error (use Status field to get the numeric error code)
+        } else {
+            // do something with the result, for instance:
+            Console.WriteLine(report.RawResponse);
+        }
+    }
+}
+```

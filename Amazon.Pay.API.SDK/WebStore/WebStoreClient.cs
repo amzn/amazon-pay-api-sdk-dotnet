@@ -4,6 +4,8 @@ using Amazon.Pay.API.WebStore.Buyer;
 using Amazon.Pay.API.WebStore.Charge;
 using Amazon.Pay.API.WebStore.ChargePermission;
 using Amazon.Pay.API.WebStore.CheckoutSession;
+using Amazon.Pay.API.WebStore.Dispute;
+using Amazon.Pay.API.WebStore.File;
 using Amazon.Pay.API.WebStore.Interfaces;
 using Amazon.Pay.API.WebStore.Refund;
 using Amazon.Pay.API.WebStore.Reports;
@@ -13,7 +15,7 @@ using System.Collections.Generic;
 
 namespace Amazon.Pay.API.WebStore
 {
-    public class WebStoreClient : Client, IWebStoreClient, IReportsClient, IMerchantOnboardingClient
+    public class WebStoreClient : Client, IWebStoreClient, IReportsClient, IMerchantOnboardingClient, IDisputesClient
     {
         public WebStoreClient(ApiConfiguration payConfiguration) : base(payConfiguration)
         {
@@ -131,6 +133,25 @@ namespace Amazon.Pay.API.WebStore
             var result = CallAPI<ChargeResponse>(apiRequest);
 
             return result;
+        }
+
+        /// <summary>
+        /// The updateCharge operation is used to update the charge status of any PSP (Payment Service Provider) processed payment method (PPM) transactions
+        /// Please note that is API is supported only for PSPs (Payment Service Provider)
+        /// </summary>
+        ///<param name="chargeId">Amazon Pay chargeId received in the Create Charge response</param>
+        /// <param name="request">The payload for updating charge.</param>
+        /// <param name="headers"></param>
+        /// <returns>ChargeResponse response</returns>
+        public ChargeResponse UpdateCharge(string chargeId, UpdateChargeRequest updateChargeRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Charges, chargeId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.PATCH, updateChargeRequest, headers);
+
+            var result = CallAPI<ChargeResponse>(apiRequest);
+
+            return result;
+
         }
 
         /// <summary>
@@ -291,20 +312,20 @@ namespace Amazon.Pay.API.WebStore
             var queryParameters = new Dictionary<string, List<string>>();
             string isoFormat = "yyyyMMddTHHmmssZ";
 
-            if(getReportsRequest != null) 
+            if(getReportsRequest != null)
             {
                 if(getReportsRequest.ReportTypes != null)
                     queryParameters.Add("reportTypes", new List<string>() { string.Join(",", getReportsRequest.ReportTypes) });
-                    
+
                 if(getReportsRequest.ProcessingStatuses !=null)
                     queryParameters.Add("processingStatuses", new List<string>() { string.Join(",", getReportsRequest.ProcessingStatuses) });
-                    
+
                 if(getReportsRequest.CreatedSince != null)
                     queryParameters.Add("createdSince", new List<string>() { getReportsRequest.CreatedSince.Value.ToString(isoFormat) });
 
                 if(getReportsRequest.CreatedUntil != null)
                     queryParameters.Add("createdUntil", new List<string>() { getReportsRequest.CreatedUntil.Value.ToString(isoFormat) });
-                    
+
                 queryParameters.Add("pageSize", new List<string>() { getReportsRequest.PageSize.ToString() });
                 if(getReportsRequest.NextToken != null)
                 {
@@ -378,7 +399,7 @@ namespace Amazon.Pay.API.WebStore
         {
             // Utility function to convert GetReportScheduleRequest to Dictionary for QueryParameters:
             var queryParameters = new Dictionary<string, List<string>>();
-            if(getReportSchedulesRequest != null) 
+            if (getReportSchedulesRequest != null)
                 queryParameters.Add("reportTypes", new List<string>() { string.Join(",", getReportSchedulesRequest.ReportTypes) });
 
             var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.ReportSchedules);
@@ -392,7 +413,7 @@ namespace Amazon.Pay.API.WebStore
 
             return result;
         }
-        
+
 
         /// <summary>
         /// Returns the report schedule details that match the given ID.
@@ -509,7 +530,7 @@ namespace Amazon.Pay.API.WebStore
 
             return CallAPI<DeleteAmazonPayAccountResponse>(apiRequest);
         }
-        
+
         /// <summary>
         /// FinalizeCheckoutSession API which enables Pay to validate payment critical attributes and also update book-keeping attributes present in merchantMetadata
         /// </summary>
@@ -522,6 +543,96 @@ namespace Amazon.Pay.API.WebStore
             var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, finalizeCheckoutSessionRequest, headers);
 
             var result = CallAPI<CheckoutSessionResponse>(apiRequest);
+
+            return result;
+        }
+
+        // ----------------------------------- Dispute APIs -----------------------------------
+
+        /// <summary>
+        /// The createDispute operation is used to notify Amazon of a newly created chargeback dispute by a buyer on a transaction processed by the PSP (Payment Service Provider), ensuring the dispute is properly accounted for in the Amazon Pay systems.
+        /// </summary>
+        /// <param name="request">The payload for creating a dispute.</param>
+        /// <param name="headers"></param>
+        /// <returns>DisputeResponse response</returns>
+        public DisputeResponse CreateDispute(CreateDisputeRequest createDisputeRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Disputes);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, createDisputeRequest, headers);
+
+            var result = CallAPI<DisputeResponse>(apiRequest);
+
+            return result;
+        }
+
+        /// <summary>
+        /// The getDispute operation is used to retrieve details of a chargeback dispute associated with a specific order
+        /// </summary>
+        /// <param name="disputeId"> The unique Dispute ID provided by Amazon Pay for the chargeback case</param>
+        /// <param name="headers"></param>
+        /// <returns>DisputeResponse response</returns>
+        public DisputeResponse GetDispute(string disputeId, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Disputes, disputeId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.GET)
+            {
+                Headers = headers
+            };
+
+            var result = CallAPI<DisputeResponse>(apiRequest);
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// The updateDispute operation is used to notify Amazon of the closure status of a chargeback dispute initiated by a buyer for orders processed by a partner PSP (Payment Service Provider), ensuring proper accounting within the Amazon systems.
+        /// </summary>
+        /// <param name="disputeId">Amazon Pay disputeId received in the Create Dispute response</param>
+        /// <param name="request">The payload for updating dispute.</param>
+        /// <param name="headers"></param>
+        /// <returns>DisputeResponse response</returns>
+        public DisputeResponse UpdateDispute(string disputeId, UpdateDisputeRequest updateDisputeRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Disputes, disputeId);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.PATCH, updateDisputeRequest, headers);
+
+            var result = CallAPI<DisputeResponse>(apiRequest);
+
+            return result;
+        }
+
+        /// <summary>
+        /// The contestDispute operation is used by the partner, on behalf of the merchant, to formally contest a dispute  managed by Amazon, requiring the submission of necessary evidence files within the specified Dispute Window (11 days for Chargeback, 7 days for A-Z Claims).
+        /// </summary>
+        /// <param name="disputeId">Amazon Pay disputeId received in the Create Dispute response</param>
+        /// <param name="request">The payload for updating contest dispute.</param>
+        /// <param name="headers"></param>
+        /// <returns>DisputeResponse response</returns>
+        public DisputeResponse ContestDispute(string disputeId, ContestDisputeRequest contestDisputeRequest, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Disputes, disputeId, Constants.Resources.WebStore.Contest);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, contestDisputeRequest, headers);
+
+            var result = CallAPI<DisputeResponse>(apiRequest);
+
+            return result;
+        }
+
+        // ----------------------------------- File APIs -----------------------------------
+
+        /// <summary>
+        /// The uploadFile operation is utilised by PSPs (Payment Service Provider) to upload file-based evidence when a merchant contests a dispute, providing the necessary reference ID to the evidence file as part of the Update Dispute API process
+        /// </summary>
+        /// <param name="request">The payload for upload file-based evidence.</param>
+        /// <param name="headers"></param>
+        /// <returns>FileResponse response</returns>
+        public FileResponse UploadFile(UploadFileRequest request, Dictionary<string, string> headers = null)
+        {
+            var apiPath = apiUrlBuilder.BuildFullApiPath(Constants.ApiServices.Default, Constants.Resources.WebStore.Files);
+            var apiRequest = new ApiRequest(apiPath, HttpMethod.POST, request, headers);
+
+            var result = CallAPI<FileResponse>(apiRequest);
 
             return result;
         }

@@ -25,9 +25,15 @@ namespace Amazon.Pay.API.WebStore.Types
         public string ReasonDescription { get; internal set; }
 
         /// <summary>
+        /// This property is only present for Dispute API resposne and if Dispute state is Resolved or Closed
+        /// </summary>
+        [JsonProperty(PropertyName = "resolution", NullValueHandling = NullValueHandling.Ignore)]
+        public string Resolution { get; internal set; }
+
+        /// <summary>
         /// UTC date and time when the state was last updated in ISO 8601 format.
         /// </summary>
         [JsonProperty(PropertyName = "lastUpdatedTimestamp")]
-        public DateTime LastUpdatedTimestamp { get; internal set; }
+        public DateTime? LastUpdatedTimestamp { get; internal set; }
     }
 }

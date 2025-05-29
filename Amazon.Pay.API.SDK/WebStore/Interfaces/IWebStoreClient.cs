@@ -30,7 +30,7 @@ namespace Amazon.Pay.API.WebStore.Interfaces
         /// Completes a Checkout Session.
         /// </summary>
         CheckoutSessionResponse CompleteCheckoutSession(string checkoutSessionId, CompleteCheckoutSessionRequest completeRequest, Dictionary<string, string> headers = null);
-        
+
         /// <summary>
         /// FinalizeCheckoutSession API which enables Pay to validate payment critical attributes and also update book-keeping attributes present in merchantMetadata
         /// </summary>
@@ -65,6 +65,13 @@ namespace Amazon.Pay.API.WebStore.Interfaces
         /// </summary>
         /// <returns>ChargeResponse response</returns>
         ChargeResponse CaptureCharge(string chargeId, CaptureChargeRequest captureRequest, Dictionary<string, string> headers = null);
+
+        /// <summary>
+        /// The updateCharge operation is used to update the charge status of any PSP (Payment Service Provider) processed payment method (PPM) transactions
+        /// Please note that is API is supported only for PSPs (Payment Service Provider)
+        /// </summary>
+        /// <returns>ChargeResponse response</returns>
+        ChargeResponse UpdateCharge(string chargeId, UpdateChargeRequest updateChargeRequest, Dictionary<string, string> headers = null);
 
         /// <summary>
         /// Gets a Charge object.
