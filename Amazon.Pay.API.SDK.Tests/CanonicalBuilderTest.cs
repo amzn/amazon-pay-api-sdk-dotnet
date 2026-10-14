@@ -13,7 +13,7 @@ namespace Amazon.Pay.API.Tests
             region: Region.Europe,
             environment: Types.Environment.Live,
             publicKeyId: "foo",
-            privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+            privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
         );
 
         CanonicalBuilder canonicalBuilder = new CanonicalBuilder();

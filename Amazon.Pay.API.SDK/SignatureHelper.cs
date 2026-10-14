@@ -136,12 +136,20 @@ namespace Amazon.Pay.API
             int SaltLength = payConfiguration.Algorithm.GetSaltLength();
 
             // read the private key
-            PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey)); // TODO: replace by method parameter to get rid of config dependency
-            object pemObject = pemReader.ReadObject();
-
-            if (pemReader == null)
+            object pemObject;
+            try
             {
-                throw new ArgumentException("Unsupported private key format");
+                PemReader pemReader = new PemReader(new StringReader(payConfiguration.PrivateKey));
+                pemObject = pemReader.ReadObject();
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("Unable to parse the private key", nameof(ApiConfiguration.PrivateKey));
+            }
+
+            if (pemObject == null)
+            {
+                throw new ArgumentException("Unsupported private key format", nameof(ApiConfiguration.PrivateKey));
             }
 
             ICipherParameters parameters;

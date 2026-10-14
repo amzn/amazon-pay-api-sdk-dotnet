@@ -26,11 +26,11 @@ This SDK is compatible with .NET Standard 2.0 (including .NET Core 2.0), as well
 
 ## SDK Installation
 
-This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.7.3/Amazon.Pay.API.SDK.2.7.3.nupkg).
+This SDK can be downloaded from NuGet [here](https://www.nuget.org/packages/Amazon.Pay.API.SDK) or GitHub [here](https://github.com/amzn/amazon-pay-api-sdk-dotnet/releases/download/2.8.0/Amazon.Pay.API.SDK.2.8.0.nupkg).
 
 NuGet install from Package Manager:
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.3
+Install-Package Amazon.Pay.API.SDK -Version 2.8.0
 ```
 
 NuGet install from .NET CLI:
@@ -42,12 +42,12 @@ Alternatively, to manually install after a GitHub download, use one of the follo
 
 Visual Studio Package Manager Console
 ```
-Install-Package Amazon.Pay.API.SDK -Version 2.7.3 -Source %USERPROFILE%\Downloads
+Install-Package Amazon.Pay.API.SDK -Version 2.8.0 -Source %USERPROFILE%\Downloads
 ```
 
 .NET Core CLI
 ```
-dotnet add package Amazon.Pay.API.SDK -v 2.7.3 -s %USERPROFILE%\Downloads\
+dotnet add package Amazon.Pay.API.SDK -v 2.8.0 -s %USERPROFILE%\Downloads\
 ```
 
 
@@ -62,9 +62,11 @@ Please note that as an alternative to generating the private key via Seller Cent
 In Windows 10 this can be done with ssh-keygen commands:
 
 ```
-ssh-keygen -t rsa -b 2048 -f private.pem
+ssh-keygen -t rsa -b 2048 -m PEM -f private.pem
 ssh-keygen -f private.pem -e -m PKCS8 > public.pub
 ```
+
+The `-m PEM` option is required: without it, current versions of ssh-keygen write the private key in OpenSSH format (`-----BEGIN OPENSSH PRIVATE KEY-----`), which is not supported by the SDK.
 
 In Linux or macOS this can be done using openssl commands:
 

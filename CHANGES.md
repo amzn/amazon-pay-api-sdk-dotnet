@@ -1,3 +1,10 @@
+#### Version 2.8.0 - October 2026
+* Security fix: the private key (or its file path) is no longer included in exception messages or properties.
+* **Breaking change:** the private key is now checked when `ApiConfiguration` is created. Only RSA private keys in PEM format (`BEGIN RSA PRIVATE KEY` or `BEGIN PRIVATE KEY`) are accepted. Invalid, encrypted, OpenSSH, non-RSA or placeholder keys now throw `ArgumentException` straight away, instead of failing on the first API call. If your code or tests create `ApiConfiguration` with a dummy key, replace it with a real RSA private key.
+* Private keys with extra spaces, blank lines or a UTF-8 BOM are now accepted.
+* A null or empty private key throws `ArgumentNullException` / `ArgumentException` instead of `NullReferenceException`.
+* README: corrected the `ssh-keygen` command (`-m PEM` is required).
+
 #### Version 2.7.4 - May 2025
 * Introducing new v2 Dispute APIs for PSPs (Payment Service Provider). Buyers can create a dispute by filing an Amazon Pay A-to-z Guarantee claim or by filing a chargeback with their bank.
 * The `createDispute` API is used to notify Amazon of a newly created chargeback dispute by a buyer on a transaction processed by the PSP (Payment Service Provider), ensuring the dispute is properly accounted for in the Amazon Pay systems.

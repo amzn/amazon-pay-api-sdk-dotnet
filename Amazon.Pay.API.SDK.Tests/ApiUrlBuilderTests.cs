@@ -25,7 +25,7 @@ namespace Amazon.Pay.API.Tests
                 region: Region.Europe,
                 environment: Environment.Live,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
 
             payConfigWithAlgorithm = new ApiConfiguration
@@ -33,7 +33,7 @@ namespace Amazon.Pay.API.Tests
                 region: Region.Europe,
                 environment: Environment.Live,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----", // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem,
                 algorithm: AmazonSignatureAlgorithm.V2
             );
         }

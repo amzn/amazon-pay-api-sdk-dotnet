@@ -32,7 +32,7 @@ namespace Amazon.Pay.API.SDK.Tests.InStore
                 region: Region.UnitedStates,
                 environment: Environment.Sandbox,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
             mockClient = new Mock<InStoreClient>(MockBehavior.Strict, payConfig) { CallBase = true };
             mockSignatureHelper = new Mock<ISignatureHelper>(MockBehavior.Strict);

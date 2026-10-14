@@ -18,7 +18,7 @@ namespace Amazon.Pay.API.SDK.Tests
                 region: Region.UnitedStates,
                 environment: Environment.Sandbox,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
             Assert.NotNull(payConfig);
             Assert.AreEqual(Region.UnitedStates, payConfig.Region);
@@ -37,7 +37,7 @@ namespace Amazon.Pay.API.SDK.Tests
                 region: Region.UnitedStates,
                 environment: Environment.Sandbox,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----", // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem,
                 algorithm: AmazonSignatureAlgorithm.V2
             );
             Assert.NotNull(payConfig);
@@ -58,7 +58,7 @@ namespace Amazon.Pay.API.SDK.Tests
                 region: Region.UnitedStates,
                 environment: Environment.Sandbox,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
             Assert.NotNull(payConfig);
             payConfig.MaxRetries = 2;
@@ -73,11 +73,11 @@ namespace Amazon.Pay.API.SDK.Tests
                 region: Region.UnitedStates,
                 environment: Environment.Sandbox,
                 publicKeyId: "foo",
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // fake a private key ..);
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
             Assert.NotNull(payConfig);
-            payConfig.PrivateKey = "-----BEGIN RSA PRIVATE KEY-----\nMIIEvA";
-            payConfig.PrivateKey.Should().EndWith("MIIEvA");
+            payConfig.PrivateKey = TestKeys.Pkcs8Pem;
+            payConfig.PrivateKey.Should().Be(TestKeys.Pkcs8Pem);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Amazon.Pay.API.SDK.Tests
             (
                 region: region,
                 publicKeyId: publicKeyId,
-                privateKey: "-----BEGIN RSA PRIVATE KEY-----" // Fake Private key
+                privateKey: Amazon.Pay.API.SDK.Tests.TestKeys.Pkcs1Pem
             );
 
             // Assertion

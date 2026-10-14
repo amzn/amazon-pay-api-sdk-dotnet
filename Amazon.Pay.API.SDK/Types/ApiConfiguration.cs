@@ -1,4 +1,7 @@
 using Amazon.Pay.API.Types;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.OpenSsl;
 using System;
 using System.IO;
 
@@ -60,37 +63,96 @@ namespace Amazon.Pay.API
             get { return privateKey; }
             set
             {
-                FileInfo fileInfo;
-
-                try
+                if (value == null)
                 {
-                    fileInfo = new FileInfo(value);
-                } 
-                catch(Exception)
-                {
-                    fileInfo = null;
-                }
-                
-                if (fileInfo != null && fileInfo.Exists)
-                {
-                    privateKey = File.ReadAllText(value);
-                }
-                else
-                {
-                    privateKey = value;
+                    throw new ArgumentNullException(nameof(PrivateKey), "A private key (file path or PEM content) must be provided");
                 }
 
-                if (!privateKey.StartsWith("-----"))
+                string normalizedValue = NormalizePrivateKey(value);
+                if (normalizedValue.Length == 0)
                 {
-                    if (fileInfo.Exists)
-                    {
-                        throw new ArgumentException("Provided file does not contain a private key in the expected format");
-                    }
-                    else
-                    {
-                        throw new FileNotFoundException("Provided private key file cannot be found", privateKey);
-                    }
+                    throw new ArgumentException("A private key (file path or PEM content) must be provided", nameof(PrivateKey));
                 }
+
+                if (normalizedValue.Contains(PemBeginMarker))
+                {
+                    privateKey = ValidatePemFormat(normalizedValue, "Provided private key is not in the expected PEM format");
+                    return;
+                }
+
+                string filePath = IsExistingFile(value) ? value : (IsExistingFile(normalizedValue) ? normalizedValue : null);
+                if (filePath != null)
+                {
+                    string fileContent;
+                    try
+                    {
+                        fileContent = File.ReadAllText(filePath);
+                    }
+                    catch (Exception)
+                    {
+                        throw new ArgumentException("Provided private key file could not be read", nameof(PrivateKey));
+                    }
+
+                    privateKey = ValidatePemFormat(NormalizePrivateKey(fileContent), "Provided file does not contain a private key in the expected format");
+                    return;
+                }
+
+                throw new FileNotFoundException("Provided private key file cannot be found");
+            }
+        }
+
+        private const string PemBeginMarker = "-----BEGIN";
+
+        private static string NormalizePrivateKey(string value)
+        {
+            return value.Trim().TrimStart('\uFEFF').Trim();
+        }
+
+        private static string ValidatePemFormat(string pem, string errorMessage)
+        {
+            if (!pem.StartsWith(PemBeginMarker, StringComparison.Ordinal))
+            {
+                throw new ArgumentException(errorMessage, nameof(PrivateKey));
+            }
+
+            if (pem.StartsWith(PemBeginMarker + " OPENSSH PRIVATE KEY", StringComparison.Ordinal))
+            {
+                throw new ArgumentException("OpenSSH private keys are not supported, generate the key in PEM format (e.g. ssh-keygen -m PEM)", nameof(PrivateKey));
+            }
+
+            object pemObject;
+            try
+            {
+                pemObject = new PemReader(new StringReader(pem)).ReadObject();
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("Unable to parse the private key", nameof(PrivateKey));
+            }
+
+            if (!IsRsaPrivateKey(pemObject))
+            {
+                throw new ArgumentException("Unsupported private key format", nameof(PrivateKey));
+            }
+
+            return pem;
+        }
+
+        private static bool IsRsaPrivateKey(object pemObject)
+        {
+            AsymmetricKeyParameter key = pemObject is AsymmetricCipherKeyPair pair ? pair.Private : pemObject as AsymmetricKeyParameter;
+            return key is RsaKeyParameters && key.IsPrivate;
+        }
+
+        private static bool IsExistingFile(string path)
+        {
+            try
+            {
+                return new FileInfo(path).Exists;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
